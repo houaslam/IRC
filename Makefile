@@ -1,10 +1,12 @@
-NAME = Webserver
+NAME = IRC
 CXX = c++
 CXX += -fsanitize=address -g3
 CXXFLAGS = -Wall -Wextra -Werror
 EXTRA_CFLAGS = -std=c++98
 
-SRC = srcs/main.cpp 
+SRC = srcs/main.cpp \
+	  srcs/external_func.cpp \
+	  srcs/Server.cpp
 
 OBJ = ${SRC:.cpp=.o} ${CNF:.cpp=.o}
 
