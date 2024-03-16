@@ -1,33 +1,69 @@
 #include "../includes/irc.hpp"
 
-int main(){
-	Server server(8500, "7894");
-	char reqs[1024];
-	struct po
-	socklen_t add_size = sizeof(server.get_addr_len());
-	int client = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
+void del_fd(struct pollfd fds[], int* fd_count, int p){
+	fds[p].fd = fds[*fd_count - 1].fd;
+	(*fd_count)--;
+}
 
-	if (client <= 0)
-		ft_error("CLIENT : ");
-	std::cout << "new connection\n";
+void add_fd(struct pollfd fds[], int* fd_count, int fd){
+	fds[(*fd_count)].fd = fd;
+	fds[(*fd_count)].events = POLLIN;
+	std::cout << BLUE << "NEW CONNECTION\n" << RESET;
+	(*fd_count)++;
+}
 
-	while(true){
+int main(int ac , char ** av){
 
-		int k = recv(client, reqs, sizeof(reqs), 0);
+	if (ac == 3){
+	
+		Server server(8500, av[2], av[1]);
+		char reqs[1024];
+		int client;
+		struct pollfd fds[5];
+		fds[0].fd = server.get_socket();
+		fds[0].events = POLLIN;
+		socklen_t add_size = sizeof(server.get_addr_len());
+		int nb_fds = 1;
+		
 
-		if (k > 0){
-			reqs[k] = '\0';
-			std::cout << "LOL = " << reqs << std::endl;
-		}
+		while(true){
 
-		else if (k == 0){
-			std::cout << "BYE BYE\n";
-			break;
-		}
+			if (poll(fds, nb_fds, 0) > 0){
 
-		else{
-			close(client);
-			ft_error("DONE : ");
+				for (int i = 0; i < nb_fds; i++){
+
+					if (fds[i].revents == POLLIN){
+						if (fds[i].fd == server.get_socket()){
+							client = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
+							if (client <= 0)
+								ft_error("CLIENT : ");
+							add_fd(fds, &nb_fds, client);
+						}
+
+						else{
+							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
+
+							if (k > 0){
+								reqs[k] = '\0';
+								std::cout << "client = " << reqs;
+							}
+
+							else{
+								del_fd(fds, &nb_fds, i);
+
+								if (k == 0){
+									std::cout << BLUE << "BYE BYE\n" << RESET;
+									continue;
+								}
+
+								else
+									ft_error("DONE : ");
+							}
+						}
+					}
+				}
+			}
 		}
 	}
+	
 }
