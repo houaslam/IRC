@@ -1,6 +1,8 @@
 #include "../includes/irc.hpp"
+#include "../includes/irc.hpp"
 
 void del_fd(struct pollfd fds[], int* fd_count, int p){
+	close(fds[p].fd);
 	fds[p].fd = fds[*fd_count - 1].fd;
 	(*fd_count)--;
 }
@@ -19,7 +21,7 @@ int main(int ac , char ** av){
 		Server server(8500, av[2], av[1]);
 		char reqs[1024];
 		int client;
-		struct pollfd fds[5];
+		struct pollfd fds[1024];
 		fds[0].fd = server.get_socket();
 		fds[0].events = POLLIN;
 		socklen_t add_size = sizeof(server.get_addr_len());
@@ -42,18 +44,19 @@ int main(int ac , char ** av){
 
 						else{
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
-
+							cout << "BYTES = " << k << endl;
 							if (k > 0){
 								reqs[k] = '\0';
 								std::cout << "client = " << reqs;
 							}
 
 							else{
+								ft_error("LOL : ");
 								del_fd(fds, &nb_fds, i);
 
 								if (k == 0){
 									std::cout << BLUE << "BYE BYE\n" << RESET;
-									continue;
+									// continue;
 								}
 
 								else
