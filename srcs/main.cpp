@@ -15,7 +15,7 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 int main(int ac , char ** av){
 
 	if (ac == 3){
-	
+
 		Server server(8500, av[2], av[1]);
 		char reqs[1024];
 		int client;
