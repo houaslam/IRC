@@ -17,6 +17,7 @@
 #include <string>
 #include <cctype>
 #include <poll.h>
+#include "parse.hpp"
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      
@@ -28,6 +29,7 @@
 #define WHITE   "\033[37m"   
 
 using namespace std;
+
 class Server{
 	private:
 		int port;
@@ -50,5 +52,6 @@ class Server{
 	// SETERS
 	
 };
-
+// OUTILS
 void ft_error(string prob);
+std::vector<std::string> split(std::string src, std::string s);

@@ -1,4 +1,4 @@
-#include "../includes/irc.hpp"
+#include "../includes/client.hpp"
 #include "../includes/irc.hpp"
 
 void del_fd(struct pollfd fds[], int* fd_count, int p){
@@ -20,13 +20,13 @@ int main(int ac , char ** av){
 
 		Server server(8500, av[2], av[1]);
 		char reqs[1024];
-		int client;
+		int clt;
 		struct pollfd fds[1024];
 		fds[0].fd = server.get_socket();
 		fds[0].events = POLLIN;
 		socklen_t add_size = sizeof(server.get_addr_len());
 		int nb_fds = 1;
-		
+		client client;
 
 		while(true){
 
@@ -36,10 +36,10 @@ int main(int ac , char ** av){
 
 					if (fds[i].revents == POLLIN){
 						if (fds[i].fd == server.get_socket()){
-							client = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
-							if (client <= 0)
+							clt = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
+							if (clt <= 0)
 								ft_error("CLIENT : ");
-							add_fd(fds, &nb_fds, client);
+							add_fd(fds, &nb_fds, clt);
 						}
 
 						else{
@@ -48,6 +48,7 @@ int main(int ac , char ** av){
 							if (k > 0){
 								reqs[k] = '\0';
 								std::cout << "client = " << reqs;
+								// parse(client, reqs);
 							}
 
 							else{

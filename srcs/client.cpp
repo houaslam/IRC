@@ -1,6 +1,8 @@
 #include "../includes/client.hpp"
 
-client::client(string nickname, int id): nickname(nickname), id(id){
+client::client(): id(0),nickname(""){}
+
+client::client(string nickname, int id):id(id) ,nickname(nickname){
     cout << "CLIENT WAS CREATED\n";
 }
 
@@ -20,3 +22,6 @@ client::~client(){
     cout << "BYE BYE\n";
 }
 
+string& client::getNickName(void){
+    return this->nickname;
+}
