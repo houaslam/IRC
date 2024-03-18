@@ -31,3 +31,18 @@ vector<string> split(string src, string s) {
 
     return ret;
 }
+
+
+string strtrim(const string& str) {
+    size_t start = 0;
+    while (start < str.length() && isspace(str[start])) {
+        start++;
+    }
+
+    size_t end = str.length();
+    while (end > start && isspace(str[end - 1])) {
+        end--;
+    }
+
+    return str.substr(start, end - start);
+}

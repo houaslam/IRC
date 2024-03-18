@@ -33,7 +33,6 @@ int main(int ac , char ** av){
 			if (poll(fds, nb_fds, 0) > 0){
 
 				for (int i = 0; i < nb_fds; i++){
-
 					if (fds[i].revents == POLLIN){
 						if (fds[i].fd == server.get_socket()){
 							clt = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
@@ -47,8 +46,7 @@ int main(int ac , char ** av){
 							cout << "BYTES = " << k << endl;
 							if (k > 0){
 								reqs[k] = '\0';
-								std::cout << "client = " << reqs;
-								// parse(client, reqs);
+							parse(client, reqs);
 							}
 
 							else{

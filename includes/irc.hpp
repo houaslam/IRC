@@ -55,3 +55,4 @@ class Server{
 // OUTILS
 void ft_error(string prob);
 std::vector<std::string> split(std::string src, std::string s);
+string strtrim(const string& str);

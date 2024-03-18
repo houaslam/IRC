@@ -1,15 +1,33 @@
 
-#include "../includes/client.hpp"
+#include "../includes/parse.hpp"
+
+string &withoutNewLine(string &line){
+
+    size_t newLine = line.find('\n');
+
+    if (newLine != string::npos)
+    {
+        cout << " Here\n";
+        line.erase(newLine, 1);
+    }
+    return line;
+}
 
 void parse(client client, string reqs){
-    vector<string> line;
+    
+    reqs = withoutNewLine(reqs);
 
+    vector<string> line;
     line = split(reqs, " ");
 
     string commands[] = {"USER", "NICK", "JOIN", "SEND"};
     int i = 0;
-    while (commands[i].compare(line[0]))
-        i++;
+    if (line.empty())
+        i = 5;
+    else
+        while (i < 4 && commands[i].compare(line[0]))
+            i++;
+    cout << client.getNickName();
     switch (i)
     {
         case 0:
@@ -18,17 +36,18 @@ void parse(client client, string reqs){
            break;
         case 1:
             nick(client.getNickName(), reqs, line.size());
+            cout << client.getNickName() << endl;
             // fall through
             break;
         // case 2:
-        //     warning();
-        //     // fall through
+        //     join();
+            // fall through
             // break;
         // case 3:
-        //     error();
+        //     ();
             // break;
         default:
-            cout << ":@localhost 421\t" << reqs << " :Unknown command\n";
+            cout << client.getNickName() <<":@localhost 421\t"   << " :Unknown command\n";
             break;
     }
 
