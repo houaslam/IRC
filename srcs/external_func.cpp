@@ -16,7 +16,7 @@ vector<string> split(string src, string s) {
     while (i < len) {
         size_t found = src.find(s, i);
         if (found > len) {
-            str = src.substr(i); 
+            str = src.substr(i);
             i = len;
         }
         else {
