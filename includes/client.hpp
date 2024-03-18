@@ -7,11 +7,11 @@ class Server;
 
 class Client{
     private:
-        int fd;
         string nickname;
+        int fd;
     public:
         Client();
-        Client(string nickname, Server server);
+        Client(string nickname, int fd);
         Client(Client& src);
         Client& operator=(Client& client_);
         ~Client();

@@ -2,13 +2,9 @@
 #include "../includes/server.hpp"
 
 
-Client::Client():fd(1), nickname(""){}
+Client::Client(): nickname(""), fd(1){}
 
-Client::Client(string nickname,  Server server):nickname(nickname){
-    socklen_t add_size = sizeof(server.get_addr_len());
-    fd = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
-	if (fd <= 0)
-		ft_error("CLIENT : ");
+Client::Client(string nickname,  int fd):nickname(nickname), fd(fd){
     cout << "CLIENT WAS CREATED\n";
 }
 
