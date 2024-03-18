@@ -65,8 +65,16 @@ socklen_t  Server::get_addr_len() const{
     return sizeof(this->s_addr);
 }
 
-// void Server::adduser(int id, string nickname){
-// 	client user(nickname, id);
-// 	clients[id] = user;
-// }
+void Server::adduser(Client& user){
+	clients[user.get_fd()] = user;
+}
 
+void Server::aff_allusers(){
+	std::map<int, Client>::iterator it = this->clients.begin();
+	for (; it != clients.end(); it++)
+	{
+		std::cout <<"[" <<  it->first << "]" << std::endl;
+		// std::cout <<"[" <<  it->second << "]" << std::endl;
+	}
+	
+}
