@@ -7,13 +7,12 @@ string &withoutNewLine(string &line){
 
     if (newLine != string::npos)
     {
-        cout << " Here\n";
         line.erase(newLine, 1);
     }
     return line;
 }
 
-void parse(client client, string reqs){
+void parse(Client client, string reqs){
     
     reqs = withoutNewLine(reqs);
 
