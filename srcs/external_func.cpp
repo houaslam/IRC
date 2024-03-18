@@ -63,3 +63,19 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 void dprint(int fd, string str){
     write(fd, &str, sizeof(str));
 }
+
+void user(vector<string> line){
+    (void)line;
+}
+
+void nick(string &nickname,string line, size_t size){
+    if (size == 1)
+        cout << ":"+ nickname +"@localhost 431\t"+ nickname +" :Nickname not given\n";
+    else
+    {
+        line = line.substr(4);
+        line = strtrim(line);
+        nickname = line;
+
+    }
+}

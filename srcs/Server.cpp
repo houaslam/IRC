@@ -32,6 +32,7 @@ Server::Server(int port, const char* password, const char* host) : port(port), p
 	cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
 }
 
+Server::~Server(){}
 
 Server::Server(Server& src){
 	*this = src;
@@ -44,6 +45,7 @@ Server& Server::operator=(Server& server){
 		this->_socket = server._socket;
 		this->password = server.password;
 		this->s_addr = server.s_addr;
+		// this->clients = server.clients;
 	}
 	return *this;
 }
@@ -65,16 +67,20 @@ socklen_t  Server::get_addr_len() const{
     return sizeof(this->s_addr);
 }
 
-void Server::adduser(Client& user){
-	clients[user.get_fd()] = user;
-}
+// void Server::adduser(Client user){
+// 	this->clients.push_back(user);
+// }
 
-void Server::aff_allusers(){
-	std::map<int, Client>::iterator it = this->clients.begin();
-	for (; it != clients.end(); it++)
-	{
-		std::cout <<"[" <<  it->first << "]" << std::endl;
-		// std::cout <<"[" <<  it->second << "]" << std::endl;
-	}
+// void Server::setUser(Client &obj){
+// 	this->clients.push_back(obj);
+// }
+
+// void Server::aff_allusers(){
+// 	vector<Client>::iterator it = this->clients.begin();
+// 	for (; it != clients.end(); it++)
+// 	{
+// 		// std::cout <<"[" <<  it->first << "]" << std::endl;
+// 		// std::cout <<"[" <<  it->second << "]" << std::endl;
+// 	}
 	
-}
+// }

@@ -12,7 +12,7 @@ int main(int ac , char ** av){
 		fds[0].events = POLLIN;
 		
 		int nb_fds = 1;
-        Client user_;
+        Client save;
 
 		while(true){
 
@@ -24,17 +24,18 @@ int main(int ac , char ** av){
                         
 						if (fds[i].fd == server.get_socket()){
                             Client  user_("test", server);
+							save = user_;
 							add_fd(fds, &nb_fds, user_.get_fd());
-                            server.adduser(user_);
+                            // server.adduser(user_);
 							std::cout << "ALL USERS : " << std::endl;
-							server.aff_allusers();
+							// server.aff_allusers();
 						}
 
 						else{
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							if (k > 0){
 								reqs[k] = '\0';
-							    parse(user_, reqs);
+							    parse(save, reqs);
 							}
 
 							else{

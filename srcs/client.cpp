@@ -1,6 +1,7 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
+
 Client::Client():fd(1), nickname(""){}
 
 Client::Client(string nickname,  Server server):nickname(nickname){

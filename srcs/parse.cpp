@@ -48,6 +48,10 @@ void parse(Client client, string reqs){
         default:
             // dprint(client.get_fd(), client.getNickName() +":@localhost 421\t"   + " :Unknown command\n");
             cout << client.getNickName() <<":@localhost 421\t"   << " :Unknown command\n";
+            char res[1024];
+            send(client.get_fd(), "test", 4, 0);
+            recv(client.get_fd(), res, 1024, 0);
+            cout << "client fd = " << client.get_fd() << endl;
             break;
     }
 
