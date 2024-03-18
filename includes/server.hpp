@@ -17,6 +17,7 @@
 #include <string>
 #include <cctype>
 #include <poll.h>
+#include "client.hpp"
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      
@@ -35,6 +36,7 @@ class Server{
 		const char* password;
 		const char* _host;
 		struct sockaddr_in s_addr;
+		map<int, class client>  clients;
 	public:
 	// CANONICAL FORM
 		Server(int port, const char* password, const char* _host);
@@ -49,6 +51,9 @@ class Server{
 	socklen_t  get_addr_len() const;
 	// SETERS
 	
+
+	// REGULAR FUNCTION
+	void adduser(int id, string nickname);
 };
 
 void ft_error(string prob);

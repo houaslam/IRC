@@ -6,6 +6,7 @@ EXTRA_CFLAGS = -std=c++98
 
 SRC = srcs/main.cpp \
 	  srcs/external_func.cpp \
+	  srcs/client.cpp \
 	  srcs/Server.cpp
 
 OBJ = ${SRC:.cpp=.o} ${CNF:.cpp=.o}

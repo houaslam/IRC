@@ -1,8 +1,8 @@
 // # pragma once
 
-#include "irc.hpp"
+#include "server.hpp"
 #include "client.hpp"
-
+using namespace std;
 
 class channel{
 	private:

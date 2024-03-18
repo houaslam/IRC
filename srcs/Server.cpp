@@ -1,4 +1,4 @@
-#include "../includes/irc.hpp"
+#include "../includes/server.hpp"
 
 
 Server::Server(int port, const char* password, const char* host) : port(port), password(password), _host(host){
@@ -29,7 +29,7 @@ Server::Server(int port, const char* password, const char* host) : port(port), p
 	if (listen(_socket, 5) < 0)
 		ft_error("LISTEN : !");
 
-	std::cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
+	cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
 }
 
 
@@ -64,3 +64,9 @@ struct sockaddr_in&  Server::get_addr(){
 socklen_t  Server::get_addr_len() const{
     return sizeof(this->s_addr);
 }
+
+// void Server::adduser(int id, string nickname){
+// 	client user(nickname, id);
+// 	clients[id] = user;
+// }
+

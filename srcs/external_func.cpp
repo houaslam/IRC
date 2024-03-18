@@ -1,4 +1,4 @@
-#include "../includes/irc.hpp"
+#include "../includes/server.hpp"
 
 void ft_error(string prob){
     string res = RED + prob + RESET;
