@@ -17,6 +17,7 @@
 #include <string>
 #include <cctype>
 #include <poll.h>
+#include "client.hpp"
 #include "parse.hpp"
 
 #define RESET   "\033[0m"
@@ -37,6 +38,7 @@ class Server{
 		const char* password;
 		const char* _host;
 		struct sockaddr_in s_addr;
+		map<int, class Client>  clients;
 	public:
 	// CANONICAL FORM
 		Server(int port, const char* password, const char* _host);
@@ -51,7 +53,14 @@ class Server{
 	socklen_t  get_addr_len() const;
 	// SETERS
 	
+
+	// REGULAR FUNCTION
+	void adduser(Client& user);
+	void aff_allusers();
 };
 // OUTILS
 void ft_error(string prob);
 std::vector<std::string> split(std::string src, std::string s);
+string strtrim(const string& str);
+void add_fd(struct pollfd fds[], int* fd_count, int fd);
+void del_fd(struct pollfd fds[], int* fd_count, int p);

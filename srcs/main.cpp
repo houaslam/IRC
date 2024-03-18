@@ -1,18 +1,5 @@
+#include "../includes/server.hpp"
 #include "../includes/client.hpp"
-#include "../includes/irc.hpp"
-
-void del_fd(struct pollfd fds[], int* fd_count, int p){
-	close(fds[p].fd);
-	fds[p].fd = fds[*fd_count - 1].fd;
-	(*fd_count)--;
-}
-
-void add_fd(struct pollfd fds[], int* fd_count, int fd){
-	fds[(*fd_count)].fd = fd;
-	fds[(*fd_count)].events = POLLIN;
-	std::cout << BLUE << "NEW CONNECTION\n" << RESET;
-	(*fd_count)++;
-}
 
 int main(int ac , char ** av){
 
@@ -20,13 +7,12 @@ int main(int ac , char ** av){
 
 		Server server(8500, av[2], av[1]);
 		char reqs[1024];
-		int clt;
 		struct pollfd fds[1024];
 		fds[0].fd = server.get_socket();
 		fds[0].events = POLLIN;
-		socklen_t add_size = sizeof(server.get_addr_len());
+		
 		int nb_fds = 1;
-		client client;
+        Client user_;
 
 		while(true){
 
@@ -35,31 +21,26 @@ int main(int ac , char ** av){
 				for (int i = 0; i < nb_fds; i++){
 
 					if (fds[i].revents == POLLIN){
+                        
 						if (fds[i].fd == server.get_socket()){
-							clt = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
-							if (clt <= 0)
-								ft_error("CLIENT : ");
-							add_fd(fds, &nb_fds, clt);
+                            Client  user_("test", server);
+							add_fd(fds, &nb_fds, user_.get_fd());
+                            server.adduser(user_);
+							std::cout << "ALL USERS : " << std::endl;
+							server.aff_allusers();
 						}
 
 						else{
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
-							cout << "BYTES = " << k << endl;
 							if (k > 0){
 								reqs[k] = '\0';
-								std::cout << "client = " << reqs;
-								// parse(client, reqs);
+							    parse(user_, reqs);
 							}
 
 							else{
-								ft_error("LOL : ");
 								del_fd(fds, &nb_fds, i);
-
-								if (k == 0){
+								if (k == 0)
 									std::cout << BLUE << "BYE BYE\n" << RESET;
-									// continue;
-								}
-
 								else
 									ft_error("DONE : ");
 							}
@@ -69,5 +50,4 @@ int main(int ac , char ** av){
 			}
 		}
 	}
-	
 }

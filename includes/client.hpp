@@ -1,20 +1,22 @@
 # pragma once
 
-#include "irc.hpp"
-
+#include "server.hpp"
 using namespace std;
 
-class client{
+class Server;
+
+class Client{
     private:
-        int id;
+        int fd;
         string nickname;
     public:
-        client();
-        client(string nickname, int id);
-        client(client& src);
-        client& operator=(client& client_);
-        ~client();
+        Client();
+        Client(string nickname, Server server);
+        Client(Client& src);
+        Client& operator=(Client& client_);
+        ~Client();
         
         // GETTERS
         string& getNickName(void);
+        int get_fd();
 };

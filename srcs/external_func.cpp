@@ -1,4 +1,4 @@
-#include "../includes/irc.hpp"
+#include "../includes/server.hpp"
 
 void ft_error(string prob){
     string res = RED + prob + RESET;
@@ -30,4 +30,32 @@ vector<string> split(string src, string s) {
     }
 
     return ret;
+}
+
+
+string strtrim(const string& str) {
+    size_t start = 0;
+    while (start < str.length() && isspace(str[start])) {
+        start++;
+    }
+
+    size_t end = str.length();
+    while (end > start && isspace(str[end - 1])) {
+        end--;
+    }
+
+    return str.substr(start, end - start);
+}
+
+void del_fd(struct pollfd fds[], int* fd_count, int p){
+	close(fds[p].fd);
+	fds[p].fd = fds[*fd_count - 1].fd;
+	(*fd_count)--;
+}
+
+void add_fd(struct pollfd fds[], int* fd_count, int fd){
+	fds[(*fd_count)].fd = fd;
+	fds[(*fd_count)].events = POLLIN;
+	std::cout << BLUE << "NEW CONNECTION\n" << RESET;
+	(*fd_count)++;
 }
