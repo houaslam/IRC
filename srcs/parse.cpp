@@ -15,6 +15,7 @@ string &withoutNewLine(string &line){
 void parse(Client client, string reqs){
     
     reqs = withoutNewLine(reqs);
+    // int fd =client.get_fd();
 
     vector<string> line;
     line = split(reqs, " ");
@@ -26,7 +27,6 @@ void parse(Client client, string reqs){
     else
         while (i < 4 && commands[i].compare(line[0]))
             i++;
-    cout << client.getNickName();
     switch (i)
     {
         case 0:
@@ -46,6 +46,7 @@ void parse(Client client, string reqs){
         //     ();
             // break;
         default:
+            // dprint(client.get_fd(), client.getNickName() +":@localhost 421\t"   + " :Unknown command\n");
             cout << client.getNickName() <<":@localhost 421\t"   << " :Unknown command\n";
             break;
     }

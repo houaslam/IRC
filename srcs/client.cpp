@@ -1,7 +1,7 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-Client::Client(): nickname(""){}
+Client::Client():fd(1), nickname(""){}
 
 Client::Client(string nickname,  Server server):nickname(nickname){
     socklen_t add_size = sizeof(server.get_addr_len());

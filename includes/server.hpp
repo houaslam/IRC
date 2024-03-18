@@ -39,6 +39,7 @@ class Server{
 		const char* _host;
 		struct sockaddr_in s_addr;
 		map<int, class Client>  clients;
+		map<int, class Client>  channels;
 	public:
 	// CANONICAL FORM
 		Server(int port, const char* password, const char* _host);
@@ -64,3 +65,4 @@ std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
+void dprint(int fd, string str);

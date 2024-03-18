@@ -59,3 +59,7 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 	std::cout << BLUE << "NEW CONNECTION\n" << RESET;
 	(*fd_count)++;
 }
+
+void dprint(int fd, string str){
+    write(fd, &str, sizeof(str));
+}
