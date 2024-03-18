@@ -7,8 +7,8 @@ class Server;
 
 class Client{
     private:
-        int fd;
         string nickname;
+        int fd;
     public:
         Client();
         Client(string nickname, int fd);

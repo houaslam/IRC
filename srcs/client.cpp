@@ -2,9 +2,9 @@
 #include "../includes/server.hpp"
 
 
-Client::Client():fd(1), nickname(""){}
+Client::Client(): nickname(""), fd(1){}
 
-Client::Client(string nickname,  int fd):fd(fd) , nickname(nickname){
+Client::Client(string nickname,  int fd):nickname(nickname), fd(fd) {
     cout << "CLIENT WAS CREATED\n";
 }
 

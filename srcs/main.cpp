@@ -10,10 +10,10 @@ int main(int ac , char ** av){
 		struct pollfd fds[1024];
 		fds[0].fd = server.get_socket();
 		fds[0].events = POLLIN;
+    	socklen_t add_size = sizeof(server.get_addr_len());
 		
 		int nb_fds = 1;
         Client save;
-		socklen_t add_size = sizeof(server.get_addr_len());
 
 		while(true){
 
@@ -30,9 +30,6 @@ int main(int ac , char ** av){
                             Client  user_("test", fd);
 							save = user_;
 							add_fd(fds, &nb_fds, user_.get_fd());
-                            // server.adduser(user_);
-							std::cout << "ALL USERS : " << std::endl;
-							// server.aff_allusers();
 						}
 
 						else{
