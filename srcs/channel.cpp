@@ -20,7 +20,7 @@ channel& channel::operator=(channel& src){
     return *this;
 }
 
-void    channel::add_user(class client client_){
+void    channel::add_user(client client_){
     clients.push_back(client_);
     cout << "WELCOME TO " << this->name << " CHANNEL\n";
 }

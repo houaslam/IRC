@@ -11,7 +11,7 @@ class Client{
         string nickname;
     public:
         Client();
-        Client(string nickname, Server server);
+        Client(string nickname, int fd);
         Client(Client& src);
         Client& operator=(Client& client_);
         ~Client();

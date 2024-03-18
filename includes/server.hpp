@@ -1,4 +1,5 @@
 # pragma once
+
 #include <sstream>
 #include <cstring>
 #include <fstream>
@@ -17,6 +18,7 @@
 #include <string>
 #include <cctype>
 #include <poll.h>
+#include <vector>
 #include "client.hpp"
 #include "parse.hpp"
 
@@ -38,12 +40,14 @@ class Server{
 		const char* password;
 		const char* _host;
 		struct sockaddr_in s_addr;
-		map<int, class Client>  clients;
+		// vector<class Client>  clients;
+		// map<int, class Client>  channels;
 	public:
 	// CANONICAL FORM
 		Server(int port, const char* password, const char* _host);
 		Server(Server& src);
 		Server& operator=(Server& server);
+		~Server();
 
 	// GETERS
 	int get_port() const;
@@ -55,7 +59,7 @@ class Server{
 	
 
 	// REGULAR FUNCTION
-	void adduser(Client& user);
+	// void setUser(Client &obj);
 	void aff_allusers();
 };
 // OUTILS
@@ -64,3 +68,4 @@ std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
+void dprint(int fd, string str);

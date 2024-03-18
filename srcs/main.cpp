@@ -12,7 +12,8 @@ int main(int ac , char ** av){
 		fds[0].events = POLLIN;
 		
 		int nb_fds = 1;
-        Client user_;
+        Client save;
+		socklen_t add_size = sizeof(server.get_addr_len());
 
 		while(true){
 
@@ -23,18 +24,22 @@ int main(int ac , char ** av){
 					if (fds[i].revents == POLLIN){
                         
 						if (fds[i].fd == server.get_socket()){
-                            Client  user_("test", server);
+    						int fd = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
+							if (fd <= 0)
+								ft_error("CLIENT : ");
+                            Client  user_("test", fd);
+							save = user_;
 							add_fd(fds, &nb_fds, user_.get_fd());
-                            server.adduser(user_);
+                            // server.adduser(user_);
 							std::cout << "ALL USERS : " << std::endl;
-							server.aff_allusers();
+							// server.aff_allusers();
 						}
 
 						else{
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							if (k > 0){
 								reqs[k] = '\0';
-							    parse(user_, reqs);
+							    parse(save, reqs);
 							}
 
 							else{

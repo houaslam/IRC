@@ -16,7 +16,7 @@ vector<string> split(string src, string s) {
     while (i < len) {
         size_t found = src.find(s, i);
         if (found > len) {
-            str = src.substr(i); 
+            str = src.substr(i);
             i = len;
         }
         else {
@@ -59,4 +59,23 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 	std::cout << BLUE << "NEW CONNECTION\n" << RESET;
 	(*fd_count)++;
 }
-  
+
+void dprint(int fd, string str){
+    write(fd, &str, sizeof(str));
+}
+
+void user(vector<string> line){
+    (void)line;
+}
+
+void nick(string &nickname,string line, size_t size){
+    if (size == 1)
+        cout << ":"+ nickname +"@localhost 431\t"+ nickname +" :Nickname not given\n";
+    else
+    {
+        line = line.substr(4);
+        line = strtrim(line);
+        nickname = line;
+
+    }
+}
