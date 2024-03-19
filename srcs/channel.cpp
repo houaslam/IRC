@@ -4,7 +4,7 @@ channel::channel(string name): name(name){
     cout << "NEW CHANNEL UNDER " << name << " NAME WAS CREATED\n";
 }
 
-channel::channel(channel& src){
+channel::channel(const channel& src){
     *this = src;
 }
 
@@ -12,7 +12,7 @@ channel::~channel(){
     cout << name << " CHANNEL HAS BEEN DELETED\n";
 }
 
-channel& channel::operator=(channel& src){
+channel& channel::operator=(const channel& src){
     if (this != &src){
         this->name = src.name;
         this->clients = src.clients;
@@ -20,7 +20,7 @@ channel& channel::operator=(channel& src){
     return *this;
 }
 
-void    channel::add_user(client client_){
+void    channel::add_user(client &client_){
     clients.push_back(client_);
     cout << "WELCOME TO " << this->name << " CHANNEL\n";
 }

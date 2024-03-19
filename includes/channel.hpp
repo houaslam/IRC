@@ -13,10 +13,10 @@ class channel{
 	public:
 	// CANONICAL FORM
 		channel(string name);
-		channel(channel& src);
+		channel(const channel& src);
 		~channel();
-		channel& operator=(channel& src);
+		channel& operator=(const channel& src);
 	// REGULAR FUNCTIONS
-		void    add_user(class client client_);
+		void    add_user(class client &client_);
 
 };

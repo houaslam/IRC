@@ -1,5 +1,5 @@
 
-#include "../includes/parse.hpp"
+#include "../includes/server.hpp"
 
 string &withoutNewLine(string &line){
 
@@ -12,31 +12,28 @@ string &withoutNewLine(string &line){
     return line;
 }
 
-void parse(Client client, string reqs){
-    
+bool parse(class Server &server,int i, string reqs){
+    server.getCLients()[i].setId(i);
+    int fd = server.getCLients()[i].get_fd();
     reqs = withoutNewLine(reqs);
-    // int fd =client.get_fd();
 
     vector<string> line;
     line = split(reqs, " ");
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND"};
-    int i = 0;
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT"};
+    int n = 0;
     if (line.empty())
-        i = 5;
+        n = 6;
     else
-        while (i < 4 && commands[i].compare(line[0]))
-            i++;
-    switch (i)
+        while (n < 5 && commands[n].compare(line[0]))
+            n++;
+    switch (n)
     {
         case 0:
             user(line);
-        //    fall through
            break;
         case 1:
-            nick(client.getNickName(), reqs, line.size());
-            cout << client.getNickName() << endl;
-            // fall through
+            nick(server.getCLients()[i].getNickName(), reqs, fd);
             break;
         // case 2:
         //     join();
@@ -45,15 +42,15 @@ void parse(Client client, string reqs){
         // case 3:
         //     ();
             // break;
+        case 4:
+            return false;
+            // break;
         default:
-            // dprint(client.get_fd(), client.getNickName() +":@localhost 421\t"   + " :Unknown command\n");
-            
-            cout << client.getNickName() <<":@localhost 421\t"   << " :Unknown command\n";
-            // char res[1024];
-            send(client.get_fd(), "test", 4, 0);
-            // send(client.get_fd(), client.getNickName()+":@localhost 421\t:Unknown command\n", client.getNickName().size() + 34, 0);
-            cout << "client fd = " << client.get_fd() << endl;
+            // dprint(server.getCLients().get_fd(), server.getCLients().getNickName() +":@localhost 421\t"   + " :Unknown command\n");
+            dprint(fd, "Ambiguous command\n");
+            // dprint(server.getCLients()[i].get_fd(), "Ambiguous command\n");
             break;
     }
 
+    return true;
 }

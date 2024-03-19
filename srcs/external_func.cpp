@@ -68,14 +68,16 @@ void user(vector<string> line){
     (void)line;
 }
 
-void nick(string &nickname,string line, size_t size){
-    if (size == 1)
-        cout << ":"+ nickname +"@localhost 431\t"+ nickname +" :Nickname not given\n";
+void nick(string &nickname,string line, int fd){
+    line = line.substr(4);
+    line = strtrim(line);
+    if (line.empty() && nickname == "\v")
+        dprint(fd, "No nickname is given\n");
+        // dprint(fd, "No nickname is given\n");
+        // cout << ":"+ nickname +"@localhost 431\t"+ nickname +" :Nickname not given\n";
     else
     {
-        line = line.substr(4);
-        line = strtrim(line);
         nickname = line;
-
+        dprint(fd, "Your nickname is "+ nickname + "\n");
     }
 }

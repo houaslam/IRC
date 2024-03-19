@@ -13,7 +13,7 @@ int main(int ac , char ** av){
     	socklen_t add_size = sizeof(server.get_addr_len());
 		
 		int nb_fds = 1;
-        Client save;
+        Client user_;
 
 		while(true){
 
@@ -27,16 +27,20 @@ int main(int ac , char ** av){
     						int fd = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
 							if (fd <= 0)
 								ft_error("CLIENT : ");
-                            Client  user_("test", fd);
-							save = user_;
+                            Client  user_(fd);
+
+							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
 						}
 
-						else{
+						else {
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							if (k > 0){
 								reqs[k] = '\0';
-							    parse(save, reqs);
+								server.getCLients()[i - 1].setFd(k);
+
+							    // if (parse(server, i - 1, reqs) == false)
+								// 	cout << "exit\n";
 							}
 
 							else{
@@ -46,6 +50,7 @@ int main(int ac , char ** av){
 								else
 									ft_error("DONE : ");
 							}
+						std::cout << "client number[" << i << "]\n"; 
 						}
 					}
 				}

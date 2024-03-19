@@ -20,7 +20,7 @@
 #include <poll.h>
 #include <vector>
 #include "client.hpp"
-#include "parse.hpp"
+#include "channel.hpp"
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      
@@ -40,13 +40,13 @@ class Server{
 		const char* password;
 		const char* _host;
 		struct sockaddr_in s_addr;
-		// vector<class Client>  clients;
-		// map<int, class Client>  channels;
+		vector<class Client>  clients;
+		map<int, class Client>  channels;
 	public:
 	// CANONICAL FORM
 		Server(int port, const char* password, const char* _host);
-		Server(Server& src);
-		Server& operator=(Server& server);
+		Server(const Server& src);
+		Server& operator=(const Server& server);
 		~Server();
 
 	// GETERS
@@ -55,14 +55,19 @@ class Server{
 	string  get_password() const;
 	struct sockaddr_in&  get_addr();
 	socklen_t  get_addr_len() const;
+	vector<Client> &getCLients();
+	map<int, class Client> &getChannels();
+
 	// SETERS
+	void setUser(Client &obj);
 	
 
 	// REGULAR FUNCTION
-	// void setUser(Client &obj);
 	void aff_allusers();
 };
-// OUTILS
+	bool parse(class Server &server,int i, string line);
+
+// OTHERS
 void ft_error(string prob);
 std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);

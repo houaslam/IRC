@@ -2,17 +2,17 @@
 #include "../includes/server.hpp"
 
 
-Client::Client(): nickname(""), fd(1){}
+Client::Client(): nickname("\v"), fd(1), id(0){}
 
-Client::Client(string nickname,  int fd):nickname(nickname), fd(fd) {
+Client::Client(int fd):nickname("\v"), fd(fd), id(0) {
     cout << "CLIENT WAS CREATED\n";
 }
 
-Client::Client(Client& src){
+Client::Client(const Client& src){
     *this = src;
 }
 
-Client& Client::operator=(Client& Client_){
+Client& Client::operator=(const Client& Client_){
     if (this != &Client_){
         this->fd = Client_.fd;
         this->nickname = Client_.nickname;
@@ -30,4 +30,16 @@ string& Client::getNickName(void){
 
 int Client::get_fd(){
     return this->fd;
+}
+
+int Client::getId(){
+    return this->id;
+}
+
+void Client::setFd(int fd){
+	this->fd = fd;
+}
+
+void Client::setId(int id){
+	this->id = id;
 }

@@ -34,18 +34,18 @@ Server::Server(int port, const char* password, const char* host) : port(port), p
 
 Server::~Server(){}
 
-Server::Server(Server& src){
+Server::Server(const Server& src){
 	*this = src;
 }
 
 
-Server& Server::operator=(Server& server){
+Server& Server::operator=(const Server& server){
 	if (this != &server){
 		this->port = server.port;
 		this->_socket = server._socket;
 		this->password = server.password;
 		this->s_addr = server.s_addr;
-		// this->clients = server.clients;
+		this->clients = server.clients;
 	}
 	return *this;
 }
@@ -63,18 +63,18 @@ string  Server::get_password() const{
 struct sockaddr_in&  Server::get_addr(){
 	return s_addr;
 }
+
+vector<Client>&  Server::getCLients(){
+	return this->clients;
+}
+
 socklen_t  Server::get_addr_len() const{
     return sizeof(this->s_addr);
 }
 
-// void Server::adduser(Client user){
-// 	this->clients.push_back(user);
-// }
-
-// void Server::setUser(Client &obj){
-// 	this->clients.push_back(obj);
-// }
-
+void Server::setUser(Client &obj){
+	this->clients.push_back(obj);
+}
 // void Server::aff_allusers(){
 // 	vector<Client>::iterator it = this->clients.begin();
 // 	for (; it != clients.end(); it++)
