@@ -39,8 +39,8 @@ int main(int ac , char ** av){
 								reqs[k] = '\0';
 								server.getCLients()[i - 1].setFd(k);
 
-							    // if (parse(server, i - 1, reqs) == false)
-								// 	cout << "exit\n";
+							    if (parse(server, i - 1, reqs) == false)
+									cout << "exit\n";
 							}
 
 							else{

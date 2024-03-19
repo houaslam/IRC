@@ -13,8 +13,8 @@ string &withoutNewLine(string &line){
 }
 
 bool parse(class Server &server,int i, string reqs){
-    server.getCLients()[i].setId(i);
-    int fd = server.getCLients()[i].get_fd();
+    // server.getCLients()[i].setId(i);
+    // int fd = server.getCLients()[i].get_fd();
     reqs = withoutNewLine(reqs);
 
     vector<string> line;
@@ -33,7 +33,7 @@ bool parse(class Server &server,int i, string reqs){
             user(line);
            break;
         case 1:
-            nick(server.getCLients()[i].getNickName(), reqs, fd);
+            nick(server.getCLients()[i].getNickName(), reqs, 1);
             break;
         // case 2:
         //     join();
@@ -47,7 +47,7 @@ bool parse(class Server &server,int i, string reqs){
             // break;
         default:
             // dprint(server.getCLients().get_fd(), server.getCLients().getNickName() +":@localhost 421\t"   + " :Unknown command\n");
-            dprint(fd, "Ambiguous command\n");
+            dprint(1, "Ambiguous command\n");
             // dprint(server.getCLients()[i].get_fd(), "Ambiguous command\n");
             break;
     }
