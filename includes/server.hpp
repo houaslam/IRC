@@ -38,13 +38,12 @@ class Server{
 		int port;
 		int _socket;
 		const char* password;
-		const char* _host;
 		struct sockaddr_in s_addr;
 		vector<class Client>  clients;
 		map<int, class Client>  channels;
 	public:
 	// CANONICAL FORM
-		Server(int port, const char* password, const char* _host);
+		Server(int port, const char* password);
 		Server(const Server& src);
 		Server& operator=(const Server& server);
 		~Server();

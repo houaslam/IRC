@@ -1,10 +1,10 @@
 #include "../includes/server.hpp"
 
 
-Server::Server(int port, const char* password, const char* host) : port(port), password(password), _host(host){
+Server::Server(int port, const char* password) : port(port), password(password){
 	struct in_addr *addr = NULL;
 	struct hostent* test = NULL;
-	test = gethostbyname(_host);
+	test = gethostbyname("localhost");
 	int reuse = 1;
 
 	if (test != NULL)
@@ -41,7 +41,6 @@ Server::Server(const Server& src){
 
 Server& Server::operator=(const Server& server){
 	if (this != &server){
-		this->port = server.port;
 		this->_socket = server._socket;
 		this->password = server.password;
 		this->s_addr = server.s_addr;
@@ -75,6 +74,7 @@ socklen_t  Server::get_addr_len() const{
 void Server::setUser(Client &obj){
 	this->clients.push_back(obj);
 }
+
 // void Server::aff_allusers(){
 // 	vector<Client>::iterator it = this->clients.begin();
 // 	for (; it != clients.end(); it++)
