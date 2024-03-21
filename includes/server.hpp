@@ -39,7 +39,7 @@ class Server{
 		int _socket;
 		const char* password;
 		struct sockaddr_in s_addr;
-		vector<class Client>  clients;
+		map<int , class Client>  clients;
 		map<int, class Client>  channels;
 	public:
 	// CANONICAL FORM
@@ -54,7 +54,7 @@ class Server{
 	string  get_password() const;
 	struct sockaddr_in&  get_addr();
 	socklen_t  get_addr_len() const;
-	vector<Client> &getCLients();
+	map<int, Client> &getCLients();
 	map<int, class Client> &getChannels();
 
 	// SETERS
@@ -64,12 +64,19 @@ class Server{
 	// REGULAR FUNCTION
 	void aff_allusers();
 };
-	bool parse(class Server &server,int i, string line);
 
 // OTHERS
+bool parse(class Server &server,int i, string line);
 void ft_error(string prob);
 std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
-void dprint(int fd, string str);
+void sendMsg(int fd, string str);
+bool check_users(Server& server,string line);
+
+// if (hajar == zwina)
+// 	return taha + hajar = love;
+// if (hajar == khyba)
+// 	return (taha + hajar = love);
+// 	bghit ngheyerha

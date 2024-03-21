@@ -60,24 +60,9 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 	(*fd_count)++;
 }
 
-void dprint(int fd, string str){
-    write(fd, &str, sizeof(str));
+void sendMsg(int fd, string str){
+    // write(fd, &str, sizeof(str));
+    // char req[1024];
+    send(fd, str.c_str(), str.length(), 0);
 }
 
-void user(vector<string> line){
-    (void)line;
-}
-
-void nick(string &nickname,string line, int fd){
-    line = line.substr(4);
-    line = strtrim(line);
-    if (line.empty() && nickname == "\v")
-        dprint(fd, "No nickname is given\n");
-        // dprint(fd, "No nickname is given\n");
-        // cout << ":"+ nickname +"@localhost 431\t"+ nickname +" :Nickname not given\n";
-    else
-    {
-        nickname = line;
-        dprint(fd, "Your nickname is "+ nickname + "\n");
-    }
-}

@@ -20,6 +20,7 @@ class Client{
         //SETTERS
         void setId(int id);
         void setFd(int fd);
+        void setNickName(string nick);
 
         // GETTERS
         string& getNickName(void);
@@ -29,5 +30,5 @@ class Client{
 
 
 void user(vector<string> line);
-void nick(string &nickname,string line, int fd);
+void nick(Server& server ,string line, int fd);
 string &withoutNewLine(string &line);

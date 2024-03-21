@@ -12,10 +12,13 @@ string &withoutNewLine(string &line){
     return line;
 }
 
-bool parse(class Server &server,int i, string reqs){
-    // server.getCLients()[i].setId(i);
-    // int fd = server.getCLients()[i].get_fd();
+// nick : check nick with others DONE
+// nick : empty nick | return prev nickname DONE
+// user : check the 4 arg 
+// irssi connection
+bool parse(class Server &server,int fd, string reqs){
     reqs = withoutNewLine(reqs);
+    server.get_addr();
 
     vector<string> line;
     line = split(reqs, " ");
@@ -33,22 +36,12 @@ bool parse(class Server &server,int i, string reqs){
             user(line);
            break;
         case 1:
-            nick(server.getCLients()[i].getNickName(), reqs, 1);
+            nick(server, reqs, fd);
             break;
-        // case 2:
-        //     join();
-            // fall through
-            // break;
-        // case 3:
-        //     ();
-            // break;
         case 4:
             return false;
-            // break;
         default:
-            // dprint(server.getCLients().get_fd(), server.getCLients().getNickName() +":@localhost 421\t"   + " :Unknown command\n");
-            dprint(1, "Ambiguous command\n");
-            // dprint(server.getCLients()[i].get_fd(), "Ambiguous command\n");
+            send(fd, "Ambiguous command\n", 19, 1);
             break;
     }
 

@@ -32,12 +32,13 @@ Server::Server(int port, const char* password) : port(port), password(password){
 	cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
 }
 
-Server::~Server(){}
+Server::~Server(){
+
+}
 
 Server::Server(const Server& src){
 	*this = src;
 }
-
 
 Server& Server::operator=(const Server& server){
 	if (this != &server){
@@ -49,21 +50,23 @@ Server& Server::operator=(const Server& server){
 	return *this;
 }
 
-
 int Server::get_port() const{
 	return this->port;
 }
+
 int Server::get_socket() const{
 	return this->_socket;
 }
+
 string  Server::get_password() const{
 	return this->password;
 }
+
 struct sockaddr_in&  Server::get_addr(){
 	return s_addr;
 }
 
-vector<Client>&  Server::getCLients(){
+map<int, Client>&  Server::getCLients(){
 	return this->clients;
 }
 
@@ -72,15 +75,7 @@ socklen_t  Server::get_addr_len() const{
 }
 
 void Server::setUser(Client &obj){
-	this->clients.push_back(obj);
+	// this->clients.push_back(obj);
+	this->clients[obj.get_fd()] = obj;
 }
 
-// void Server::aff_allusers(){
-// 	vector<Client>::iterator it = this->clients.begin();
-// 	for (; it != clients.end(); it++)
-// 	{
-// 		// std::cout <<"[" <<  it->first << "]" << std::endl;
-// 		// std::cout <<"[" <<  it->second << "]" << std::endl;
-// 	}
-	
-// }
