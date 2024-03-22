@@ -11,7 +11,7 @@ bool check_users(Server& server,string line){
     return false;
 }
 
-bool checkChannels(Server& server,string line){
+bool isChannelExist(Server& server,string &line){
     for (vector<channel>::iterator i = server.getChannels().begin(); i < server.getChannels().end(); i++){
         if (i->getChannelName() == line){
             return false;
@@ -60,7 +60,7 @@ void join(Server& server, string line, int fd){ // [X]
         server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters\n");
     }
     else{
-        // if (isChannelExist(&line))
+        if (isChannelExist(server, &line))
     }
         // send(fd, "Your nickname is fadermou\n", 26, 0);
     // if (server.getUser)
