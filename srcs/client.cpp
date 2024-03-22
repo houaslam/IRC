@@ -33,7 +33,8 @@ void nick(Server& server, string line, int fd){ //done
     line = line.substr(4);
     line = strtrim(line);
     if (line.empty()){
-        if(server.getCLients()[fd].getNickName().compare("\v"))
+        // if (server.getCLients()[fd].getNickName().compare(""))
+        if (!server.getCLients()[fd].getNickName().empty())
             send(fd, "NICKNAME ALREADY SET\n", 22, 0);
         else
             send(fd, "No nickname is given\n", 21, 0);
@@ -60,7 +61,8 @@ void join(Server& server, string line, int fd){ // [X]
         server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters\n");
     }
     else{
-        if (isChannelExist(server, &line))
+        if (isChannelExist(server, line))
+            cout << "channel " << line << " exist\n";
     }
         // send(fd, "Your nickname is fadermou\n", 26, 0);
     // if (server.getUser)
@@ -68,11 +70,11 @@ void join(Server& server, string line, int fd){ // [X]
         
 }
 
-Client::Client(): nickname("\v"), fd(1), id(0), inChannel(false){
+Client::Client(): nickname(""), user(""), fd(1), id(0), inChannel(false){
 
 }
 
-Client::Client(int fd):nickname("\v"), fd(fd), id(0), inChannel(false){
+Client::Client(int fd):nickname(""), user(""), fd(fd), id(0), inChannel(false){
     // cout << "CLIENT WAS CREATED\n";
 }
 
@@ -94,6 +96,10 @@ Client::~Client(){
 
 string& Client::getNickName(void){
     return this->nickname;
+}
+
+string& Client::getUser(void){
+    return this->user;
 }
 
 bool Client::getInChannel(){

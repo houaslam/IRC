@@ -10,7 +10,7 @@ SRC = srcs/main.cpp \
 	  srcs/client.cpp \
 	  srcs/parse.cpp \
 	  srcs/channel.cpp \
-	#   srcs/user.cpp \
+	  srcs/errors.cpp \
 
 
 OBJ = ${SRC:.cpp=.o} ${CNF:.cpp=.o}

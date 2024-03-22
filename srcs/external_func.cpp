@@ -61,7 +61,7 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 }
 
 void sendMsg(int fd, string str){
-    send(fd, str.c_str(), str.length(), 0);
+    send(fd, str.c_str(), str.length() + 1, 0);
 }
 
 unsigned long	get_time(void)

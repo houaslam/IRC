@@ -21,8 +21,10 @@
 #include <vector>
 #include "client.hpp"
 #include "channel.hpp"
+#include "errors.hpp"
 #include <sys/time.h>
 
+       /* COLORS */
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      
 #define GREEN   "\033[32m"    

@@ -8,6 +8,7 @@ class Server;
 class Client{
     private:
         string nickname;
+        string user;
         int fd;
         int id;
         bool inChannel;
@@ -26,6 +27,7 @@ class Client{
 
         // GETTERS
         string& getNickName(void);
+        string& getUser(void);
         bool getInChannel(void);
         int get_fd();
         int getId();
