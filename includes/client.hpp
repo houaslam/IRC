@@ -10,6 +10,7 @@ class Client{
         string nickname;
         int fd;
         int id;
+        bool inChannel;
     public:
         Client();
         Client(int fd);
@@ -21,14 +22,17 @@ class Client{
         void setId(int id);
         void setFd(int fd);
         void setNickName(string nick);
+        void setInChannel(bool inChannel);
 
         // GETTERS
         string& getNickName(void);
+        bool getInChannel(void);
         int get_fd();
         int getId();
 };
 
 
-void user(vector<string> line);
+void user(Server& server, string line, int fd);
 void nick(Server& server ,string line, int fd);
 string &withoutNewLine(string &line);
+void join(Server& server, string line, int fd);

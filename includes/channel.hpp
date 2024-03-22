@@ -1,4 +1,4 @@
-// # pragma once
+# pragma once
 
 #include "server.hpp"
 #include "client.hpp"
@@ -6,17 +6,20 @@ using namespace std;
 
 class channel{
 	private:
-		vector<class client> clients;
+		vector<class Client> clients;
 		string name;
-		int mode;
+		map<char, int> modes;
 		string topic;
 	public:
 	// CANONICAL FORM
-		channel(string name);
+		channel(string &name);
 		channel(const channel& src);
-		~channel();
 		channel& operator=(const channel& src);
+		~channel();
 	// REGULAR FUNCTIONS
-		void    add_user(class client &client_);
+		void    addUser(class Client &client_);
+
+		//getters
+		string &getChannelName();
 
 };

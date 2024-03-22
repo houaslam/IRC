@@ -1,7 +1,13 @@
 #include "../includes/channel.hpp"
 
-channel::channel(string name): name(name){
-    cout << "NEW CHANNEL UNDER " << name << " NAME WAS CREATED\n";
+channel::channel(string &name): name(name){
+ //itkol
+	modes['i'] = 0;
+	modes['t'] = 0;
+	modes['k'] = 0;
+	modes['o'] = 0;
+	modes['l'] = 0;
+	cout << "NEW CHANNEL UNDER " << name << " NAME WAS CREATED\n";
 }
 
 channel::channel(const channel& src){
@@ -20,7 +26,11 @@ channel& channel::operator=(const channel& src){
     return *this;
 }
 
-void    channel::add_user(client &client_){
+void    channel::addUser(Client &client_){
     clients.push_back(client_);
     cout << "WELCOME TO " << this->name << " CHANNEL\n";
+}
+
+string &channel::getChannelName(){
+    return this->name;
 }

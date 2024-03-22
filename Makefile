@@ -9,6 +9,7 @@ SRC = srcs/main.cpp \
 	  srcs/Server.cpp \
 	  srcs/client.cpp \
 	  srcs/parse.cpp \
+	  srcs/channel.cpp \
 	#   srcs/user.cpp \
 
 

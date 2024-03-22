@@ -21,6 +21,7 @@
 #include <vector>
 #include "client.hpp"
 #include "channel.hpp"
+#include <sys/time.h>
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      
@@ -40,7 +41,9 @@ class Server{
 		const char* password;
 		struct sockaddr_in s_addr;
 		map<int , class Client>  clients;
-		map<int, class Client>  channels;
+		vector<class channel>  channels;
+		string serverName;
+
 	public:
 	// CANONICAL FORM
 		Server(int port, const char* password);
@@ -49,13 +52,15 @@ class Server{
 		~Server();
 
 	// GETERS
+	string getServerName() const;
 	int get_port() const;
 	int get_socket() const;
 	string  get_password() const;
 	struct sockaddr_in&  get_addr();
 	socklen_t  get_addr_len() const;
 	map<int, Client> &getCLients();
-	map<int, class Client> &getChannels();
+	vector<class channel> &getChannels();
+
 
 	// SETERS
 	void setUser(Client &obj);
@@ -63,6 +68,8 @@ class Server{
 
 	// REGULAR FUNCTION
 	void aff_allusers();
+	channel &createChannel();
+
 };
 
 // OTHERS

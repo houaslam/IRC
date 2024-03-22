@@ -33,16 +33,23 @@ bool parse(class Server &server,int fd, string reqs){
     switch (n)
     {
         case 0:
-            user(line);
+            user(server, reqs, fd);
            break;
         case 1:
             nick(server, reqs, fd);
             break;
+        case 2:
+            join(server, reqs, fd);
+            break;
         case 4:
             return false;
-        default:
-            send(fd, "Ambiguous command\n", 19, 1);
+        default:{
+
+            string str;
+            str = server.getCLients()[fd].getNickName() + ":@localhost 421  "+ reqs +" :Unknown command\n";
+            send(fd, &str, sizeof(str), 0);    
             break;
+        }
     }
 
     return true;

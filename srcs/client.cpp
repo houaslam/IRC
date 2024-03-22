@@ -11,11 +11,25 @@ bool check_users(Server& server,string line){
     return false;
 }
 
-void user(vector<string> line){
-    (void)line;
+bool checkChannels(Server& server,string line){
+    for (vector<channel>::iterator i = server.getChannels().begin(); i < server.getChannels().end(); i++){
+        if (i->getChannelName() == line){
+            return false;
+        }
+    }
+    return true;
+}
+void user(Server& server, string line, int fd){
+    line = line.substr(4);
+    line = strtrim(line);
+    if (line.empty()){
+        server.get_addr();
+    fd = 0;
+    }
+
 }
 
-void nick(Server& server, string line, int fd){
+void nick(Server& server, string line, int fd){ //done
     line = line.substr(4);
     line = strtrim(line);
     if (line.empty()){
@@ -31,17 +45,35 @@ void nick(Server& server, string line, int fd){
         else{
             server.getCLients()[fd].setNickName(line);
             string send = "ur nickname was set to " + server.getCLients()[fd].getNickName();
-            sendMsg(fd,send+ "\n");
+            sendMsg(fd, send + "\n");
         }
     }
 }
 
+void join(Server& server, string line, int fd){ // [X]
+    server.getServerName();
+    line = line.substr(4);
+    line = strtrim(line);
 
-Client::Client(): nickname("\v"), fd(1), id(0){
+    if (line.empty()){
+        sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
+        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters\n");
+    }
+    else{
+        // if (isChannelExist(&line))
+    }
+        // send(fd, "Your nickname is fadermou\n", 26, 0);
+    // if (server.getUser)
+    
+        
+}
+
+
+Client::Client(): nickname("\v"), fd(1), id(0), inChannel(false){
 
 }
 
-Client::Client(int fd):nickname("\v"), fd(fd), id(0) {
+Client::Client(int fd):nickname("\v"), fd(fd), id(0), inChannel(false){
     // cout << "CLIENT WAS CREATED\n";
 }
 
@@ -65,6 +97,9 @@ string& Client::getNickName(void){
     return this->nickname;
 }
 
+bool Client::getInChannel(){
+    return this->inChannel;
+}
 int Client::get_fd(){
     return this->fd;
 }
@@ -81,6 +116,9 @@ void Client::setId(int id){
 	this->id = id;
 }
 
+void Client::setInChannel(bool inChannel){
+    this->inChannel = inChannel;
+}
 void Client::setNickName(string nick){
     this->nickname = nick;
 }

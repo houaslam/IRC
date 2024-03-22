@@ -73,6 +73,7 @@
         "compare": "cpp",
         "concepts": "cpp",
         "__availability": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "*.tcc": "cpp"
     }
 }

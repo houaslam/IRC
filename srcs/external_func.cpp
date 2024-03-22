@@ -61,8 +61,13 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 }
 
 void sendMsg(int fd, string str){
-    // write(fd, &str, sizeof(str));
-    // char req[1024];
     send(fd, str.c_str(), str.length(), 0);
 }
 
+unsigned long	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
