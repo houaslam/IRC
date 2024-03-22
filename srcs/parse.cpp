@@ -46,8 +46,9 @@ bool parse(class Server &server,int fd, string reqs){
         default:{
 
             string str;
+            // send(fd, "test", 5, 0);
             str = server.getCLients()[fd].getNickName() + ":@localhost 421  "+ reqs +" :Unknown command\n";
-            send(fd, &str, sizeof(str), 0);    
+            send(fd, str.c_str(), sizeof(str), 0);    
             break;
         }
     }

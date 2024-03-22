@@ -78,6 +78,5 @@ vector<class channel> &Server::getChannels(){
 
 //GETTERS
 void Server::setUser(Client &obj){
-	// this->clients.push_back(obj);
 	this->clients[obj.get_fd()] = obj;
 }

@@ -14,7 +14,6 @@ int main(int ac , char ** av){
     	socklen_t add_size = sizeof(server.get_addr_len());
 
 		int nb_fds = 1;
-        // Client user_;
 
 		while(true){
 
@@ -43,16 +42,19 @@ int main(int ac , char ** av){
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							if (k > 0){
 								reqs[k] = '\0';
-							    if (parse(server, fds[i].fd, reqs) == false)
-									cout << "exit\n";
+								cout << reqs << endl;
+							    // if (parse(server, fds[i].fd, reqs) == false)
+								// 	cout << "exit\n";
 							}
 
 							else{
-								del_fd(fds, &nb_fds, i);
-								if (k == 0)
-									std::cout << BLUE << "BYE BYE\n" << RESET;
+								if (k == 0){
+									cout << "a user is disconnected\n";
+									server.getCLients().erase(fds[i].fd);
+								}
 								else
 									ft_error("DONE : ");
+								del_fd(fds, &nb_fds, i);
 							}
 						}
 					}
