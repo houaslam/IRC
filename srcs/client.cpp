@@ -1,11 +1,10 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-
-bool check_users(Server& server,string line){
+bool check_users(Server& server,string line , int ref){
     map<int , class Client> save = server.getCLients();
     for(map<int, class Client>::iterator it = save.begin(); it != save.end(); it++){
-        if (!line.compare(it->second.getNickName()))
+        if (!line.compare(it->second.getNickName()) && it->second.get_fd() != ref)
             return true;
     }
     return false;
@@ -19,6 +18,7 @@ bool isChannelExist(Server& server,string &line){
     }
     return true;
 }
+
 void user(Server& server, string line, int fd){
     line = line.substr(4);
     line = strtrim(line);
@@ -40,7 +40,7 @@ void nick(Server& server, string line, int fd){ //done
     }
     else
     {
-        if (check_users(server, line))
+        if (check_users(server, line, fd))
             send(fd, "nickname alredy used by another user\n", 38, 0);
         else{
             server.getCLients()[fd].setNickName(line);
@@ -67,7 +67,6 @@ void join(Server& server, string line, int fd){ // [X]
     
         
 }
-
 
 Client::Client(): nickname("\v"), fd(1), id(0), inChannel(false){
 
@@ -100,6 +99,7 @@ string& Client::getNickName(void){
 bool Client::getInChannel(){
     return this->inChannel;
 }
+
 int Client::get_fd(){
     return this->fd;
 }
@@ -119,6 +119,7 @@ void Client::setId(int id){
 void Client::setInChannel(bool inChannel){
     this->inChannel = inChannel;
 }
+
 void Client::setNickName(string nick){
     this->nickname = nick;
 }
