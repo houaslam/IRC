@@ -8,6 +8,7 @@ SRC = srcs/main.cpp \
 	  srcs/parse.cpp \
 	  srcs/errors.cpp \
 	  srcs/channel.cpp \
+	  srcs/commands.cpp \
 
 CXX		= c++
 

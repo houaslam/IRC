@@ -22,7 +22,7 @@ class channel{
 		// REGULAR FUNCTIONS
 		void    addUser(class Client &client_);
 
-		//getters
+		// GETERS
 		string &getChannelName();
 
 };

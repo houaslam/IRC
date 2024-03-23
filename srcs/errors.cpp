@@ -1,4 +1,4 @@
-#include "../includes/errors.hpp"
+#include "../includes/server.hpp"
 
 // voit sendError(server &server, int fd, int n)
 

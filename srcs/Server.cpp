@@ -92,3 +92,7 @@ void Server::setChannel(string name, Client &client){
 	this->channels.insert(make_pair(name, channel));
 	// this->channels.insert(make_pair(name, client));
 }
+
+void Server::setServerName(string name){
+	this->serverName = name;
+}

@@ -12,10 +12,6 @@ string &withoutNewLine(string &line){
     return line;
 }
 
-// nick : check nick with others DONE
-// nick : empty nick | return prev nickname DONE
-// user : check the 4 arg 
-// irssi connection
 bool parse(class Server &server,int fd, string reqs){
     reqs = withoutNewLine(reqs);
     server.get_addr();
@@ -26,12 +22,12 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT"};
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS"};
     int n = 0;
     if (line.empty())
-        n = 6;
+        n = 7;
     else
-        while (n < 5 && commands[n].compare(line[0]))
+        while (n < 6 && commands[n].compare(line[0]))
             n++;
 
     switch (n)
@@ -47,8 +43,10 @@ bool parse(class Server &server,int fd, string reqs){
             break;
         case 4:
             return false;
+        case 5:
+            pass(server, reqs, fd);
+            break;
         default:{
-
             ft_unknownCmd(server.getCLients()[fd], fd, line[0]);
             break;
         }

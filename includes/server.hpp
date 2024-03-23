@@ -21,7 +21,6 @@
 #include <vector>
 #include "client.hpp"
 #include "channel.hpp"
-#include "errors.hpp"
 #include <sys/time.h>
 
        /* COLORS */
@@ -33,6 +32,18 @@
 #define MAGENTA "\033[35m"     
 #define CYAN    "\033[36m"     
 #define WHITE   "\033[37m"   
+
+
+       /* ERRORS */
+#define IN_CHANNEL			    "405"  //  " :You have joined too many channels"
+#define UNKNOW_CMD			    "421"  // :Unknown command
+#define NICK_NOT_GIVEN		    "431"  // :Nickname not given"
+#define NICK_IN_USE			    "433"  //  :Nickname is already in use"
+#define NOT_REGISTRED		    "451"  // :You have not registered
+#define NOT_ENOUGH_PARA		    "461"  //  :Not enough parameters
+#define ALREADY_REGISTERED	           "462"  //  :You may not register
+#define INCORRECT_PWD		    "464"  // :Password is incorrect"
+
 
 using namespace std;
 
@@ -67,7 +78,7 @@ class Server{
 	// SETERS
 	void setUser(Client &obj);
 	void setChannel(string name, Client &client);
-	
+	void setServerName(string name);
 
 	// REGULAR FUNCTION
 	void aff_allusers();
@@ -83,6 +94,7 @@ string strtrim(const string& str);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void sendMsg(int fd, string str);
+void ft_unknownCmd(Client &client, int fd, string &line);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;
