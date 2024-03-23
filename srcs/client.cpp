@@ -33,7 +33,6 @@ void nick(Server& server, string line, int fd){ //done
     line = line.substr(4);
     line = strtrim(line);
     if (line.empty()){
-        // if (server.getCLients()[fd].getNickName().compare(""))
         if (!server.getCLients()[fd].getNickName().empty())
             send(fd, "NICKNAME ALREADY SET\n", 22, 0);
         else

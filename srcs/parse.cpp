@@ -23,6 +23,9 @@ bool parse(class Server &server,int fd, string reqs){
     vector<string> line;
     line = split(reqs, " ");
 
+    if (line.empty())
+        return true;
+
     string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT"};
     int n = 0;
     if (line.empty())
@@ -30,6 +33,7 @@ bool parse(class Server &server,int fd, string reqs){
     else
         while (n < 5 && commands[n].compare(line[0]))
             n++;
+
     switch (n)
     {
         case 0:
@@ -45,9 +49,7 @@ bool parse(class Server &server,int fd, string reqs){
             return false;
         default:{
 
-            string str;
-            str = ":" + server.getCLients()[fd].getNickName() +"!"+ server.getCLients()[fd].getUser() + ":@localhost 421\t"+ reqs +" :Unknown command\n";
-            sendMsg(fd,str);
+            ft_unknownCmd(server.getCLients()[fd], fd, line[0]);
             break;
         }
     }

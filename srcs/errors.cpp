@@ -48,7 +48,7 @@ string getLocalhost(Client &client){
     return ":" + client.getNickName() + "!" + client.getUser() +"@localhost ";
 }
 
-void ft_unknowncmd(Client &client, int fd, string &line){
+void ft_unknownCmd(Client &client, int fd, string &line){
 
     vector<string> first = split(line, " ");
 
@@ -58,3 +58,5 @@ void ft_unknowncmd(Client &client, int fd, string &line){
     sendMsg(fd, localhost + UNKNOW_CMD + " " + client.getNickName() + " " + first[0] + _errorMsg);
 
 }
+
+// void ft_notEnoughParam(clien)

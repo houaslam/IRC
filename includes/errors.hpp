@@ -13,4 +13,4 @@
 #define ALREADY_REGISTERED	    "462"  //  :You may not register
 #define INCORRECT_PWD		    "464"  // :Password is incorrect"
 
-void ft_unknowncmd(Client &client, int fd, string &line);
+void ft_unknownCmd(Client &client, int fd, string &line);
