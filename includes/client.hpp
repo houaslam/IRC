@@ -11,7 +11,7 @@ class Client{
         string user;
         int fd;
         int id;
-        bool inChannel;
+        string inChannel;
     public:
         Client();
         Client(int fd);
@@ -23,12 +23,12 @@ class Client{
         void setId(int id);
         void setFd(int fd);
         void setNickName(string nick);
-        void setInChannel(bool inChannel);
+        void setInChannel(string &inChannel);
 
         // GETTERS
         string& getNickName(void);
         string& getUser(void);
-        bool getInChannel(void);
+        string &getInChannel(void);
         int get_fd();
         int getId();
 };

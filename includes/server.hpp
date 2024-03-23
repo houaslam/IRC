@@ -43,7 +43,7 @@ class Server{
 		const char* password;
 		struct sockaddr_in s_addr;
 		map<int , class Client>  clients;
-		vector<class channel>  channels;
+		map<string, class channel>  channels;
 		string serverName;
 
 	public:
@@ -61,16 +61,17 @@ class Server{
 	struct sockaddr_in&  get_addr();
 	socklen_t  get_addr_len() const;
 	map<int, Client> &getCLients();
-	vector<class channel> &getChannels();
+	map<string, class channel> &getChannels();
 
 
 	// SETERS
 	void setUser(Client &obj);
+	void setChannel(string name, Client &client);
 	
 
 	// REGULAR FUNCTION
 	void aff_allusers();
-	channel &createChannel();
+	// channel &createChannel();
 
 };
 
@@ -82,7 +83,6 @@ string strtrim(const string& str);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void sendMsg(int fd, string str);
-bool check_users(Server& server,string line);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;

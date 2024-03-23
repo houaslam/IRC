@@ -1,36 +1,39 @@
-NAME = ircserv
-CXX = c++
-CXX += -fsanitize=address -g3
-CXXFLAGS = -Wall -Wextra -Werror
-EXTRA_CFLAGS = -std=c++98
+NAME = ./ircserv
+
 
 SRC = srcs/main.cpp \
 	  srcs/external_func.cpp \
 	  srcs/Server.cpp \
 	  srcs/client.cpp \
 	  srcs/parse.cpp \
-	  srcs/channel.cpp \
 	  srcs/errors.cpp \
+	  srcs/channel.cpp \
+
+CXX		= c++
+
+CXXFLAGS	= -std=c++98 -Wall -Wextra -Werror 
+
+OBJS 	= $(SRC:.cpp=.o)
+
+all: $(NAME) 
+
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(NAME)
+
+%.o : %.cpp %.hpp
+	c++ ${CXXFLAGS}  -c $< -o $@
+	
 
 
-OBJ = ${SRC:.cpp=.o} ${CNF:.cpp=.o}
-
-all : ${NAME}
-
-%.o : %.cpp %.hpp 
-	c++ ${CXXFLAGS} ${EXTRA_CFLAGS} -c $< -o $@
-
-${NAME} : ${OBJ}
-	${CXX}  ${OBJ} -o ${NAME}
-
-clean :
-	rm -rf ${OBJ}
+clean:
+	rm -rf $(OBJS)
 	rm -rf client server
 
 fclean : clean
-	rm -rf ${NAME}
+	rm -rf $(NAME)
 
 re : fclean all
+
 
 push : 
 	git add .

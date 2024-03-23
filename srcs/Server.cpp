@@ -49,7 +49,8 @@ Server& Server::operator=(const Server& server){
 	}
 	return *this;
 }
-//SETTERS
+
+		//GETTERS
 int Server::get_port() const{
 	return this->port;
 }
@@ -72,11 +73,22 @@ string Server::getServerName() const{
 	return this->serverName;
 }
 
-vector<class channel> &Server::getChannels(){
+map<string, channel> &Server::getChannels(){
 	return this->channels;
 }
 
-//GETTERS
+		//SETTERS
 void Server::setUser(Client &obj){
 	this->clients[obj.get_fd()] = obj;
+}
+void Server::setChannel(string name, Client &client){
+	client.get_fd();
+
+	channel channel(name);
+	channel.addUser(client);
+	// std::pair<std::string, Client> pairToInsert(name, client);
+	// channels.insert(pairToInsert);
+	
+	this->channels.insert(make_pair(name, channel));
+	// this->channels.insert(make_pair(name, client));
 }

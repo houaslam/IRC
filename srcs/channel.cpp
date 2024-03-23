@@ -1,6 +1,6 @@
 #include "../includes/channel.hpp"
 
-channel::channel(string &name): name(name){
+channel::channel(): name(""){
  //itkol
 	modes['i'] = 0;
 	modes['t'] = 0;
@@ -9,6 +9,8 @@ channel::channel(string &name): name(name){
 	modes['l'] = 0;
 	cout << "NEW CHANNEL UNDER " << name << " NAME WAS CREATED\n";
 }
+
+channel::channel(string name): name(name){}
 
 channel::channel(const channel& src){
     *this = src;

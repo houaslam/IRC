@@ -10,12 +10,9 @@ bool check_users(Server& server,string line , int ref){
     return false;
 }
 
-bool isChannelExist(Server& server,string &line){
-    for (vector<channel>::iterator i = server.getChannels().begin(); i < server.getChannels().end(); i++){
-        if (i->getChannelName() == line){
-            return false;
-        }
-    }
+bool isChannelExist(map<string, channel> &channels,string &line){
+    if (channels.find(line) == channels.end())
+        return false;
     return true;
 }
 
@@ -58,22 +55,26 @@ void join(Server& server, string line, int fd){ // [X]
     if (line.empty()){
         sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
         server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters\n");
+        return ;
     }
-    else{
-        if (isChannelExist(server, line))
-            cout << "channel " << line << " exist\n";
-    }
-        // send(fd, "Your nickname is fadermou\n", 26, 0);
-    // if (server.getUser)
+
+    vector<string> spl = split(line, " ");
+
+        // if (!isChannelExist(server.getChannels(), split(line, " ")[1])) /*doesn't exist*/{
+        //     server.setChannel(spl[0], server.getCLients()[fd]);
+
+        //     cout << "channel " << line << "DOESN'T exist\n";
+
+        // } /// KEEP ADDING TILL YOU SEGFAULT IT
     
         
 }
 
-Client::Client(): nickname(""), user(""), fd(1), id(0), inChannel(false){
+Client::Client(): nickname(""), user(""), fd(1), id(0), inChannel(""){
 
 }
 
-Client::Client(int fd):nickname(""), user(""), fd(fd), id(0), inChannel(false){
+Client::Client(int fd):nickname(""), user(""), fd(fd), id(0), inChannel(""){
     // cout << "CLIENT WAS CREATED\n";
 }
 
@@ -101,7 +102,7 @@ string& Client::getUser(void){
     return this->user;
 }
 
-bool Client::getInChannel(){
+string &Client::getInChannel(){
     return this->inChannel;
 }
 
@@ -121,7 +122,7 @@ void Client::setId(int id){
 	this->id = id;
 }
 
-void Client::setInChannel(bool inChannel){
+void Client::setInChannel(string &inChannel){
     this->inChannel = inChannel;
 }
 
