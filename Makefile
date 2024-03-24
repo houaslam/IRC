@@ -6,7 +6,7 @@ SRC = srcs/main.cpp \
 	  srcs/Server.cpp \
 	  srcs/client.cpp \
 	  srcs/parse.cpp \
-	  srcs/errors.cpp \
+	  srcs/sendMsg.cpp \
 	  srcs/channel.cpp \
 	  srcs/commands.cpp \
 

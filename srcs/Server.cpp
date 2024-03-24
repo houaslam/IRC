@@ -1,7 +1,7 @@
 #include "../includes/server.hpp"
 
 
-Server::Server(int port, const char* password) : port(port), password(password), serverName("Pixserv"){
+Server::Server(int port, const char* password) : port(port), serverName("Pixserv"), password(password){
 	struct in_addr *addr = NULL;
 	struct hostent* test = NULL;
 	test = gethostbyname("localhost");

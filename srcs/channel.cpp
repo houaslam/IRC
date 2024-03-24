@@ -1,6 +1,6 @@
 #include "../includes/channel.hpp"
 
-channel::channel(): name(""){
+channel::channel(): name(""), topic(""){
  //itkol
 	modes['i'] = 0;
 	modes['t'] = 0;
@@ -35,4 +35,7 @@ void    channel::addUser(Client &client_){
 
 string &channel::getChannelName(){
     return this->name;
+}
+string &channel::getChannelTopic(){
+    return this->topic;
 }

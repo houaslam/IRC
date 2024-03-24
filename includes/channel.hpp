@@ -8,8 +8,8 @@ class channel{
 	private:
 		vector<class Client> clients;
 		string name;
-		map<char, int> modes;
 		string topic;
+		map<char, int> modes;
 	public:
 
 		// CANONICAL FORM
@@ -24,5 +24,6 @@ class channel{
 
 		// GETERS
 		string &getChannelName();
+		string &getChannelTopic();
 
 };

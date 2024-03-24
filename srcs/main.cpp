@@ -31,10 +31,10 @@ int main(int ac , char ** av){
                             Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
-    						sendMsg(fd,":" + server.getServerName() + " 001 " + user_.getNickName() + " :Welcome to the Internet Relay Network\n");
-    						sendMsg(fd,":" + server.getServerName() + " 002 " + user_.getNickName() + " :Your host is " + server.getServerName() + " \n");
-    						sendMsg(fd,":" + server.getServerName() + " 003 " + user_.getNickName() + " :This server was created 0 \n");
-    						sendMsg(fd,":" + server.getServerName() + " 004 " + user_.getNickName() + " :" + server.getServerName() + " 1.1 More info\n");
+    						sendMsg(fd,":" + server.getServerName() + " 001 " + user_.getNickName() + " :Welcome to the Internet Relay Network");
+    						sendMsg(fd,":" + server.getServerName() + " 002 " + user_.getNickName() + " :Your host is " + server.getServerName() + " ");
+    						sendMsg(fd,":" + server.getServerName() + " 003 " + user_.getNickName() + " :This server was created 0 ");
+    						sendMsg(fd,":" + server.getServerName() + " 004 " + user_.getNickName() + " :" + server.getServerName() + " 1.1 More info");
 
 						}
 

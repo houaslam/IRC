@@ -32,34 +32,34 @@ void    pass(Server& server, string line , int fd){
 	vector<string> res = split(line, " ");
 	if (res.size() == 1 && !res[0].compare(server.get_password())){
 		server.getCLients()[fd].pass = true;
-		sendMsg(fd, "UR PASSWORD IS CORRECT\n");
+		sendMsg(fd, "UR PASSWORD IS CORRECT");
 	}
 	else
-		sendMsg(fd, "UR PASSWORD IS INCORRECT PLZ TRY AGAIN\n");
+		sendMsg(fd, "UR PASSWORD IS INCORRECT PLZ TRY AGAIN");
 }
 
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
 	if (server.getCLients()[fd].pass == false){
-		sendMsg(fd, "PROVID THE PASSWORD FIRST\n");
+		sendMsg(fd, "PROVID THE PASSWORD FIRST");
 		return ;
 	}
 	line = line.substr(4);
 	line = strtrim(line);
 	if (line.empty()){
 		if (!server.getCLients()[fd].getNickName().empty())
-			sendMsg(fd, "NICKNAME ALREADY SET\n");
+			sendMsg(fd, "NICKNAME ALREADY SET");
 		else
-			sendMsg(fd, "No nickname is given\n");
+			sendMsg(fd, "No nickname is given");
 	}
 	else
 	{
 		if (check_users(server, line, fd))
-			sendMsg(fd, "nickname alredy used by another user\n");
+			sendMsg(fd, "nickname alredy used by another user");
 		else{
 			server.getCLients()[fd].setNickName(line);
 			string send = "ur nickname was set to " + server.getCLients()[fd].getNickName();
-			sendMsg(fd, send + "\n");
+			sendMsg(fd, send + "");
 		}
 	}
 }
@@ -67,19 +67,19 @@ void nick(Server& server, string line, int fd){
 // USER <username> <hostname> <servername> <realname>
 void user(Server& server, string line, int fd){
 	if (server.getCLients()[fd].getNickName().empty()){
-		sendMsg(fd, "PROVID A NICKNAME FIRST\n");
+		sendMsg(fd, "PROVID A NICKNAME FIRST");
 		return ;
 	}
 	line = line.substr(4);
 	line = strtrim(line);
 	if (line.empty()){
-		sendMsg(fd, "not enough arguments\n");
+		sendMsg(fd, "not enough arguments");
 		return ;
 	}
 	else{
 		vector<string> res = split(line, " ");
 		if (res.size() != 4){
-			sendMsg(fd, "not enough arguments\n");
+			sendMsg(fd, "not enough arguments");
 			return ;
 		}
 		server.getCLients()[fd].setUser(res[0]);
@@ -93,24 +93,30 @@ void user(Server& server, string line, int fd){
 
 // JOIN <channels>
 void join(Server& server, string line, int fd){ // [X]
-	line = line.substr(4);
-	line = strtrim(line);
+    if (!server.getCLients()[fd].getInChannel().empty())
+        return;
 
-	if (line.empty()){
-		sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
-		server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters\n");
-		return ;
-	}
 
-	vector<string> spl = split(line, " ");
+    server.getServerName();
+    line = line.substr(4);
+    line = strtrim(line);
 
-		// if (!isChannelExist(server.getChannels(), split(line, " ")[1])) /*doesn't exist*/{
-		//     server.setChannel(spl[0], server.getCLients()[fd]);
+    if (line.empty()){
+        sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
+        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters");
+        return ;
+    }
 
-		//     cout << "channel " << line << "DOESN'T exist\n";
+    vector<string> spl = split(line, " ");
 
-		// } /// KEEP ADDING TILL YOU SEGFAULT IT
-	
+        if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
+            channel channel(spl[0]);
+			cout << "CHANNEL DOESN'T EXIST\n";
+			channel.addUser(server.getCLients()[fd]);
+            server.getCLients()[fd].setInChannel(spl[0]);
+
+			server.getChannels().insert(make_pair(spl[0], channel));
+			justJoined(server.getCLients()[fd], channel, fd, spl[0]);
+        } /// KEEP ADDING TILL YOU SEGFAULT IT
 
 }
-

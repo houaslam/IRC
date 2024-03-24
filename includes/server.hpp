@@ -41,8 +41,9 @@
 #define NICK_IN_USE			    "433"  //  :Nickname is already in use"
 #define NOT_REGISTRED		    "451"  // :You have not registered
 #define NOT_ENOUGH_PARA		    "461"  //  :Not enough parameters
-#define ALREADY_REGISTERED	           "462"  //  :You may not register
+#define ALREADY_REGISTERED	    "462"  //  :You may not register
 #define INCORRECT_PWD		    "464"  // :Password is incorrect"
+#define JOIN_NO_TOPIC    		"332"  // :Channel Topic
 
 
 using namespace std;
@@ -51,11 +52,12 @@ class Server{
 	private:
 		int port;
 		int _socket;
+		string serverName;
+		// string topic;
 		const char* password;
 		struct sockaddr_in s_addr;
 		map<int , class Client>  clients;
 		map<string, class channel>  channels;
-		string serverName;
 
 	public:
 	// CANONICAL FORM
@@ -95,6 +97,7 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void sendMsg(int fd, string str);
 void ft_unknownCmd(Client &client, int fd, string &line);
+void justJoined(Client &client, channel &channel, int fd, string &line);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;

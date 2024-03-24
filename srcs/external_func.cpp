@@ -60,10 +60,6 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 	(*fd_count)++;
 }
 
-void sendMsg(int fd, string str){
-    send(fd, str.c_str(), str.length() + 1, 0);
-}
-
 unsigned long	get_time(void)
 {
 	struct timeval	tv;
