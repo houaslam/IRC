@@ -10,11 +10,10 @@ string getMsg(string msgNumber){
 
     std::string numbers[] = {"405", "421", "431", "433", "451", "461", "462", "464", "332"};
     int i = 0;
-    while (i < 8 && numbers[i].compare(msgNumber))
+    while (i < 9 && numbers[i].compare(msgNumber))
         i++;
 
-    switch (i)
-    {
+    switch (i){
     case (0):
         msg = " :You have joined too many channels";
         break;
@@ -41,8 +40,7 @@ string getMsg(string msgNumber){
         break;
     case (8):
         msg = " :No topic is set";
-        break;
-    
+        break;   
     default:
         break;
     }

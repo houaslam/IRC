@@ -34,8 +34,10 @@ void    pass(Server& server, string line , int fd){
 		server.getCLients()[fd].pass = true;
 		sendMsg(fd, "UR PASSWORD IS CORRECT");
 	}
-	else
-		sendMsg(fd, "UR PASSWORD IS INCORRECT PLZ TRY AGAIN");
+	else{
+		if (server.getCLients()[fd].pass == false)
+			sendMsg(fd, "UR PASSWORD IS INCORRECT PLZ TRY AGAIN");
+	}
 }
 
 // NICK <nickname>
@@ -50,14 +52,16 @@ void nick(Server& server, string line, int fd){
 		if (!server.getCLients()[fd].getNickName().empty())
 			sendMsg(fd, "NICKNAME ALREADY SET");
 		else
-			sendMsg(fd, "No nickname is given");
+			sendMsg(fd, server.getCLients()[fd].getNickName() + getMsg(NICK_NOT_GIVEN));
+			// sendMsg(fd, "No nickname is given");
 	}
 	else
 	{
-		if (check_users(server, line, fd))
-			sendMsg(fd, "nickname alredy used by another user");
+		vector<string> res = split(line, " ");
+		if (check_users(server, res[0], fd))
+			sendMsg(fd, server.getCLients()[fd].getNickName() + " "+ res[0] + getMsg(NICK_IN_USE));
 		else{
-			server.getCLients()[fd].setNickName(line);
+			server.getCLients()[fd].setNickName(res[0]);
 			string send = "ur nickname was set to " + server.getCLients()[fd].getNickName();
 			sendMsg(fd, send + "");
 		}
