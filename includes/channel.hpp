@@ -20,8 +20,9 @@ class channel{
 		~channel();
 
 		// REGULAR FUNCTIONS
-		void    addUser(class Client &client_);
-
+		void    setUser(class Client &client_);
+		void setChannelTopic(string &topic);
+		
 		// GETERS
 		string &getChannelName();
 		string &getChannelTopic();

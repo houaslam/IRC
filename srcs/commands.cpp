@@ -1,6 +1,7 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
-
+					
+					/*BOOL*/
 bool check_users(Server& server,string line , int ref){
 	map<int , class Client> save = server.getCLients();
 	for(map<int, class Client>::iterator it = save.begin(); it != save.end(); it++){
@@ -20,6 +21,13 @@ bool isConnected(Server& server, int fd){
 	if (!server.getCLients()[fd].pass)
 		return false;
 	if (server.getCLients()[fd].getNickName().empty())
+		return false;
+	return true;
+}
+
+bool isInChannel(Client &client, string &name){
+	vector<string>::iterator it = find(client.getInChannel().begin(), client.getInChannel().end(), name);
+	if (it == client.getInChannel().end())
 		return false;
 	return true;
 }
@@ -70,6 +78,7 @@ void nick(Server& server, string line, int fd){
 
 // USER <username> <hostname> <servername> <realname>
 void user(Server& server, string line, int fd){
+
 	if (server.getCLients()[fd].getNickName().empty()){
 		sendMsg(fd, "PROVID A NICKNAME FIRST");
 		return ;
@@ -97,8 +106,8 @@ void user(Server& server, string line, int fd){
 
 // JOIN <channels>
 void join(Server& server, string line, int fd){ // [X]
-    if (!server.getCLients()[fd].getInChannel().empty())
-        return;
+    // if (!server.getCLients()[fd].getInChannel().empty())
+    //     return;
 
 
     server.getServerName();
@@ -106,7 +115,7 @@ void join(Server& server, string line, int fd){ // [X]
     line = strtrim(line);
 
     if (line.empty()){
-        sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
+        sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
         server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters");
         return ;
     }
@@ -115,12 +124,35 @@ void join(Server& server, string line, int fd){ // [X]
 
         if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
             channel channel(spl[0]);
-			cout << "CHANNEL DOESN'T EXIST\n";
-			channel.addUser(server.getCLients()[fd]);
+
+			channel.setUser(server.getCLients()[fd]);
             server.getCLients()[fd].setInChannel(spl[0]);
 
 			server.getChannels().insert(make_pair(spl[0], channel));
 			justJoined(server.getCLients()[fd], channel, fd, spl[0]);
         } /// KEEP ADDING TILL YOU SEGFAULT IT
 
+}
+
+void	topic(Server &server, string line, int fd){
+
+    server.getServerName();
+    line = line.substr(5);
+    line = strtrim(line);
+
+    if (line.empty()){
+        sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
+        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters"); //! 461
+        return ;
+    }
+    
+	vector<string> spl = split(line, " ");
+
+    if (!isChannelExist(server.getChannels(), spl[0])) /*doesn't exist*/{
+		send(fd, ":No such channel\n", 18, 0); //! 403
+    }
+	if (!isInChannel(server.getCLients()[fd] ,line))
+		send(fd, ":You're not on that channel\n", 18, 0); //! 442
+	if (spl.size() )
+	server.set
 }

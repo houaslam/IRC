@@ -7,7 +7,6 @@ channel::channel(): name(""), topic(""){
 	modes['k'] = 0;
 	modes['o'] = 0;
 	modes['l'] = 0;
-	cout << "NEW CHANNEL UNDER " << name << " NAME WAS CREATED\n";
 }
 
 channel::channel(string name): name(name){}
@@ -16,9 +15,7 @@ channel::channel(const channel& src){
     *this = src;
 }
 
-channel::~channel(){
-    cout << name << " CHANNEL HAS BEEN DELETED\n";
-}
+channel::~channel(){}
 
 channel& channel::operator=(const channel& src){
     if (this != &src){
@@ -28,11 +25,15 @@ channel& channel::operator=(const channel& src){
     return *this;
 }
 
-void    channel::addUser(Client &client_){
+            /*SETTERS*/
+void    channel::setUser(Client &client_){
     clients.push_back(client_);
-    cout << "WELCOME TO " << this->name << " CHANNEL\n";
+}
+void channel::setChannelTopic(string &topic){
+	this->topic = topic;
 }
 
+            /*GETTERS*/
 string &channel::getChannelName(){
     return this->name;
 }

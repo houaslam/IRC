@@ -1,7 +1,7 @@
 #include "../includes/server.hpp"
 
 
-Server::Server(int port, const char* password) : port(port), serverName("Pixserv"), password(password){
+Server::Server(int port, const char* password) : port(port), serverName(""), password(password){
 	struct in_addr *addr = NULL;
 	struct hostent* test = NULL;
 	test = gethostbyname("localhost");
@@ -85,12 +85,8 @@ void Server::setChannel(string name, Client &client){
 	client.get_fd();
 
 	channel channel(name);
-	channel.addUser(client);
-	// std::pair<std::string, Client> pairToInsert(name, client);
-	// channels.insert(pairToInsert);
-	
+	channel.setUser(client);
 	this->channels.insert(make_pair(name, channel));
-	// this->channels.insert(make_pair(name, client));
 }
 
 void Server::setServerName(string name){
