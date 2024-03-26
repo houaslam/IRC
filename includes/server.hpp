@@ -22,7 +22,6 @@
 #include "client.hpp"
 #include "channel.hpp"
 #include <sys/time.h>
-#include <algorithm>
 
        /* COLORS */
 #define RESET   "\033[0m"
@@ -38,21 +37,24 @@
        /* ERRORS */
 
 // CHANNEL
-#define IN_CHANNEL			    "405"  // :You have joined too many channels
-#define JOIN_NO_TOPIC    		"332"  // :Channel Topic
+#define IN_CHANNEL			    405  // :You have joined too many channels
+#define JOIN_NO_TOPIC    		332  // :Channel Topic
+#define ERR_NOTONCHANNEL		442
+#define ERR_NOSUCHCHANNEL 		403
+
 
 // NICK 
-#define NICK_NOT_GIVEN		    "431"  // :Nickname not given"
-#define NICK_IN_USE			    "433"  // :Nickname is already in use"
+#define NICK_NOT_GIVEN		    431  // :Nickname not given"
+#define NICK_IN_USE			    433  // :Nickname is already in use"
 
 // PASS
-#define INCORRECT_PWD		    "464"  // :Password is incorrect
+#define INCORRECT_PWD		    464  // :Password is incorrect
 
 // GENERAL
-#define NOT_REGISTRED		    "451"  // :You have not registered
-#define UNKNOW_CMD			    "421"  // :Unknown command
-#define NOT_ENOUGH_PARA		    "461"  // :Not enough parameters
-#define ALREADY_REGISTERED	    "462"  // :You may not register
+#define NOT_REGISTRED		    451  // :You have not registered
+#define UNKNOW_CMD			    421  // :Unknown command
+#define NOT_ENOUGH_PARA		    461  // :Not enough parameters
+#define ALREADY_REGISTERED	    462  // :You may not register
 
 
 using namespace std;
@@ -67,6 +69,7 @@ class Server{
 		struct sockaddr_in s_addr;
 		map<int , class Client>  clients;
 		map<string, class channel>  channels;
+		map<int, string> msg;
 
 	public:
 	// CANONICAL FORM
@@ -80,6 +83,7 @@ class Server{
 	int get_port() const;
 	int get_socket() const;
 	string  get_password() const;
+	map<int, string> get_msg() const;
 	struct sockaddr_in&  get_addr();
 	socklen_t  get_addr_len() const;
 	map<int, Client> &getCLients();
@@ -104,10 +108,14 @@ std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
-void sendMsg(int fd, string str);
+void sendMsg(Client& client, string str);
 void ft_unknownCmd(Client &client, int fd, string &line);
 void justJoined(Client &client, channel &channel, int fd, string &line);
-string getMsg(string msgNumber);
+string getMsg(int msgNumber);
+map<int, string> msgs();
+string getLocalhost(Client &client);
+string nbtoString(int nb);
+map<int, string> msgs(Client& client, string channel, string cmd);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;

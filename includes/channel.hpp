@@ -9,9 +9,7 @@ class channel{
 		vector<class Client> clients;
 		string name;
 		string topic;
-		int admin;
-		string adminName;
-		map<char, string> modes;
+		map<char, int> modes;
 	public:
 
 		// CANONICAL FORM
@@ -22,16 +20,10 @@ class channel{
 		~channel();
 
 		// REGULAR FUNCTIONS
-		void    setChannelUser(class Client &client_);
-		void setChannelTopic(string &topic);
-		void setChannelAdmin(int admin);
-		void setChannelAdminName(string &admin);
+		void    addUser(class Client &client_);
 
 		// GETERS
 		string &getChannelName();
-		int 	getChannelAdmin();
 		string &getChannelTopic();
-		map<char, string> &getChannelModes();
-		string &getChannelAdminName();
 
 };

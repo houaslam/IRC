@@ -21,8 +21,8 @@ class Client{
         //CLIENT HIMSELF 
         int fd;
 
-        // CHANNELS
-        vector<string> inChannel;
+        // JOIN
+        string inChannel;
     public:
         bool isConnected;
         bool pass;
@@ -45,7 +45,7 @@ class Client{
         // GETTERS
         string& getNickName(void);
         string& getUser(void);
-        vector<string> &getInChannel(void);
+        string &getInChannel(void);
         int get_fd();
         int getId();
 };
@@ -56,4 +56,3 @@ void nick(Server& server ,string line, int fd);
 string &withoutNewLine(string &line);
 void join(Server& server, string line, int fd);
 void    pass(Server& server, string line , int fd);
-void	topic(Server &server, string line, int fd);
