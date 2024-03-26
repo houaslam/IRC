@@ -67,3 +67,10 @@ unsigned long	get_time(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
+
+string nbtoString(int nb){
+    std::stringstream ss;
+    ss << nb;
+    std::string str = ss.str();
+    return str;
+}

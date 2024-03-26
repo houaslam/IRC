@@ -1,6 +1,5 @@
 #include "../includes/server.hpp"
 
-
 Server::Server(int port, const char* password) : port(port), serverName("Pixserv"), password(password){
 	struct in_addr *addr = NULL;
 	struct hostent* test = NULL;
@@ -33,7 +32,7 @@ Server::Server(int port, const char* password) : port(port), serverName("Pixserv
 }
 
 Server::~Server(){
-
+	close(_socket);
 }
 
 Server::Server(const Server& src){
@@ -54,21 +53,27 @@ Server& Server::operator=(const Server& server){
 int Server::get_port() const{
 	return this->port;
 }
+
 int Server::get_socket() const{
 	return this->_socket;
 }
+
 string  Server::get_password() const{
 	return this->password;
 }
+
 struct sockaddr_in&  Server::get_addr(){
 	return s_addr;
 }
+
 map<int, Client>&  Server::getCLients(){
 	return this->clients;
 }
+
 socklen_t  Server::get_addr_len() const{
     return sizeof(this->s_addr);
 }
+
 string Server::getServerName() const{
 	return this->serverName;
 }
@@ -81,6 +86,7 @@ map<string, channel> &Server::getChannels(){
 void Server::setUser(Client &obj){
 	this->clients[obj.get_fd()] = obj;
 }
+
 void Server::setChannel(string name, Client &client){
 	client.get_fd();
 
@@ -95,4 +101,8 @@ void Server::setChannel(string name, Client &client){
 
 void Server::setServerName(string name){
 	this->serverName = name;
+}
+
+map<int, string> Server::get_msg() const{
+	return this->msg;
 }

@@ -32,38 +32,38 @@ void    pass(Server& server, string line , int fd){
 	vector<string> res = split(line, " ");
 	if (res.size() == 1 && !res[0].compare(server.get_password())){
 		server.getCLients()[fd].pass = true;
-		sendMsg(fd, "UR PASSWORD IS CORRECT");
+		sendMsg(server.getCLients()[fd], "UR PASSWORD IS CORRECT");
 	}
 	else{
 		if (server.getCLients()[fd].pass == false)
-			sendMsg(fd, "UR PASSWORD IS INCORRECT PLZ TRY AGAIN");
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "")[INCORRECT_PWD]);
 	}
 }
 
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
 	if (server.getCLients()[fd].pass == false){
-		sendMsg(fd, "PROVID THE PASSWORD FIRST");
+		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "")[NOT_REGISTRED]);
 		return ;
 	}
 	line = line.substr(4);
 	line = strtrim(line);
 	if (line.empty()){
 		if (!server.getCLients()[fd].getNickName().empty())
-			sendMsg(fd, "NICKNAME ALREADY SET");
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"", "")[NICK_NOT_GIVEN]);
 		else
-			sendMsg(fd, server.getCLients()[fd].getNickName() + getMsg(NICK_NOT_GIVEN));
-			// sendMsg(fd, "No nickname is given");
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"", "")[NICK_NOT_GIVEN]);
+			// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd].getNickName() + getMsg(NICK_NOT_GIVEN));
 	}
 	else
 	{
 		vector<string> res = split(line, " ");
 		if (check_users(server, res[0], fd))
-			sendMsg(fd, server.getCLients()[fd].getNickName() + " "+ res[0] + getMsg(NICK_IN_USE));
+				sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NICK_IN_USE]);
 		else{
 			server.getCLients()[fd].setNickName(res[0]);
 			string send = "ur nickname was set to " + server.getCLients()[fd].getNickName();
-			sendMsg(fd, send + "");
+			sendMsg(server.getCLients()[fd], send + "");
 		}
 	}
 }
@@ -71,19 +71,19 @@ void nick(Server& server, string line, int fd){
 // USER <username> <hostname> <servername> <realname>
 void user(Server& server, string line, int fd){
 	if (server.getCLients()[fd].getNickName().empty()){
-		sendMsg(fd, "PROVID A NICKNAME FIRST");
+		sendMsg(server.getCLients()[fd], "PROVID A NICKNAME FIRST");
 		return ;
 	}
 	line = line.substr(4);
 	line = strtrim(line);
 	if (line.empty()){
-		sendMsg(fd, "not enough arguments");
+		sendMsg(server.getCLients()[fd], "not enough arguments");
 		return ;
 	}
 	else{
 		vector<string> res = split(line, " ");
 		if (res.size() != 4){
-			sendMsg(fd, "not enough arguments");
+			sendMsg(server.getCLients()[fd], "not enough arguments");
 			return ;
 		}
 		server.getCLients()[fd].setUser(res[0]);
@@ -92,7 +92,13 @@ void user(Server& server, string line, int fd){
 		server.getCLients()[fd].setRName(res[3]);
 	}
 	server.getCLients()[fd].isConnected = isConnected(server, fd);
+	if (server.getCLients()[fd].isConnected){
+		sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Internet Relay Network");
+    	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName() + " ");
+    	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 003 " + server.getCLients()[fd].getNickName() + " :This server was created 0 ");
+    	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 004 " + server.getCLients()[fd].getNickName() + " :" + server.getServerName() + " 1.1 More info");
 
+	}
 }
 
 // JOIN <channels>
@@ -106,7 +112,7 @@ void join(Server& server, string line, int fd){ // [X]
     line = strtrim(line);
 
     if (line.empty()){
-        sendMsg(fd,":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
+        sendMsg(server.getCLients()[fd],":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
         server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters");
         return ;
     }
@@ -124,3 +130,7 @@ void join(Server& server, string line, int fd){ // [X]
         } /// KEEP ADDING TILL YOU SEGFAULT IT
 
 }
+
+// string getMsg(int msgNumber, Server& server, string channel, int fd){
+// 	return(   msgs()[msgNumber]);
+// }
