@@ -1,6 +1,6 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
-					
+
 					/*BOOL*/
 bool check_users(Server& server,string line , int ref){
 	map<int , class Client> save = server.getCLients();
@@ -26,9 +26,12 @@ bool isConnected(Server& server, int fd){
 }
 
 bool isInChannel(Client &client, string &name){
+
 	vector<string>::iterator it = find(client.getInChannel().begin(), client.getInChannel().end(), name);
+
 	if (it == client.getInChannel().end())
 		return false;
+
 	return true;
 }
 
@@ -122,15 +125,22 @@ void join(Server& server, string line, int fd){ // [X]
 
     vector<string> spl = split(line, " ");
 
-        if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
-            channel channel(spl[0]);
+    if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
+        channel channel(spl[0]);
 
-			channel.setUser(server.getCLients()[fd]);
-            server.getCLients()[fd].setInChannel(spl[0]);
-
-			server.getChannels().insert(make_pair(spl[0], channel));
-			justJoined(server.getCLients()[fd], channel, fd, spl[0]);
-        } /// KEEP ADDING TILL YOU SEGFAULT IT
+		channel.setChannelUser(server.getCLients()[fd]);
+		channel.setChannelAdmin(fd);
+		channel.getChannelModes().insert(make_pair('t', "+t"));
+		channel.setChannelAdminName(server.getCLients()[fd].getNickName()); /// to be changed no need for t
+        server.getCLients()[fd].setInChannel(spl[0]);
+		server.getChannels().insert(make_pair(spl[0], channel));
+		justJoined(server.getCLients()[fd], channel, fd, spl[0]); //!
+    }
+	else{
+		server.getCLients()[fd].setInChannel(spl[0]);
+		server.getChannels()[spl[0]].setChannelUser(server.getCLients()[fd]);
+		justJoined(server.getCLients()[fd], server.getChannels()[spl[0]], fd, spl[0]); //!
+	}
 
 }
 
@@ -148,11 +158,26 @@ void	topic(Server &server, string line, int fd){
     
 	vector<string> spl = split(line, " ");
 
-    if (!isChannelExist(server.getChannels(), spl[0])) /*doesn't exist*/{
+	string channel = spl[0]; //next time work using reference 
+    if (!isChannelExist(server.getChannels(), channel)) /*doesn't exist*/{
 		send(fd, ":No such channel\n", 18, 0); //! 403
+		return ;
     }
-	if (!isInChannel(server.getCLients()[fd] ,line))
-		send(fd, ":You're not on that channel\n", 18, 0); //! 442
-	if (spl.size() )
-	server.set
+	if (!isInChannel(server.getCLients()[fd], channel))
+		send(fd, ":You're not on that channel\n", 29, 0); //! 442
+
+	string topic = line.substr(spl[0].size());
+
+	cout <<"[" +channel+"]\t" <<server.getChannels()[channel].getChannelName()<<"\n"; 
+	
+	cout <<"[" + server.getChannels()[channel].getChannelModes()['t'] +"]\t\n"; 
+	
+	if (/*server.getChannels()[channel].getChannelModes()['t'] == "+t" &&*/
+	 server.getChannels()[channel].getChannelAdminName() != server.getCLients()[fd].getNickName())
+			send(fd, "You're not channel operator\n", 29, 0); //! 482
+	else
+			send(fd, "NEW TOPIC\n", 12, 0); //! 482
+
+	
+
 }

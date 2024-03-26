@@ -85,7 +85,7 @@ void Server::setChannel(string name, Client &client){
 	client.get_fd();
 
 	channel channel(name);
-	channel.setUser(client);
+	channel.setChannelUser(client);
 	this->channels.insert(make_pair(name, channel));
 }
 
