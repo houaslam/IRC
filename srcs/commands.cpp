@@ -197,4 +197,64 @@ void	topic(Server &server, string line, int fd){
 		}
 	}
 }
+/*if the first arg doesn't start with a + or - we have to cases if we are in a channel we show nothing otherwize
+we check if the mode already exist if we have the right to change it changes if we're not we show that we don't have the right
+	and if we aren't in a channel and the first arg starts with a + or - we show "Not joined to any channel
+" otherwize we show that no such a channel even if it does exist*/
+// void	mode(Server &server, string line, int fd){
+
+//     server.getServerName();
+//     line = line.substr(5);
+//     line = strtrim(line); 
+
+
+//     if (strtrim(line).empty()){
+// 		string msg = ":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
+//         server.getCLients()[fd].getNickName()+" MODE :Not enough parameters";
+//         send(fd, ":Not enough parameters\n", 24, 0); //! 461
+//         return ;
+//     }
+
+// 	vector<string> spl = split(line, " ");
+
+// 	if (isInChannel(server.getCLients()[fd], spl[0])){
+// 		if (spl[0][0] != '+')
+// 			return;
+// 		else
+// 			get
+// 	}
+	
+// 	// string channel = spl[0]; //next time work using reference 
+//     if (!isChannelExist(server.getChannels(), spl)) /*doesn't exist*/{
+// 		send(fd, ":No such channel\n", 18, 0); //! 403
+// 		return;
+//     }
+// 	else if (!isInChannel(server.getCLients()[fd], spl[0]))
+// 	{
+// 		send(fd, ":You're not on that channel\n", 29, 0); //! 442
+// 		return;
+// 	}
+
+// 	string topic = line.substr(channel.size());
+
+// 	if (topic.empty())
+// 	{
+// 		if (server.getChannels()[channel].getChannelTopic().empty())
+// 			send(fd," :No topic is set\n", 19, 0); //! 331
+// 		else
+// 		{
+// 			// send(fd, server.getChannels()[channel].getChannelTopic().c_str(), (server.getChannels()[channel].getChannelTopic()).size(), 0); //! 332
+// 			send(fd," :show old topic\n", 18, 0); //! 331
+// 		}
+// 	}
+// 	else{
+// 		if (server.getChannels()[channel].getChannelModes()['t'] == "+t" &&
+// 		 server.getChannels()[channel].getChannelAdmin() != fd)
+// 			send(fd, "You're not channel operator\n", 29, 0); //! 482
+// 		else{
+// 			send(fd, ":new topic\n", 12, 0); //! 333
+// 			server.getChannels()[channel].setChannelTopic(topic);
+// 		}
+// 	}
+// }
 

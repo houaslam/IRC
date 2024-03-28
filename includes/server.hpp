@@ -22,6 +22,7 @@
 #include "client.hpp"
 #include "channel.hpp"
 #include <sys/time.h>
+#include <algorithm>
 
        /* COLORS */
 #define RESET   "\033[0m"
