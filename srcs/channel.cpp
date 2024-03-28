@@ -1,41 +1,61 @@
 #include "../includes/channel.hpp"
 
-channel::channel(): name(""), topic(""){
+channel::channel(): admin(1), name(""), topic(""){
  //itkol
-	modes['i'] = 0;
-	modes['t'] = 0;
-	modes['k'] = 0;
-	modes['o'] = 0;
-	modes['l'] = 0;
-	cout << "NEW CHANNEL UNDER " << name << " NAME WAS CREATED\n";
+	modes['i'] = "";
+	modes['t'] = "+t";
+	modes['k'] = "";
+	modes['o'] = "";
+	modes['l'] = "";
 }
 
-channel::channel(string name): name(name){}
+channel::channel(string name):admin(1), name(name), topic(""){
+    modes['i'] = "";
+	modes['t'] = "+t";
+	modes['k'] = "";
+	modes['o'] = "";
+	modes['l'] = "";
+}
 
 channel::channel(const channel& src){
     *this = src;
 }
 
-channel::~channel(){
-    cout << name << " CHANNEL HAS BEEN DELETED\n";
-}
+channel::~channel(){}
 
 channel& channel::operator=(const channel& src){
     if (this != &src){
+        this->users = src.users;
         this->name = src.name;
-        this->clients = src.clients;
+        this->topic = src.topic;
+        this->admin = src.admin;
+        this->modes = src.modes;
     }
     return *this;
 }
 
-void    channel::addUser(Client &client_){
-    clients.push_back(client_);
-    cout << "WELCOME TO " << this->name << " CHANNEL\n";
+
+            /*SETTERS*/
+void    channel::setChannelUser(Client &client_){
+    users.push_back(client_);
+}
+void channel::setChannelTopic(string &topic){
+	this->topic = topic;
+}
+void channel::setChannelAdmin(int admin){
+	this->admin = admin;
 }
 
+            /*GETTERS*/
 string &channel::getChannelName(){
     return this->name;
 }
 string &channel::getChannelTopic(){
     return this->topic;
+}
+int channel::getChannelAdmin(){
+    return this->admin;
+}
+map<char, string> &channel::getChannelModes(){
+    return this->modes;
 }

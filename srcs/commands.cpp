@@ -24,6 +24,16 @@ bool isConnected(Server& server, int fd){
 	return true;
 }
 
+bool isInChannel(Client &client, string &name){
+
+	vector<string>::iterator it = find(client.getInChannel().begin(), client.getInChannel().end(), name);
+
+	if (it == client.getInChannel().end())
+		return false;
+
+	return true;
+}
+
 // PASS <password>
 void    pass(Server& server, string line , int fd){
 	line = line.substr(4);
@@ -101,10 +111,11 @@ void user(Server& server, string line, int fd){
 	}
 }
 
+
 // JOIN <channels>
 void join(Server& server, string line, int fd){ // [X]
-    if (!server.getCLients()[fd].getInChannel().empty())
-        return;
+    // if (!server.getCLients()[fd].getInChannel().empty())
+    //     return;
 
 
     server.getServerName();
@@ -112,25 +123,78 @@ void join(Server& server, string line, int fd){ // [X]
     line = strtrim(line);
 
     if (line.empty()){
-        sendMsg(server.getCLients()[fd],":"+ server.getCLients()[fd].getNickName() + "!" /*getfirstuser*/ + "@localhost 461 "+\
-        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters");
+		string msg = ":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
+        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters";
+        send(fd,"JOIN :Not enough parameters", 29, 0);
         return ;
     }
 
     vector<string> spl = split(line, " ");
 
-        if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
-            channel channel(spl[0]);
-			cout << "CHANNEL DOESN'T EXIST\n";
-			channel.addUser(server.getCLients()[fd]);
-            server.getCLients()[fd].setInChannel(spl[0]);
+    if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
+        channel channel(spl[0]);
 
-			server.getChannels().insert(make_pair(spl[0], channel));
-			justJoined(server.getCLients()[fd], channel, fd, spl[0]);
-        } /// KEEP ADDING TILL YOU SEGFAULT IT
+		server.getCLients()[fd].setInChannel(spl[0]);
+		channel.setChannelUser(server.getCLients()[fd]);
+		channel.setChannelAdmin(fd);
+		server.setChannel(channel, spl[0], server.getCLients()[fd]);
+		justJoined(server.getCLients()[fd], channel, fd, spl[0]); //!
 
+    }
+	else{
+		server.getCLients()[fd].setInChannel(spl[0]);
+		server.getChannels()[spl[0]].setChannelUser(server.getCLients()[fd]);
+		justJoined(server.getCLients()[fd], server.getChannels()[spl[0]], fd, spl[0]); //!
+	}
 }
 
-// string getMsg(int msgNumber, Server& server, string channel, int fd){
-// 	return(   msgs()[msgNumber]);
-// }
+void	topic(Server &server, string line, int fd){
+
+    server.getServerName();
+    line = line.substr(5);
+    line = strtrim(line); 
+
+
+    if (strtrim(line).empty()){
+		string msg = ":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
+        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters";
+        send(fd, ":Not enough parameters\n", 24, 0); //! 461
+        return ;
+    }
+
+	vector<string> spl = split(line, " ");
+
+	string channel = spl[0]; //next time work using reference 
+    if (!isChannelExist(server.getChannels(), channel)) /*doesn't exist*/{
+		send(fd, ":No such channel\n", 18, 0); //! 403
+		return;
+    }
+	else if (!isInChannel(server.getCLients()[fd], channel))
+	{
+		send(fd, ":You're not on that channel\n", 29, 0); //! 442
+		return;
+	}
+
+	string topic = line.substr(channel.size());
+
+	if (topic.empty())
+	{
+		if (server.getChannels()[channel].getChannelTopic().empty())
+			send(fd," :No topic is set\n", 19, 0); //! 331
+		else
+		{
+			// send(fd, server.getChannels()[channel].getChannelTopic().c_str(), (server.getChannels()[channel].getChannelTopic()).size(), 0); //! 332
+			send(fd," :show old topic\n", 18, 0); //! 331
+		}
+	}
+	else{
+		if (server.getChannels()[channel].getChannelModes()['t'] == "+t" &&
+		 server.getChannels()[channel].getChannelAdmin() != fd)
+			send(fd, "You're not channel operator\n", 29, 0); //! 482
+		else{
+			send(fd, ":new topic\n", 12, 0); //! 333
+			server.getChannels()[channel].setChannelTopic(topic);
+		}
+	}
+}
+

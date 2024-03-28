@@ -6,10 +6,11 @@ using namespace std;
 
 class channel{
 	private:
-		vector<class Client> clients;
+		vector<class Client> users;
+		map<char, string> modes;
+		int admin;
 		string name;
 		string topic;
-		map<char, int> modes;
 	public:
 
 		// CANONICAL FORM
@@ -20,10 +21,14 @@ class channel{
 		~channel();
 
 		// REGULAR FUNCTIONS
-		void    addUser(class Client &client_);
+		void    setChannelUser(class Client &client_);
+		void setChannelTopic(string &topic);
+		void setChannelAdmin(int admin);
 
 		// GETERS
 		string &getChannelName();
+		int getChannelAdmin();
 		string &getChannelTopic();
+		map<char, string> &getChannelModes();
 
 };

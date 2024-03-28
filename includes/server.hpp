@@ -92,7 +92,7 @@ class Server{
 
 	// SETERS
 	void setUser(Client &obj);
-	void setChannel(string name, Client &client);
+	channel &setChannel(channel channel, string &name, Client &client);
 	void setServerName(string name);
 
 	// REGULAR FUNCTION

@@ -26,11 +26,11 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 }
 
 
-Client::Client(): nickname(""), username(""), fd(1), inChannel(""), isConnected(false){
+Client::Client(): nickname(""), username(""), fd(1), isConnected(false){
 
 }
 
-Client::Client(int fd):nickname(""), username(""), fd(fd), inChannel(""), isConnected(false){
+Client::Client(int fd):nickname(""), username(""), fd(fd), isConnected(false){
 }
 
 Client::Client(const Client& src){
@@ -56,7 +56,7 @@ string& Client::getUser(void){
 	return this->username;
 }
 
-string &Client::getInChannel(){
+vector<string> &Client::getInChannel(){
 	return this->inChannel;
 }
 
@@ -68,10 +68,9 @@ void Client::setFd(int fd){
 	this->fd = fd;
 }
 
-void Client::setInChannel(string &inChannel){
-	this->inChannel = inChannel;
+void Client::setInChannel(string &str){
+	inChannel.push_back(str);
 }
-
 void Client::setNickName(string nick){
 	this->nickname = nick;
 }

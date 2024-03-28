@@ -22,12 +22,12 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS"};
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC"};
     int n = 0;
     if (line.empty())
-        n = 7;
+        n = 8;
     else
-        while (n < 6 && commands[n].compare(line[0]))
+        while (n < 8 && commands[n].compare(line[0]))
             n++;
 
     switch (n)
@@ -45,6 +45,9 @@ bool parse(class Server &server,int fd, string reqs){
             return false;
         case 5:
             pass(server, reqs, fd);
+            break;
+        case 6:
+            topic(server, reqs, fd);
             break;
         default:{
             ft_unknownCmd(server.getCLients()[fd], fd, line[0]);
