@@ -117,6 +117,7 @@ map<int, string> msgs();
 string getLocalhost(Client &client);
 string nbtoString(int nb);
 map<int, string> msgs(Client& client, string channel, string cmd);
+void	mode(Server &server, string line, int fd);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;

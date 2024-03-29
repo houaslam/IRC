@@ -8,7 +8,7 @@ class channel{
 	private:
 		vector<class Client> users;
 		map<char, string> modes;
-		int admin;
+		vector<int> admins;
 		string name;
 		string topic;
 	public:
@@ -27,7 +27,7 @@ class channel{
 
 		// GETERS
 		string &getChannelName();
-		int getChannelAdmin();
+		vector<int> getChannelAdmins();
 		string &getChannelTopic();
 		map<char, string> &getChannelModes();
 

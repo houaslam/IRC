@@ -1,20 +1,20 @@
 #include "../includes/channel.hpp"
 
-channel::channel(): admin(1), name(""), topic(""){
+channel::channel():name(""), topic(""){
  //itkol
-	modes['i'] = "";
+	modes['i'] = "+i";
 	modes['t'] = "+t";
-	modes['k'] = "";
-	modes['o'] = "";
-	modes['l'] = "";
+	modes['k'] = "+k";
+	modes['o'] = "+o";
+	modes['l'] = "+l";
 }
 
-channel::channel(string name):admin(1), name(name), topic(""){
-    modes['i'] = "";
+channel::channel(string name):name(name), topic(""){
+    modes['i'] = "+i";
 	modes['t'] = "+t";
-	modes['k'] = "";
-	modes['o'] = "";
-	modes['l'] = "";
+	modes['k'] = "+k";
+	modes['o'] = "+o";
+	modes['l'] = "+l";
 }
 
 channel::channel(const channel& src){
@@ -28,7 +28,7 @@ channel& channel::operator=(const channel& src){
         this->users = src.users;
         this->name = src.name;
         this->topic = src.topic;
-        this->admin = src.admin;
+        this->admins = src.admins;
         this->modes = src.modes;
     }
     return *this;
@@ -43,7 +43,7 @@ void channel::setChannelTopic(string &topic){
 	this->topic = topic;
 }
 void channel::setChannelAdmin(int admin){
-	this->admin = admin;
+	this->admins.push_back(admin);
 }
 
             /*GETTERS*/
@@ -53,8 +53,8 @@ string &channel::getChannelName(){
 string &channel::getChannelTopic(){
     return this->topic;
 }
-int channel::getChannelAdmin(){
-    return this->admin;
+vector<int> channel::getChannelAdmins(){
+    return this->admins;
 }
 map<char, string> &channel::getChannelModes(){
     return this->modes;
