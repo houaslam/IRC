@@ -12,7 +12,6 @@ string getLocalhost(Client &client){
 
 void ft_unknownCmd(Client &client, int fd, string &line){
 
-    // vector<string> first = split(line, " ");
 
     (void)fd;
     // string msg = getMsg(UNKNOW_CMD);
@@ -28,13 +27,13 @@ void justJoined(Client &client, channel &channel, int fd, string &line){
     string msg;
     string localhost = getLocalhost(client);
 
-    (void)fd;
     if (channel.getChannelTopic().empty())
         msg = msgs(client, channel.getChannelName(), line)[JOIN_NO_TOPIC];
     else
         msg = channel.getChannelTopic();
 
-    // sendMsg(fd, localhost + client.getNickName() + " " + line + msg); // RECHECK
+
+    clearScreen(fd);
     sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg);
     sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
     sendMsg(client, localhost + "366" + " " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366

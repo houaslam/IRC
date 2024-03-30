@@ -19,5 +19,6 @@
         "__tree": "cpp",
         "bitset": "cpp",
         "initializer_list": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

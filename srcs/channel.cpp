@@ -1,5 +1,6 @@
 #include "../includes/channel.hpp"
 
+
 channel::channel():name(""), topic(""){
  //itkol
 	modes['i'] = "+i";

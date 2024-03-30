@@ -1,5 +1,6 @@
 
 #include "../includes/server.hpp"
+#include "../includes/client.hpp"
 
 string &withoutNewLine(string &line){
 
@@ -53,7 +54,7 @@ bool parse(class Server &server,int fd, string reqs){
             mode(server, reqs, fd);
             break;
         default:{
-            ft_unknownCmd(server.getCLients()[fd], fd, line[0]);
+            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", reqs)[UNKNOW_CMD]);
             break;
         }
     }
