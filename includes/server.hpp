@@ -22,6 +22,8 @@
 #include "client.hpp"
 #include "channel.hpp"
 #include <sys/time.h>
+#include <ctime>
+#include <algorithm>
 
        /* COLORS */
 #define RESET   "\033[0m"
@@ -61,6 +63,7 @@ using namespace std;
 
 class Server{
 	private:
+		time_t start;
 		int port;
 		int _socket;
 		string serverName;
@@ -88,11 +91,13 @@ class Server{
 	socklen_t  get_addr_len() const;
 	map<int, Client> &getCLients();
 	map<string, class channel> &getChannels();
+	time_t& getTime(void) const;
 
 
 	// SETERS
+	void setTime(time_t time);
 	void setUser(Client &obj);
-	void setChannel(string name, Client &client);
+	channel &setChannel(channel channel, string &name, Client &client);
 	void setServerName(string name);
 
 	// REGULAR FUNCTION
@@ -112,10 +117,18 @@ void sendMsg(Client& client, string str);
 void ft_unknownCmd(Client &client, int fd, string &line);
 void justJoined(Client &client, channel &channel, int fd, string &line);
 string getMsg(int msgNumber);
-map<int, string> msgs();
+// map<int, string> msgs();
 string getLocalhost(Client &client);
 string nbtoString(int nb);
 map<int, string> msgs(Client& client, string channel, string cmd);
+void	mode(Server &server, string line, int fd);
+void clearScreen(int fd);
+
+        /*BOOL*/
+bool isConnected(Server& server, int fd);
+bool isChannelExist(map<string, channel> &channels,string &line);
+bool isInChannel(class Client &client, string &name);
+bool isAdmin(int admin, channel channel);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;

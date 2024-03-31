@@ -4,33 +4,33 @@
 map<int, string> msgs(Client& client, string channel, string cmd){
 	map<int, string> msg;
 	// CHANNEL
-	msg[IN_CHANNEL] = nbtoString(client.get_fd()) + " " + channel + " :You have joined too many channels";
-	msg[JOIN_NO_TOPIC] = nbtoString(client.get_fd()) + " " + channel + " :No topic is set";
-	msg[ERR_NOTONCHANNEL] = nbtoString(client.get_fd()) + " " + channel + ":You're not on that channel";
-	msg[ERR_NOSUCHCHANNEL] = nbtoString(client.get_fd()) + " " + channel + " :No such channel";
+	msg[IN_CHANNEL] = nbtoString(IN_CHANNEL) + " " + channel + " :You have joined too many channels";
+	msg[JOIN_NO_TOPIC] = nbtoString(JOIN_NO_TOPIC) + " " + channel + " :No topic is set";
+	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
+	msg[ERR_NOSUCHCHANNEL] = nbtoString(ERR_NOSUCHCHANNEL) + " " + channel + " :No such channel";
 
 	// NICK
-	msg[NICK_NOT_GIVEN] = nbtoString(client.get_fd()) + " :Nickname not given";
-	msg[NICK_IN_USE] =  nbtoString(client.get_fd()) + " " + client.getNickName() + " :Nickname is already in use";
+	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
+	msg[NICK_IN_USE] =  nbtoString(NICK_IN_USE) + " " + client.getNickName() + " :Nickname is already in use";
 
 	// PASS
-	msg[NOT_REGISTRED] = nbtoString(client.get_fd()) +  " :You have not registered";
-	msg[NOT_ENOUGH_PARA] =  nbtoString(client.get_fd()) + " " + cmd + " :Not enough parameters";
-	msg[ALREADY_REGISTERED] = nbtoString(client.get_fd()) +  " :You may not reregister";
-	msg[INCORRECT_PWD] = nbtoString(client.get_fd()) + " :Password is incorrect";
+	msg[NOT_REGISTRED] = nbtoString(NOT_REGISTRED) +  " :You have not registered";
+	msg[NOT_ENOUGH_PARA] =  nbtoString(NOT_ENOUGH_PARA) + " " + cmd + " :Not enough parameters";
+	msg[ALREADY_REGISTERED] = nbtoString(ALREADY_REGISTERED) +  " :You may not reregister";
+	msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
 
 	// GENERAL
-	msg[UNKNOW_CMD] = nbtoString(client.get_fd()) + " " + cmd +  " :Unknown command";
+	msg[UNKNOW_CMD] = nbtoString(UNKNOW_CMD) + " " + cmd +  " :Unknown command";
 
 	return msg;
 }
 
 
-Client::Client(): nickname(""), username(""), fd(1), inChannel(""), isConnected(false){
+Client::Client(): nickname("user"), username(""), fd(1), isConnected(false){
 
 }
 
-Client::Client(int fd):nickname(""), username(""), fd(fd), inChannel(""), isConnected(false){
+Client::Client(int fd):nickname("user"), username(""), fd(fd), isConnected(false){
 }
 
 Client::Client(const Client& src){
@@ -56,7 +56,7 @@ string& Client::getUser(void){
 	return this->username;
 }
 
-string &Client::getInChannel(){
+vector<string> &Client::getInChannel(){
 	return this->inChannel;
 }
 
@@ -68,10 +68,9 @@ void Client::setFd(int fd){
 	this->fd = fd;
 }
 
-void Client::setInChannel(string &inChannel){
-	this->inChannel = inChannel;
+void Client::setInChannel(string &str){
+	inChannel.push_back(str);
 }
-
 void Client::setNickName(string nick){
 	this->nickname = nick;
 }

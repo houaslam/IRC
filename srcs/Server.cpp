@@ -87,16 +87,12 @@ void Server::setUser(Client &obj){
 	this->clients[obj.get_fd()] = obj;
 }
 
-void Server::setChannel(string name, Client &client){
-	client.get_fd();
+channel &Server::setChannel(channel channel,string &name, Client &client){
 
-	channel channel(name);
-	channel.addUser(client);
-	// std::pair<std::string, Client> pairToInsert(name, client);
-	// channels.insert(pairToInsert);
-	
+	channel.setChannelUser(client);
 	this->channels.insert(make_pair(name, channel));
-	// this->channels.insert(make_pair(name, client));
+
+	return channels[name];
 }
 
 void Server::setServerName(string name){
@@ -105,4 +101,13 @@ void Server::setServerName(string name){
 
 map<int, string> Server::get_msg() const{
 	return this->msg;
+}
+
+time_t&  Server::getTime(void) const{
+	return this->time;
+}
+
+
+void  Server::setTime(time_t time){
+	this->time = time;
 }

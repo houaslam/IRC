@@ -1,5 +1,10 @@
 #include "../includes/server.hpp"
 
+void clearScreen(int fd) {
+    const char* clear_cmd = "\033[H\033[2J"; 
+    write(fd, clear_cmd, 10); 
+}
+
 void ft_error(string prob){
     string res = RED + prob + RESET;
     perror(res.c_str());
