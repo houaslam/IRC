@@ -1,35 +1,7 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-void getMode(string mode, string str, channel &channel, Server &server){
-	if (mode.size() < 2)
-		return;
-	string flag; //itkol
-	if (mode[0] == '-')
-		flag  = "-";
-	else
-		flag = "+";
-	if (mode.find("i"))
-			channel.getChannelModes()['i'] = flag + "i";
-	else if(mode.find("t"))
-			channel.getChannelModes()['t'] = flag + "t";
-		else if (mode.find("o"))
-		{
-			//del or add
-			// map<int , class Client> save = server.getCLients();
-			for(map<int, class Client>::iterator it = server.getCLients().begin(); it != server.getCLients().end(); it++){
-				if (str.compare(it->second.getNickName()))
-					if (flag == "+")
-						channel.setChannelAdmin(it->first);
-					// else
-
-			}
-		}
-		// else if (mode[i] == 'l')
-		// 	channel.getChannelModes()[i] = flag + "l";
-}
-				/*bool*/
-bool isAdmin(int admin, channel channel){
+bool isAdmin(string admin, channel channel){
 	
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
 		if (channel.getChannelAdmins()[i] == admin)
@@ -38,6 +10,69 @@ bool isAdmin(int admin, channel channel){
 	return false;
 }
 
+void fillMode(string mode, string arg, channel &channel, Server &server, Client &client){
+	server.getCLients();
+
+	if (mode.size() > 2) ///recheck later
+	{
+		send(client.get_fd(), "ERROR\n", 5, 0);	
+		return; 
+	}
+	char flag = mode[0];
+	if (mode[1] == 'o'){
+		if (flag == '+')
+			channel.setChannelAdmin(client.getNickName()); 
+		else
+			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
+				if (arg ==(channel.getChannelAdmins()[i]))
+					channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+	}
+	if (mode[1] == 'k'){
+		if (flag == '-')
+			channel.getChannelModes()['k'] = "";
+		else
+			channel.getChannelModes()['k'] = arg;
+	}
+	if (mode[1] == 'l'){
+		if (flag == '-')
+			channel.getChannelModes()['l'] = "";
+		else
+			channel.getChannelModes()['l'] = arg;
+	}
+
+}
+
+void getMode(string mode, string str, channel &channel, Server &server){
+	return;
+	str = "";
+	if (mode.size() < 2)
+		return;
+	string flag; //itkol
+	if (mode[0] == '-')
+		flag  = "-";
+	else
+		flag = "+";
+	if (mode.find("i"))
+		cout <<"" << endl;
+			// channel.getChannelModes()['i'] = flag + "i";
+	else if(mode.find("t"))
+			channel.getChannelModes()['t'] = flag + "t";
+		else if (mode.find("o"))
+		{
+			//del or add
+			// map<int , class Client> save = server.getCLients();
+			for(map<int, class Client>::iterator it = server.getCLients().begin(); it != server.getCLients().end(); it++){
+				// if (str.compare(it->second.getNickName()))
+					// if (flag == "+")
+					// 	channel.setChannelAdmin(it->first);
+					// else
+
+			}
+		}
+		// else if (mode[i] == 'l')
+		// 	channel.getChannelModes()[i] = flag + "l";
+}
+				/*bool*/
 
 bool check_users(Server& server,string line , int ref){
 	map<int , class Client> save = server.getCLients();
@@ -152,54 +187,40 @@ void user(Server& server, string line, int fd){
 
 // JOIN <channels>
 void join(Server& server, string line, int fd){ // [X]
-    // if (!server.getCLients()[fd].getInChannel().empty())
-    //     return;
-
-
-    server.getServerName();
+	Client &client = server.getCLients()[fd];
     line = line.substr(4);
     line = strtrim(line);
 
     if (line.empty()){
-		string msg = ":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
-        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters";
-        send(fd,"JOIN :Not enough parameters", 29, 0);
+		sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]); //! 461
         return ;
     }
-
     vector<string> spl = split(line, " ");
-
     if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
         channel channel(spl[0]);
 
-		server.getCLients()[fd].setInChannel(spl[0]);
-		channel.setChannelUser(server.getCLients()[fd]);
-		channel.setChannelAdmin(fd);
-		server.setChannel(channel, spl[0], server.getCLients()[fd]);
-		justJoined(server.getCLients()[fd], channel, fd, spl[0]); //!
-
+		client.setInChannel(spl[0]);
+		channel.setChannelUser(client);
+		channel.setChannelAdmin(client.getNickName());
+		server.setChannel(channel, spl[0], client);
+		justJoined(client, channel, fd, spl[0]); //!
     }
 	else{
-		server.getCLients()[fd].setInChannel(spl[0]);
-		server.getChannels()[spl[0]].setChannelUser(server.getCLients()[fd]);
-		justJoined(server.getCLients()[fd], server.getChannels()[spl[0]], fd, spl[0]); //!
+		client.setInChannel(spl[0]);
+		server.getChannels()[spl[0]].setChannelUser(client);
+		justJoined(client, server.getChannels()[spl[0]], fd, spl[0]); //!
 	}
 }
 
 void	topic(Server &server, string line, int fd){
-
-    server.getServerName();
+	Client &client = server.getCLients()[fd];
     line = line.substr(5);
     line = strtrim(line); 
 
-
     if (strtrim(line).empty()){
-		string msg = ":"+ server.getCLients()[fd].getNickName() + "!" + server.getCLients()[fd].getUser() + "@localhost 461 "+\
-        server.getCLients()[fd].getNickName()+" JOIN :Not enough parameters";
-        send(fd, ":Not enough parameters\n", 24, 0); //! 461
+		sendMsg(client, msgs(client, "", "TOPIC")[NOT_ENOUGH_PARA]); //! 461
         return ;
     }
-
 	vector<string> spl = split(line, " ");
 
 	string channel = spl[0]; //next time work using reference 
@@ -224,7 +245,7 @@ void	topic(Server &server, string line, int fd){
 	}
 	else{
 		if (server.getChannels()[channel].getChannelModes()['t'] == "+t" &&
-			!isAdmin(fd, server.getChannels()[channel]))
+			!isAdmin(client.getNickName(), server.getChannels()[channel]))
 				send(fd, "You're not channel operator\n", 29, 0); //! 482
 		else{
 			send(fd, ":new topic\n", 12, 0); //! 333
@@ -250,15 +271,17 @@ void	mode(Server &server, string line, int fd){
 	
 	if (!isInChannel(client, spl[0]))
 		send(fd, ":You're not on that channel\n", 29, 0); //!442
-	else if (!isAdmin(fd, channel))
+	else if (!isAdmin(client.getNickName(), channel))
 		send(fd, "You're not channel operator\n", 29, 0); //! 482
 	else if (spl[1][0] == '+' || spl[1][0] == '-')
 	{
-		if ((spl[1].find("o") != string::npos && spl[1].find("k") != string::npos && spl[1].find("l") != string::npos) \
-			&& spl[2].empty())
-				sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
+		if (spl.size() < 3)
+			spl.push_back("");
+		if (spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos || spl[1].find("t") != string::npos)
+				fillMode(spl[1], spl[2], channel, server, client);
 		else
-			getMode(spl[1], spl[2], channel, server);
+			cout << "je\n";
+				// sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
 	}
 	else
 		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461

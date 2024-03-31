@@ -8,7 +8,8 @@ class channel{
 	private:
 		vector<class Client> users;
 		map<char, string> modes;
-		vector<int> admins;
+		vector<string> admins;
+		vector<int> invited;
 		string name;
 		string topic;
 	public:
@@ -23,12 +24,14 @@ class channel{
 		// REGULAR FUNCTIONS
 		void    setChannelUser(class Client &client_);
 		void setChannelTopic(string &topic);
-		void setChannelAdmin(int admin);
+		void setChannelAdmin(string admin);
 
 		// GETERS
 		string &getChannelName();
-		vector<int> getChannelAdmins();
+		vector<string> getChannelAdmins();
 		string &getChannelTopic();
 		map<char, string> &getChannelModes();
 
 };
+
+bool isAdmin(string admin, channel channel);

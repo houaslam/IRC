@@ -7,15 +7,15 @@ channel::channel():name(""), topic(""){
 	modes['t'] = "+t";
 	modes['k'] = "+k";
 	modes['o'] = "+o";
-	modes['l'] = "+l";
+	modes['l'] = ""; /// or digit
 }
 
 channel::channel(string name):name(name), topic(""){
-    modes['i'] = "+i";
-	modes['t'] = "+t";
-	modes['k'] = "+k";
-	modes['o'] = "+o";
-	modes['l'] = "+l";
+    modes['i'] = "-i"; // only the guys who got invited and set the channel to +i
+	modes['t'] = "+t"; //
+	modes['k'] = "+k"; //password
+	modes['o'] = "+o"; //admins kicking and banning ...
+	modes['l'] = ""; /// or digit
 }
 
 channel::channel(const channel& src){
@@ -43,7 +43,7 @@ void    channel::setChannelUser(Client &client_){
 void channel::setChannelTopic(string &topic){
 	this->topic = topic;
 }
-void channel::setChannelAdmin(int admin){
+void channel::setChannelAdmin(string admin){
 	this->admins.push_back(admin);
 }
 
@@ -54,7 +54,7 @@ string &channel::getChannelName(){
 string &channel::getChannelTopic(){
     return this->topic;
 }
-vector<int> channel::getChannelAdmins(){
+vector<string> channel::getChannelAdmins(){
     return this->admins;
 }
 map<char, string> &channel::getChannelModes(){

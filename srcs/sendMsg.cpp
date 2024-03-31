@@ -32,7 +32,6 @@ void justJoined(Client &client, channel &channel, int fd, string &line){
     else
         msg = channel.getChannelTopic();
 
-
     clearScreen(fd);
     sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg);
     sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
