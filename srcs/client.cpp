@@ -26,11 +26,11 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 }
 
 
-Client::Client(): nickname(""), username(""), fd(1), isConnected(false){
+Client::Client(): nickname("user"), username(""), fd(1), isConnected(false){
 
 }
 
-Client::Client(int fd):nickname(""), username(""), fd(fd), isConnected(false){
+Client::Client(int fd):nickname("user"), username(""), fd(fd), isConnected(false){
 }
 
 Client::Client(const Client& src){

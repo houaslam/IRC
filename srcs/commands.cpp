@@ -298,3 +298,7 @@ void	mode(Server &server, string line, int fd){
 		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
 	
 }
+
+// string getMsg(int msgNumber, Server& server, string channel, int fd){
+// 	return(   msgs()[msgNumber]);
+// }

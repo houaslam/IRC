@@ -22,6 +22,7 @@
 #include "client.hpp"
 #include "channel.hpp"
 #include <sys/time.h>
+#include <ctime>
 #include <algorithm>
 
        /* COLORS */
@@ -62,6 +63,7 @@ using namespace std;
 
 class Server{
 	private:
+		time_t start;
 		int port;
 		int _socket;
 		string serverName;
@@ -89,9 +91,11 @@ class Server{
 	socklen_t  get_addr_len() const;
 	map<int, Client> &getCLients();
 	map<string, class channel> &getChannels();
+	time_t& getTime(void) const;
 
 
 	// SETERS
+	void setTime(time_t time);
 	void setUser(Client &obj);
 	channel &setChannel(channel channel, string &name, Client &client);
 	void setServerName(string name);

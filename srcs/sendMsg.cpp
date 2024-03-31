@@ -27,6 +27,7 @@ void justJoined(Client &client, channel &channel, int fd, string &line){
     string msg;
     string localhost = getLocalhost(client);
 
+    fd++;
     if (channel.getChannelTopic().empty())
         msg = msgs(client, channel.getChannelName(), line)[JOIN_NO_TOPIC];
     else

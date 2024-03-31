@@ -7,6 +7,7 @@ int main(int ac , char ** av){
 	if (ac == 3){
 
 		Server server(atoi(av[1]), av[2]);
+		server.setTime(NULL);
 		char reqs[1024];
 		struct pollfd fds[1024];
 		fds[0].fd = server.get_socket();
