@@ -11,10 +11,15 @@ int main() {
     vec.push_back(5);
 
     // Method 1: Using erase() by index
-    size_t index_to_remove = 2; // Index of element to remove
-    if (index_to_remove < vec.size()) {
-        vec.erase(vec.begin() + 4);
+    // size_t index_to_remove = 2; // Index of element to remove
+    for (size_t i = 0; i < vec.size(); ++i) {
+        if (vec[i] == 3)
+            vec.erase(vec.begin() + i);
+
     }
+    // if (index_to_remove < vec.size()) {
+    //     vec.erase(vec.begin() + 1);
+    // }
     for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it) {
         std::cout << *it << " ";
     }

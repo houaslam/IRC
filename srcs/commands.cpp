@@ -1,45 +1,13 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-bool isAdmin(string admin, channel channel){
+bool isAdmin(string admin, channel &channel){
 	
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
 		if (channel.getChannelAdmins()[i] == admin)
 			return true;
 	}
 	return false;
-}
-
-void fillMode(string mode, string arg, channel &channel, Server &server, Client &client){
-	server.getCLients();
-
-	if (mode.size() > 2) ///recheck later
-	{
-		send(client.get_fd(), "ERROR\n", 5, 0);	
-		return; 
-	}
-	char flag = mode[0];
-	if (mode[1] == 'o'){
-		if (flag == '+')
-			channel.setChannelAdmin(client.getNickName()); 
-		else
-			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
-				if (arg ==(channel.getChannelAdmins()[i]))
-					channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
-	}
-	if (mode[1] == 'k'){
-		if (flag == '-')
-			channel.getChannelModes()['k'] = "";
-		else
-			channel.getChannelModes()['k'] = arg;
-	}
-	if (mode[1] == 'l'){
-		if (flag == '-')
-			channel.getChannelModes()['l'] = "";
-		else
-			channel.getChannelModes()['l'] = arg;
-	}
-
 }
 
 void getMode(string mode, string str, channel &channel, Server &server){
@@ -254,6 +222,49 @@ void	topic(Server &server, string line, int fd){
 	}
 }
 
+void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
+	server.getCLients();
+	if (mode.size() > 2) ///recheck later
+	{
+		send(client.get_fd(), "ERROR\n", 5, 0);	
+		return; 
+	}
+	char flag = mode[0];
+	if (mode[1] == 'o'){
+		if (arg.empty())
+			return sendMsg(client, "not enough arguments");
+		if (flag == '+')
+			channel.setChannelAdmin(arg);
+		else
+			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
+			{
+				if (arg == channel.getChannelAdmins()[i])
+				{
+					cout << "UNSETING ADMIN :" << arg << endl;	
+					channel.getChannelAdmins()[i] = ""; ////later
+				}
+					// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+			}
+	}
+	if (mode[1] == 'k'){
+		if (flag == '-')
+			channel.getChannelModes()['k'] = "";
+		else
+			if (arg.empty())
+				return sendMsg(client, "not enough arguments");
+			channel.getChannelModes()['k'] = arg;
+	}
+	if (mode[1] == 'l'){
+		if (flag == '-')
+			channel.getChannelModes()['l'] = "";
+		else
+			if (arg.empty())
+				return sendMsg(client, "not enough arguments");
+			channel.getChannelModes()['l'] = arg;
+	}
+
+}
+
 void	mode(Server &server, string line, int fd){
     line = line.substr(4);
     line = strtrim(line);
@@ -263,7 +274,7 @@ void	mode(Server &server, string line, int fd){
         return ;
     }
 	vector<string> spl = split(line, " ");
-	if(!isChannelExist(server.getChannels(), spl[0])){
+	if (!isChannelExist(server.getChannels(), spl[0])){
 		send(fd, ":No such channel\n", 18, 0); //! 403
 		return ;
 	}
@@ -277,12 +288,13 @@ void	mode(Server &server, string line, int fd){
 	{
 		if (spl.size() < 3)
 			spl.push_back("");
-		if (spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos || spl[1].find("t") != string::npos)
-				fillMode(spl[1], spl[2], channel, server, client);
+		if ((spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos) && spl[2].empty())
+			return sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
 		else
-			cout << "je\n";
+			fillMode(spl[1], spl[2], channel, server, client);
 				// sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
 	}
 	else
 		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
+	
 }

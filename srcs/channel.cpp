@@ -54,7 +54,7 @@ string &channel::getChannelName(){
 string &channel::getChannelTopic(){
     return this->topic;
 }
-vector<string> channel::getChannelAdmins(){
+vector<string> &channel::getChannelAdmins(){
     return this->admins;
 }
 map<char, string> &channel::getChannelModes(){

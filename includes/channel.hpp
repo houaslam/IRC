@@ -28,10 +28,10 @@ class channel{
 
 		// GETERS
 		string &getChannelName();
-		vector<string> getChannelAdmins();
+		vector<string> &getChannelAdmins();
 		string &getChannelTopic();
 		map<char, string> &getChannelModes();
 
 };
 
-bool isAdmin(string admin, channel channel);
+bool isAdmin(string admin, channel &channel);
