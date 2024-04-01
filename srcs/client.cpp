@@ -1,6 +1,25 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
+bool isAdmin(string admin, channel &channel){
+	
+	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
+		if (channel.getChannelAdmins()[i] == admin)
+			return true;
+	}
+	return false;
+}
+
+bool isInvited(string invited, channel &channel){
+	
+	for (size_t i = 0; i < channel.getChannelInvited().size(); i++){
+		if (channel.getChannelInvited()[i] == invited)
+			return true;
+	}
+	return false;
+}
+
+
 map<int, string> msgs(Client& client, string channel, string cmd){
 	map<int, string> msg;
 	// CHANNEL
@@ -8,6 +27,7 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 	msg[JOIN_NO_TOPIC] = nbtoString(JOIN_NO_TOPIC) + " " + channel + " :No topic is set";
 	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
 	msg[ERR_NOSUCHCHANNEL] = nbtoString(ERR_NOSUCHCHANNEL) + " " + channel + " :No such channel";
+	msg[MODE_PLUS_I] = nbtoString(MODE_PLUS_I) + " " + channel + " :Cannot join channel (+i)";
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";

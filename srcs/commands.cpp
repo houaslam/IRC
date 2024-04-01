@@ -1,15 +1,6 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-bool isAdmin(string admin, channel &channel){
-	
-	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
-		if (channel.getChannelAdmins()[i] == admin)
-			return true;
-	}
-	return false;
-}
-
 void getMode(string mode, string str, channel &channel, Server &server){
 	return;
 	str = "";
@@ -159,10 +150,8 @@ void join(Server& server, string line, int fd){ // [X]
     line = line.substr(4);
     line = strtrim(line);
 
-    if (line.empty()){
-		sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]); //! 461
-        return ;
-    }
+    if (line.empty())
+		return sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]); //! 461
     vector<string> spl = split(line, " ");
     if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
         channel channel(spl[0]);
@@ -171,12 +160,18 @@ void join(Server& server, string line, int fd){ // [X]
 		channel.setChannelUser(client);
 		channel.setChannelAdmin(client.getNickName());
 		server.setChannel(channel, spl[0], client);
-		justJoined(client, channel, fd, spl[0]); //!
+		justJoined(client, channel, spl[0]); //!
     }
 	else{
+		channel &channel = server.getChannels()[spl[0]];
+		if (isInChannel(client, spl[0]))
+			return ;
+		if (!isAdmin(client.getNickName(), channel) && !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i"){
+			return sendMsg(client, msgs(client, spl[0], "")[MODE_PLUS_I]); //!437 "<client> <channel> :Cannot join channel (+i)"
+		}
 		client.setInChannel(spl[0]);
-		server.getChannels()[spl[0]].setChannelUser(client);
-		justJoined(client, server.getChannels()[spl[0]], fd, spl[0]); //!
+		channel.setChannelUser(client);
+		justJoined(client, channel, spl[0]); //!
 	}
 }
 
@@ -191,33 +186,33 @@ void	topic(Server &server, string line, int fd){
     }
 	vector<string> spl = split(line, " ");
 
-	string channel = spl[0]; //next time work using reference 
-    if (!isChannelExist(server.getChannels(), channel)) /*doesn't exist*/{
+	channel channel = server.getChannels()[spl[0]]; //next time work using reference 
+    if (!isChannelExist(server.getChannels(), spl[0])) /*doesn't exist*/{
 		send(fd, ":No such channel\n", 18, 0); //! 403
 		return;
     }
-	else if (!isInChannel(server.getCLients()[fd], channel))
+	else if (!isInChannel(server.getCLients()[fd], spl[0]))
 	{
 		send(fd, ":You're not on that channel\n", 29, 0); //! 442
 		return;
 	}
 
-	string topic = line.substr(channel.size());
+	string topic = line.substr(spl[0].size());
 
 	if (topic.empty())
 	{
-		if (server.getChannels()[channel].getChannelTopic().empty())
+		if (channel.getChannelTopic().empty())
 			send(fd," :No topic is set\n", 19, 0); //! 331
 		else
 			send(fd," :show old topic\n", 18, 0); //! 331
 	}
 	else{
-		if (server.getChannels()[channel].getChannelModes()['t'] == "+t" &&
-			!isAdmin(client.getNickName(), server.getChannels()[channel]))
+		if (channel.getChannelModes()['t'] == "+t" &&
+			!isAdmin(client.getNickName(), channel))
 				send(fd, "You're not channel operator\n", 29, 0); //! 482
 		else{
 			send(fd, ":new topic\n", 12, 0); //! 333
-			server.getChannels()[channel].setChannelTopic(topic);
+			channel.setChannelTopic(topic);
 		}
 	}
 }
@@ -237,32 +232,41 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 			channel.setChannelAdmin(arg);
 		else
 			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
-			{
 				if (arg == channel.getChannelAdmins()[i])
-				{
-					cout << "UNSETING ADMIN :" << arg << endl;	
 					channel.getChannelAdmins()[i] = ""; ////later
-				}
 					// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
-			}
 	}
 	if (mode[1] == 'k'){
 		if (flag == '-')
 			channel.getChannelModes()['k'] = "";
-		else
+		else{
 			if (arg.empty())
 				return sendMsg(client, "not enough arguments");
 			channel.getChannelModes()['k'] = arg;
+		}
 	}
 	if (mode[1] == 'l'){
 		if (flag == '-')
 			channel.getChannelModes()['l'] = "";
 		else
+		{
 			if (arg.empty())
 				return sendMsg(client, "not enough arguments");
 			channel.getChannelModes()['l'] = arg;
+		}
 	}
-
+	if (mode[1] == 't'){
+		if (flag == '-')
+			channel.getChannelModes()['t'] = "-t";
+		else
+			channel.getChannelModes()['t'] = "+t";
+	}
+	if (mode[1] == 'i'){
+		if (flag == '-')
+			channel.getChannelModes()['i'] = "-i";
+		else
+			channel.getChannelModes()['i'] = "+i";
+	}
 }
 
 void	mode(Server &server, string line, int fd){
@@ -302,3 +306,4 @@ void	mode(Server &server, string line, int fd){
 // string getMsg(int msgNumber, Server& server, string channel, int fd){
 // 	return(   msgs()[msgNumber]);
 // }
+

@@ -43,6 +43,7 @@
 #define JOIN_NO_TOPIC    		332  // :Channel Topic
 #define ERR_NOTONCHANNEL		442
 #define ERR_NOSUCHCHANNEL 		403
+#define MODE_PLUS_I 			437  // <client> <channel> :Cannot join channel (+i)"
 
 
 // NICK 
@@ -115,7 +116,7 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void sendMsg(Client& client, string str);
 void ft_unknownCmd(Client &client, int fd, string &line);
-void justJoined(Client &client, channel &channel, int fd, string &line);
+void justJoined(Client &client, channel &channel, string &line);
 string getMsg(int msgNumber);
 // map<int, string> msgs();
 string getLocalhost(Client &client);

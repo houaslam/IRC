@@ -46,6 +46,9 @@ void channel::setChannelTopic(string &topic){
 void channel::setChannelAdmin(string admin){
 	this->admins.push_back(admin);
 }
+void channel::setChannelInvited(string invited){
+	this->invited.push_back(invited);
+}
 
             /*GETTERS*/
 string &channel::getChannelName(){
@@ -56,6 +59,8 @@ string &channel::getChannelTopic(){
 }
 vector<string> &channel::getChannelAdmins(){
     return this->admins;
+}vector<string> &channel::getChannelInvited(){
+    return this->invited;
 }
 map<char, string> &channel::getChannelModes(){
     return this->modes;

@@ -9,7 +9,7 @@ class channel{
 		vector<class Client> users;
 		map<char, string> modes;
 		vector<string> admins;
-		vector<int> invited;
+		vector<string> invited;
 		string name;
 		string topic;
 	public:
@@ -25,13 +25,16 @@ class channel{
 		void    setChannelUser(class Client &client_);
 		void setChannelTopic(string &topic);
 		void setChannelAdmin(string admin);
+		void setChannelInvited(string admin);
 
 		// GETERS
 		string &getChannelName();
 		vector<string> &getChannelAdmins();
+		vector<string> &getChannelInvited();
 		string &getChannelTopic();
 		map<char, string> &getChannelModes();
 
 };
 
+bool isInvited(string invited, channel &channel);
 bool isAdmin(string admin, channel &channel);
