@@ -44,7 +44,8 @@
 #define ERR_NOTONCHANNEL		442
 #define ERR_NOSUCHCHANNEL 		403
 #define MODE_PLUS_I 			437  // <client> <channel> :Cannot join channel (+i)"
-
+#define ERR_CHANNELMODEINVALID	473  // :Invalid channel mode
+#define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
 
 // NICK 
 #define NICK_NOT_GIVEN		    431  // :Nickname not given"

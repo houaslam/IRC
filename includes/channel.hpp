@@ -29,9 +29,10 @@ class channel{
 
 		// GETERS
 		string &getChannelName();
+		string &getChannelTopic();
 		vector<string> &getChannelAdmins();
 		vector<string> &getChannelInvited();
-		string &getChannelTopic();
+		vector<Client> &getChannelUsers();
 		map<char, string> &getChannelModes();
 
 };

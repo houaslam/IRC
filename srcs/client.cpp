@@ -28,6 +28,8 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
 	msg[ERR_NOSUCHCHANNEL] = nbtoString(ERR_NOSUCHCHANNEL) + " " + channel + " :No such channel";
 	msg[MODE_PLUS_I] = nbtoString(MODE_PLUS_I) + " " + channel + " :Cannot join channel (+i)";
+	msg[ERR_CHANNELISFULL] = nbtoString(ERR_CHANNELISFULL) + " " + channel + " :Cannot join channel (+l)";
+	// msg[ERR_CHANNELMODEINVALID] = nbtoString(ERR_CHANNELMODEINVALID) + " " + channel + " :Invalid channel mode";
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";

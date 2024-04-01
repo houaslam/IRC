@@ -39,29 +39,25 @@ channel& channel::operator=(const channel& src){
             /*SETTERS*/
 void    channel::setChannelUser(Client &client_){
     users.push_back(client_);
-}
-void channel::setChannelTopic(string &topic){
+}void   channel::setChannelTopic(string &topic){
 	this->topic = topic;
-}
-void channel::setChannelAdmin(string admin){
+}void   channel::setChannelAdmin(string admin){
 	this->admins.push_back(admin);
-}
-void channel::setChannelInvited(string invited){
+}void   channel::setChannelInvited(string invited){
 	this->invited.push_back(invited);
 }
 
             /*GETTERS*/
-string &channel::getChannelName(){
+string          &channel::getChannelName(){
     return this->name;
-}
-string &channel::getChannelTopic(){
+}string         &channel::getChannelTopic(){
     return this->topic;
-}
-vector<string> &channel::getChannelAdmins(){
+}vector<string> &channel::getChannelAdmins(){
     return this->admins;
+}vector<Client> &channel::getChannelUsers(){
+    return this->users;
 }vector<string> &channel::getChannelInvited(){
     return this->invited;
-}
-map<char, string> &channel::getChannelModes(){
+}map<char, string>  &channel::getChannelModes(){
     return this->modes;
 }

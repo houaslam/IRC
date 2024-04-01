@@ -157,7 +157,7 @@ void join(Server& server, string line, int fd){ // [X]
         channel channel(spl[0]);
 
 		client.setInChannel(spl[0]);
-		channel.setChannelUser(client);
+		channel.setChannelUser(client); ///add invited to users as well
 		channel.setChannelAdmin(client.getNickName());
 		server.setChannel(channel, spl[0], client);
 		justJoined(client, channel, spl[0]); //!
@@ -166,6 +166,9 @@ void join(Server& server, string line, int fd){ // [X]
 		channel &channel = server.getChannels()[spl[0]];
 		if (isInChannel(client, spl[0]))
 			return ;
+		if (channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['l'].c_str()))
+			return sendMsg(client, msgs(client, spl[0], "")[ERR_CHANNELISFULL]);
+		// if (channel.getChannelModes()['l'] != "-k" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['k'].c_str()))
 		if (!isAdmin(client.getNickName(), channel) && !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i"){
 			return sendMsg(client, msgs(client, spl[0], "")[MODE_PLUS_I]); //!437 "<client> <channel> :Cannot join channel (+i)"
 		}
@@ -252,6 +255,9 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		{
 			if (arg.empty())
 				return sendMsg(client, "not enough arguments");
+			for (size_t i = 0; i < arg.size(); i++)
+				if (!isdigit(arg[i]))
+					return;
 			channel.getChannelModes()['l'] = arg;
 		}
 	}
