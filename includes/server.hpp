@@ -40,11 +40,19 @@
 
 // CHANNEL
 #define IN_CHANNEL			    405  // :You have joined too many channels
-#define JOIN_NO_TOPIC    		332  // :Channel Topic
-#define ERR_NOTONCHANNEL		442
-#define ERR_NOSUCHCHANNEL 		403
+#define ERR_NOTONCHANNEL		442	 // :You're not on that channel
+#define ERR_NOSUCHCHANNEL 		403  // :No such channel
+#define MODE_PLUS_I 			437  // <client> <channel> :Cannot join channel (+i)"
+#define ERR_CHANNELMODEINVALID	473  // :Invalid channel mode
+#define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
+#define ERR_BADCHANNELKEY		475  // :Cannot join channel (+k)
+#define RPL_INVITING			341  // :<nick> <channel>
+#define RPL_TOPIC	    		332  // :Channel Topic
+#define RPL_NOTOPIC				331  // :No topic is set"
+#define ERR_CHANOPRIVSNEEDED	482  // :You're not channel operator
+#define ERR_USERONCHANNEL		443  // :is already on channel
 
-
+  
 // NICK 
 #define NICK_NOT_GIVEN		    431  // :Nickname not given"
 #define NICK_IN_USE			    433  // :Nickname is already in use"
@@ -114,12 +122,15 @@ string strtrim(const string& str);
 // EXTERNAL FUNCTION
 void sendMsg(Client& client, string str);
 void ft_unknownCmd(Client &client, int fd, string &line);
+void justJoined(Client &client, channel &channel, string &line);
 string getMsg(int msgNumber);
 string getLocalhost(Client &client);
 string nbtoString(int nb);
 map<int, string> msgs(Client& client, string channel, string cmd);
 void clearScreen(int fd);
 string getTime(void);
+void del_fd(struct pollfd fds[], int* fd_count, int p);
+void add_fd(struct pollfd fds[], int* fd_count, int fd);
 
 // BOOL
 bool isConnected(Server& server, int fd);

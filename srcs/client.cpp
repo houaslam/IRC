@@ -1,7 +1,9 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-Client::Client(): nickname(""), username(""), fd(1), isConnected(false){
+
+
+Client::Client(): nickname("user"), username(""), fd(1), isConnected(false){
 
 }
 

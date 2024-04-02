@@ -1,47 +1,6 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-bool isAdmin(string admin, channel channel){
-	
-	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
-		if (channel.getChannelAdmins()[i] == admin)
-			return true;
-	}
-	return false;
-}
-
-void fillMode(string mode, string arg, channel &channel, Server &server, Client &client){
-	server.getCLients();
-
-	if (mode.size() > 2) ///recheck later
-	{
-		send(client.get_fd(), "ERROR\n", 5, 0);	
-		return; 
-	}
-	char flag = mode[0];
-	if (mode[1] == 'o'){
-		if (flag == '+')
-			channel.setChannelAdmin(client.getNickName()); 
-		else
-			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
-				if (arg ==(channel.getChannelAdmins()[i]))
-					channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
-	}
-	if (mode[1] == 'k'){
-		if (flag == '-')
-			channel.getChannelModes()['k'] = "";
-		else
-			channel.getChannelModes()['k'] = arg;
-	}
-	if (mode[1] == 'l'){
-		if (flag == '-')
-			channel.getChannelModes()['l'] = "";
-		else
-			channel.getChannelModes()['l'] = arg;
-	}
-
-}
-
 void getMode(string mode, string str, channel &channel, Server &server){
 	return;
 	str = "";
@@ -189,73 +148,155 @@ void user(Server& server, string line, int fd){
 	}
 }
 
-
 // JOIN <channels>
-void join(Server& server, string line, int fd){ // [X]
+void join(Server& server, string line, int fd){ 
 	Client &client = server.getCLients()[fd];
     line = line.substr(4);
     line = strtrim(line);
 
-    if (line.empty()){
-		sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]); //! 461
-        return ;
-    }
+    if (line.empty())
+		return sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]);
     vector<string> spl = split(line, " ");
+	if (spl.size() == 1)
+		spl.push_back("");
     if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
         channel channel(spl[0]);
 
 		client.setInChannel(spl[0]);
-		channel.setChannelUser(client);
+		channel.setChannelUser(client); ///add invited to users as well
 		channel.setChannelAdmin(client.getNickName());
 		server.setChannel(channel, spl[0], client);
-		justJoined(client, channel, fd, spl[0]); //!
+		justJoined(client, channel, spl[0]); //!
     }
 	else{
+		channel &channel = server.getChannels()[spl[0]];
+		if (isInChannel(client, spl[0])) ///LATER
+			return ;
+		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['l'].c_str()))
+			return sendMsg(client, msgs(client, "JOIN", "")[ERR_CHANNELISFULL]);
+		if (!channel.getChannelModes()['k'].empty() && channel.getChannelModes()['k'] != "-k" && spl[1] != channel.getChannelModes()['k'])
+		{
+			cout << "keey\n";
+			return sendMsg(client, msgs(client, "JOIN", "")[ERR_BADCHANNELKEY]);
+		}
+		if (!isAdmin(client.getNickName(), channel) && !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i")
+			return sendMsg(client, msgs(client, "JOIN", "")[MODE_PLUS_I]);
 		client.setInChannel(spl[0]);
-		server.getChannels()[spl[0]].setChannelUser(client);
-		justJoined(client, server.getChannels()[spl[0]], fd, spl[0]); //!
+		channel.setChannelUser(client);
+		justJoined(client, channel, spl[0]); //!
 	}
 }
 
-void	topic(Server &server, string line, int fd){
+// INVITE <nick> [<channel>]
+void invite(Server& server, string line, int fd){
 	Client &client = server.getCLients()[fd];
-    line = line.substr(5);
-    line = strtrim(line); 
+	line = line.substr(6);
+    line = strtrim(line);
 
-    if (strtrim(line).empty()){
-		sendMsg(client, msgs(client, "", "TOPIC")[NOT_ENOUGH_PARA]); //! 461
-        return ;
-    }
+    if (line.empty() || split(line, " ").size() < 2)
+		return sendMsg(client, msgs(client, "", "INVITE")[NOT_ENOUGH_PARA]);
+	
 	vector<string> spl = split(line, " ");
 
-	string channel = spl[0]; //next time work using reference 
-    if (!isChannelExist(server.getChannels(), channel)) /*doesn't exist*/{
-		send(fd, ":No such channel\n", 18, 0); //! 403
-		return;
-    }
-	else if (!isInChannel(server.getCLients()[fd], channel))
-	{
-		send(fd, ":You're not on that channel\n", 29, 0); //! 442
-		return;
-	}
+	channel &channel = server.getChannels()[spl[0]]; 
+    if (!isChannelExist(server.getChannels(), spl[0]))
+		return sendMsg(client, msgs(client, "", "INVITE")[ERR_NOSUCHCHANNEL]);
+	if (!isInChannel(server.getCLients()[fd], spl[0]))
+		return sendMsg(client, msgs(client, "", "INVITE")[ERR_NOTONCHANNEL]);
+	if (!isAdmin(client.getNickName(), channel))
+		return sendMsg(client, msgs(client, "", "INVITE")[ERR_CHANOPRIVSNEEDED]);
+	if (isInChannel(client, spl[0])) ///LATER
+		return sendMsg(client, msgs(client, "", "INVITE")[ERR_USERONCHANNEL]);
+	channel.setChannelInvited(client.getNickName());
+	channel.setChannelUser(client);
+	sendMsg(client, msgs(client, "", "INVITE")[ERR_USERONCHANNEL]);
+}
 
-	string topic = line.substr(channel.size());
+void	topic(Server &server, string line, int fd){// [X]
+	Client &client = server.getCLients()[fd];
+    line = line.substr(5);
+    line = strtrim(line);
+
+    if (strtrim(line).empty())
+		return sendMsg(client, msgs(client, "", "TOPIC")[NOT_ENOUGH_PARA]);
+	
+	vector<string> spl = split(line, " ");
+
+	channel &channel = server.getChannels()[spl[0]]; 
+    if (!isChannelExist(server.getChannels(), spl[0]))
+		return sendMsg(client, msgs(client, "", "TOPIC")[ERR_NOSUCHCHANNEL]);
+	else if (!isInChannel(server.getCLients()[fd], spl[0]))
+		return sendMsg(client, msgs(client, "", "TOPIC")[ERR_NOTONCHANNEL]);
+
+	string topic = line.substr(spl[0].size());
 
 	if (topic.empty())
 	{
-		if (server.getChannels()[channel].getChannelTopic().empty())
-			send(fd," :No topic is set\n", 19, 0); //! 331
-		else
-			send(fd," :show old topic\n", 18, 0); //! 331
+		if (channel.getChannelTopic().empty())
+			return sendMsg(client, msgs(client, "", "TOPIC")[RPL_NOTOPIC]);
+		send(fd," :show old topic\n", 18, 0);
 	}
 	else{
-		if (server.getChannels()[channel].getChannelModes()['t'] == "+t" &&
-			!isAdmin(client.getNickName(), server.getChannels()[channel]))
-				send(fd, "You're not channel operator\n", 29, 0); //! 482
+		if (channel.getChannelModes()['t'] == "+t" &&
+			!isAdmin(client.getNickName(), channel))
+				return sendMsg(client, msgs(client, "", "TOPIC")[ERR_CHANOPRIVSNEEDED]);
+		else
+			channel.setChannelTopic(topic);
+	}
+}
+
+void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
+	server.getCLients(); //// WHAT IF WE GAVE A +O OR WHATEVER TO SOMEONE NOT IN THE CHANNEL
+	if (mode.size() > 2) ///recheck later
+	{
+		send(client.get_fd(), "ERROR\n", 5, 0);	
+		return; 
+	}
+	char flag = mode[0];
+	if (mode[1] == 'o'){
+		if (arg.empty())
+			return sendMsg(client, "not enough arguments");
+		if (flag == '+')
+			channel.setChannelAdmin(arg);
+		else
+			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
+				if (arg == channel.getChannelAdmins()[i])
+					channel.getChannelAdmins()[i] = ""; ////later
+					// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+	}
+	if (mode[1] == 'k'){
+		if (flag == '-')
+			channel.getChannelModes()['k'] = "";
 		else{
-			send(fd, ":new topic\n", 12, 0); //! 333
-			server.getChannels()[channel].setChannelTopic(topic);
+			if (arg.empty())
+				return sendMsg(client, "not enough arguments");
+			channel.getChannelModes()['k'] = arg;
 		}
+	}
+	if (mode[1] == 'l'){
+		if (flag == '-')
+			channel.getChannelModes()['l'] = "";
+		else
+		{
+			if (arg.empty())
+				return sendMsg(client, "not enough arguments");
+			for (size_t i = 0; i < arg.size(); i++)
+				if (!isdigit(arg[i]))
+					return;
+			channel.getChannelModes()['l'] = arg;
+		}
+	}
+	if (mode[1] == 't'){
+		if (flag == '-')
+			channel.getChannelModes()['t'] = "-t";
+		else
+			channel.getChannelModes()['t'] = "+t";
+	}
+	if (mode[1] == 'i'){
+		if (flag == '-')
+			channel.getChannelModes()['i'] = "-i";
+		else
+			channel.getChannelModes()['i'] = "+i";
 	}
 }
 
@@ -263,35 +304,35 @@ void	mode(Server &server, string line, int fd){
     line = line.substr(4);
     line = strtrim(line);
 	Client &client = server.getCLients()[fd];
-    if (strtrim(line).empty() || split(line, " ").size() < 2){
-		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
+    if (line.empty() || split(line, " ").size() < 2){
+		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]);
         return ;
     }
 	vector<string> spl = split(line, " ");
-	if(!isChannelExist(server.getChannels(), spl[0])){
-		send(fd, ":No such channel\n", 18, 0); //! 403
-		return ;
-	}
+	if (!isChannelExist(server.getChannels(), spl[0]))
+		return sendMsg(client, msgs(client, "", "MODE")[ERR_NOSUCHCHANNEL]);
 	channel &channel = server.getChannels()[spl[0]];
 	
 	if (!isInChannel(client, spl[0]))
-		send(fd, ":You're not on that channel\n", 29, 0); //!442
+		return sendMsg(client, msgs(client, "", "MODE")[ERR_NOTONCHANNEL]);
 	else if (!isAdmin(client.getNickName(), channel))
-		send(fd, "You're not channel operator\n", 29, 0); //! 482
+		return sendMsg(client, msgs(client, "", "MODE")[ERR_CHANOPRIVSNEEDED]);
 	else if (spl[1][0] == '+' || spl[1][0] == '-')
 	{
 		if (spl.size() < 3)
 			spl.push_back("");
-		if (spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos || spl[1].find("t") != string::npos)
-				fillMode(spl[1], spl[2], channel, server, client);
+		if ((spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos) && spl[2].empty())
+			return sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]);
 		else
-			cout << "je\n";
-				// sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
+			fillMode(spl[1], spl[2], channel, server, client);
+				// sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]);
 	}
 	else
-		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
+		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]);
+	
 }
 
 // string getMsg(int msgNumber, Server& server, string channel, int fd){
 // 	return(   msgs()[msgNumber]);
 // }
+

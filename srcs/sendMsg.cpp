@@ -1,12 +1,37 @@
 #include "../includes/server.hpp"
 
+bool isAdmin(string admin, channel &channel){
+	
+	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
+		if (channel.getChannelAdmins()[i] == admin)
+			return true;
+	}
+	return false;
+}
+
+bool isInvited(string invited, channel &channel){
+	
+	for (size_t i = 0; i < channel.getChannelInvited().size(); i++){
+		if (channel.getChannelInvited()[i] == invited)
+			return true;
+	}
+	return false;
+}
+
 map<int, string> msgs(Client& client, string channel, string cmd){
 	map<int, string> msg;
 	// CHANNEL
 	msg[IN_CHANNEL] = nbtoString(IN_CHANNEL) + " " + channel + " :You have joined too many channels";
-	msg[JOIN_NO_TOPIC] = nbtoString(JOIN_NO_TOPIC) + " " + channel + " :No topic is set";
 	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
 	msg[ERR_NOSUCHCHANNEL] = nbtoString(ERR_NOSUCHCHANNEL) + " " + channel + " :No such channel";
+	msg[MODE_PLUS_I] = nbtoString(MODE_PLUS_I) + " " + channel + " :Cannot join channel (+i)";
+	msg[ERR_CHANNELISFULL] = nbtoString(ERR_CHANNELISFULL) + " " + channel + " :Cannot join channel (+l)";
+	msg[ERR_BADCHANNELKEY] = nbtoString(ERR_BADCHANNELKEY) + " " + channel + " :Cannot join channel (+k)";
+	msg[RPL_NOTOPIC] = nbtoString(RPL_NOTOPIC) + " " + channel + " :No topic is set";
+	// msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + channel + " TOPIC///";
+	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
+	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + channel + " :is already on channel";
+	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + client.getNickName() + " " + channel;
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
@@ -35,31 +60,27 @@ string getLocalhost(Client &client){
     return ":" + client.getNickName() + "!" + client.getUser() +"@localhost ";
 }
 
-void ft_unknownCmd(Client &client, int fd, string &line){
+void ft_unknownCmd(Client &client, string &line){
 
 
-    (void)fd;
     // string msg = getMsg(UNKNOW_CMD);
     string msg = msgs(client, "", line)[UNKNOW_CMD];
     string localhost = getLocalhost(client);
-    fd++;
     sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg);
 
 }
 
-void justJoined(Client &client, channel &channel, int fd, string &line){
+void justJoined(Client &client, channel &channel, string &line){
 
     string msg;
     string localhost = getLocalhost(client);
 
-    fd++;
     if (channel.getChannelTopic().empty())
-        msg = msgs(client, channel.getChannelName(), line)[JOIN_NO_TOPIC];
+        msg = msgs(client, channel.getChannelName(), line)[RPL_NOTOPIC];
     else
-        msg = channel.getChannelTopic();
+        msg = channel.getChannelTopic(); //! 332
 
-    clearScreen(fd);
-    sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg);
+    sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg); ////later
     sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
     sendMsg(client, localhost + "366" + " " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
 }

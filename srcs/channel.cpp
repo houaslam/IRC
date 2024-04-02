@@ -5,17 +5,17 @@ channel::channel():name(""), topic(""){
  //itkol
 	modes['i'] = "+i";
 	modes['t'] = "+t";
-	modes['k'] = "+k";
+	modes['k'] = "";
 	modes['o'] = "+o";
-	modes['l'] = ""; /// or digit
+	modes['l'] = ""; 
 }
 
 channel::channel(string name):name(name), topic(""){
     modes['i'] = "-i"; // only the guys who got invited and set the channel to +i
 	modes['t'] = "+t"; //
-	modes['k'] = "+k"; //password
+	modes['k'] = ""; //password
 	modes['o'] = "+o"; //admins kicking and banning ...
-	modes['l'] = ""; /// or digit
+	modes['l'] = ""; 
 }
 
 channel::channel(const channel& src){
@@ -39,24 +39,25 @@ channel& channel::operator=(const channel& src){
             /*SETTERS*/
 void    channel::setChannelUser(Client &client_){
     users.push_back(client_);
-}
-void channel::setChannelTopic(string &topic){
+}void   channel::setChannelTopic(string &topic){
 	this->topic = topic;
-}
-void channel::setChannelAdmin(string admin){
+}void   channel::setChannelAdmin(string admin){
 	this->admins.push_back(admin);
+}void   channel::setChannelInvited(string invited){
+	this->invited.push_back(invited);
 }
 
             /*GETTERS*/
-string &channel::getChannelName(){
+string          &channel::getChannelName(){
     return this->name;
-}
-string &channel::getChannelTopic(){
+}string         &channel::getChannelTopic(){
     return this->topic;
-}
-vector<string> channel::getChannelAdmins(){
+}vector<string> &channel::getChannelAdmins(){
     return this->admins;
-}
-map<char, string> &channel::getChannelModes(){
+}vector<Client> &channel::getChannelUsers(){
+    return this->users;
+}vector<string> &channel::getChannelInvited(){
+    return this->invited;
+}map<char, string>  &channel::getChannelModes(){
     return this->modes;
 }

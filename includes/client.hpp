@@ -53,15 +53,11 @@ class Client{
 };
 
 
-void	user(Server& server, string line, int fd);
-void	nick(Server& server ,string line, int fd);
-void	join(Server& server, string line, int fd);
-void	pass(Server& server, string line , int fd);
+void    user(Server& server, string line, int fd);
+void    nick(Server& server ,string line, int fd);
+string  &withoutNewLine(string &line);
+void    join(Server& server, string line, int fd);
+void    pass(Server& server, string line , int fd);
 void	topic(Server &server, string line, int fd);
-string	&withoutNewLine(string &line);
-void	add_fd(struct pollfd fds[], int* fd_count, int fd);
-void	del_fd(struct pollfd fds[], int* fd_count, int p);
-void	justJoined(Client &client, channel &channel, int fd, string &line);
+void	invite(Server &server, string line, int fd);
 void	mode(Server &server, string line, int fd);
-
-
