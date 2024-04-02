@@ -46,7 +46,9 @@
 #define MODE_PLUS_I 			437  // <client> <channel> :Cannot join channel (+i)"
 #define ERR_CHANNELMODEINVALID	473  // :Invalid channel mode
 #define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
-
+#define ERR_BADCHANNELKEY		475  // :Cannot join channel (+k)
+#define RPL_INVITING			341  // :"<channel> <nick>"
+  
 // NICK 
 #define NICK_NOT_GIVEN		    431  // :Nickname not given"
 #define NICK_IN_USE			    433  // :Nickname is already in use"

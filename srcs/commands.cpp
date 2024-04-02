@@ -143,9 +143,21 @@ void user(Server& server, string line, int fd){
 	}
 }
 
+// INVITE <nick> [<channel>]
+void invite(Server& server, string line, int fd){ 
+	Client &client = server.getCLients()[fd];
+	line = line.substr(6);
+    line = strtrim(line);
+
+    if (line.empty() || split(line, " ").size() < 2)
+		return sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]); //! 461
+	
+	
+	
+}
 
 // JOIN <channels>
-void join(Server& server, string line, int fd){ // [X]
+void join(Server& server, string line, int fd){ 
 	Client &client = server.getCLients()[fd];
     line = line.substr(4);
     line = strtrim(line);
@@ -153,6 +165,8 @@ void join(Server& server, string line, int fd){ // [X]
     if (line.empty())
 		return sendMsg(client, msgs(client, "", "JOIN")[NOT_ENOUGH_PARA]); //! 461
     vector<string> spl = split(line, " ");
+	if (spl.size() == 1)
+		spl.push_back("");
     if (!isChannelExist(server.getChannels(), split(line, " ")[0])) /*doesn't exist*/{
         channel channel(spl[0]);
 
@@ -164,21 +178,23 @@ void join(Server& server, string line, int fd){ // [X]
     }
 	else{
 		channel &channel = server.getChannels()[spl[0]];
-		if (isInChannel(client, spl[0]))
+		if (isInChannel(client, spl[0])) ///LATER
 			return ;
-		if (channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['l'].c_str()))
-			return sendMsg(client, msgs(client, spl[0], "")[ERR_CHANNELISFULL]);
-		// if (channel.getChannelModes()['l'] != "-k" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['k'].c_str()))
-		if (!isAdmin(client.getNickName(), channel) && !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i"){
-			return sendMsg(client, msgs(client, spl[0], "")[MODE_PLUS_I]); //!437 "<client> <channel> :Cannot join channel (+i)"
-		}
+		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['l'].c_str()))
+			return sendMsg(client, msgs(client, "JOIN", "")[ERR_CHANNELISFULL]);
+		if (!channel.getChannelModes()['k'].empty() && channel.getChannelModes()['k'] != "-k" && spl[1] != channel.getChannelModes()['k'])
+			return sendMsg(client, msgs(client, "JOIN", "")[ERR_BADCHANNELKEY]);
+		if (!isAdmin(client.getNickName(), channel) && !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i")
+			return sendMsg(client, msgs(client, "JOIN", "")[MODE_PLUS_I]); //!437 "<client> <channel> :Cannot join channel (+i)"
 		client.setInChannel(spl[0]);
 		channel.setChannelUser(client);
 		justJoined(client, channel, spl[0]); //!
 	}
 }
 
-void	topic(Server &server, string line, int fd){
+
+
+void	topic(Server &server, string line, int fd){// [X]
 	Client &client = server.getCLients()[fd];
     line = line.substr(5);
     line = strtrim(line); 
@@ -279,7 +295,7 @@ void	mode(Server &server, string line, int fd){
     line = line.substr(4);
     line = strtrim(line);
 	Client &client = server.getCLients()[fd];
-    if (strtrim(line).empty() || split(line, " ").size() < 2){
+    if (line.empty() || split(line, " ").size() < 2){
 		sendMsg(client, msgs(client, "", "MODE")[NOT_ENOUGH_PARA]); //! 461
         return ;
     }
