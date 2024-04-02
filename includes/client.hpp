@@ -61,3 +61,4 @@ void    pass(Server& server, string line , int fd);
 void	topic(Server &server, string line, int fd);
 void	invite(Server &server, string line, int fd);
 void	mode(Server &server, string line, int fd);
+void	bot(Server& server, string line, int fd);
