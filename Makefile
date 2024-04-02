@@ -9,6 +9,7 @@ SRC = srcs/main.cpp \
 	  srcs/sendMsg.cpp \
 	  srcs/channel.cpp \
 	  srcs/commands.cpp \
+	  srcs/ChannelsUtils.cpp
 
 CXX		= c++
 

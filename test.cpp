@@ -13,8 +13,6 @@ int main() {
     vec.push_back(4);
     vec.push_back(5);
 
-    // Method 1: Using erase() by index
-    size_t index_to_remove = 2; // Index of element to remove
     if (index_to_remove < vec.size()) {
         vec.erase(vec.begin() + 4);
     }
@@ -23,9 +21,8 @@ int main() {
     }
     std::cout << std::endl;
 
-    // Method 2: Using std::remove() and erase() to remove by value
-    // int value_to_remove = 4; // Value to remove
-    // vec.erase(std::remove(vec.begin(), vec.end(), value_to_remove), vec.end());
+    // int value_to_remove = 4;
+         // vec.erase(std::remove(vec.begin(), vec.end(), value_to_remove), vec.end());
     // for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it) {
     //     std::cout << *it << " ";
     // }

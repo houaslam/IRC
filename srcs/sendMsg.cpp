@@ -1,23 +1,5 @@
 #include "../includes/server.hpp"
 
-bool isAdmin(string admin, channel &channel){
-	
-	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
-		if (channel.getChannelAdmins()[i] == admin)
-			return true;
-	}
-	return false;
-}
-
-bool isInvited(string invited, channel &channel){
-	
-	for (size_t i = 0; i < channel.getChannelInvited().size(); i++){
-		if (channel.getChannelInvited()[i] == invited)
-			return true;
-	}
-	return false;
-}
-
 map<int, string> msgs(Client& client, string channel, string cmd){
 	map<int, string> msg;
 	// CHANNEL
@@ -32,6 +14,7 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
 	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + channel + " :is already on channel";
 	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + client.getNickName() + " " + channel;
+	msg[ERR_NOSUCHNICK] = nbtoString(ERR_NOSUCHNICK) + " " + channel + " :No such nick/channel";
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
@@ -39,7 +22,7 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 
 	// PASS
 	msg[NOT_REGISTRED] = nbtoString(NOT_REGISTRED) +  " :You have not registered";
-	msg[NOT_ENOUGH_PARA] =  nbtoString(NOT_ENOUGH_PARA) + " " + cmd + " :Not enough parameters";
+	msg[ERR_NEEDMOREPARAMS] =  nbtoString(ERR_NEEDMOREPARAMS) + " " + cmd + " :Not enough parameters";
 	msg[ALREADY_REGISTERED] = nbtoString(ALREADY_REGISTERED) +  " :You may not reregister";
 	msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
 

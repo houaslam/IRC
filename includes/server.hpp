@@ -51,6 +51,7 @@
 #define RPL_NOTOPIC				331  // :No topic is set"
 #define ERR_CHANOPRIVSNEEDED	482  // :You're not channel operator
 #define ERR_USERONCHANNEL		443  // :is already on channel
+#define ERR_NOSUCHNICK			401  // :No such nick/channel
 
   
 // NICK 
@@ -63,7 +64,7 @@
 // GENERAL
 #define NOT_REGISTRED		    451  // :You have not registered
 #define UNKNOW_CMD			    421  // :Unknown command
-#define NOT_ENOUGH_PARA		    461  // :Not enough parameters
+#define ERR_NEEDMOREPARAMS		    461  // :Not enough parameters
 #define ALREADY_REGISTERED	    462  // :You may not register
 
 
@@ -133,10 +134,13 @@ void del_fd(struct pollfd fds[], int* fd_count, int p);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 
 // BOOL
+bool isAdmin(string admin, channel &channel);
+bool isInvited(string invited, channel &channel);
 bool isConnected(Server& server, int fd);
 bool isChannelExist(map<string, channel> &channels,string &line);
 bool isInChannel(class Client &client, string &name);
-bool isAdmin(int admin, channel channel);
+bool isInChannelString(string &client, channel &channel);
+bool check_users(Server& server,string line , int ref);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;
