@@ -26,9 +26,9 @@ void justJoined(Client &client, channel &channel, string &line){
     string localhost = getLocalhost(client);
 
     if (channel.getChannelTopic().empty())
-        msg = msgs(client, channel.getChannelName(), line)[JOIN_NO_TOPIC];
+        msg = msgs(client, channel.getChannelName(), line)[RPL_NOTOPIC];
     else
-        msg = channel.getChannelTopic();
+        msg = channel.getChannelTopic(); //! 332
 
     sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg); ////later
     sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353

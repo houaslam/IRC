@@ -51,9 +51,10 @@ class Client{
 };
 
 
-void user(Server& server, string line, int fd);
-void nick(Server& server ,string line, int fd);
-string &withoutNewLine(string &line);
-void join(Server& server, string line, int fd);
+void    user(Server& server, string line, int fd);
+void    nick(Server& server ,string line, int fd);
+string  &withoutNewLine(string &line);
+void    join(Server& server, string line, int fd);
 void    pass(Server& server, string line , int fd);
 void	topic(Server &server, string line, int fd);
+void	invite(Server &server, string line, int fd);

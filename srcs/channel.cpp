@@ -5,17 +5,17 @@ channel::channel():name(""), topic(""){
  //itkol
 	modes['i'] = "+i";
 	modes['t'] = "+t";
-	modes['k'] = "+k";
+	modes['k'] = "";
 	modes['o'] = "+o";
-	modes['l'] = ""; /// or digit
+	modes['l'] = ""; 
 }
 
 channel::channel(string name):name(name), topic(""){
     modes['i'] = "-i"; // only the guys who got invited and set the channel to +i
 	modes['t'] = "+t"; //
-	modes['k'] = "+k"; //password
+	modes['k'] = ""; //password
 	modes['o'] = "+o"; //admins kicking and banning ...
-	modes['l'] = ""; /// or digit
+	modes['l'] = ""; 
 }
 
 channel::channel(const channel& src){
