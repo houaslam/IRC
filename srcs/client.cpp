@@ -1,36 +1,11 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-map<int, string> msgs(Client& client, string channel, string cmd){
-	map<int, string> msg;
-	// CHANNEL
-	msg[IN_CHANNEL] = nbtoString(IN_CHANNEL) + " " + channel + " :You have joined too many channels";
-	msg[JOIN_NO_TOPIC] = nbtoString(JOIN_NO_TOPIC) + " " + channel + " :No topic is set";
-	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
-	msg[ERR_NOSUCHCHANNEL] = nbtoString(ERR_NOSUCHCHANNEL) + " " + channel + " :No such channel";
-
-	// NICK
-	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
-	msg[NICK_IN_USE] =  nbtoString(NICK_IN_USE) + " " + client.getNickName() + " :Nickname is already in use";
-
-	// PASS
-	msg[NOT_REGISTRED] = nbtoString(NOT_REGISTRED) +  " :You have not registered";
-	msg[NOT_ENOUGH_PARA] =  nbtoString(NOT_ENOUGH_PARA) + " " + cmd + " :Not enough parameters";
-	msg[ALREADY_REGISTERED] = nbtoString(ALREADY_REGISTERED) +  " :You may not reregister";
-	msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
-
-	// GENERAL
-	msg[UNKNOW_CMD] = nbtoString(UNKNOW_CMD) + " " + cmd +  " :Unknown command";
-
-	return msg;
-}
-
-
-Client::Client(): nickname("user"), username(""), fd(1), isConnected(false){
+Client::Client(): nickname(""), username(""), fd(1), isConnected(false){
 
 }
 
-Client::Client(int fd):nickname("user"), username(""), fd(fd), isConnected(false){
+Client::Client(int fd):nickname(""), username(""), fd(fd), isConnected(false){
 }
 
 Client::Client(const Client& src){
@@ -41,6 +16,9 @@ Client& Client::operator=(const Client& Client_){
 	if (this != &Client_){
 		this->fd = Client_.fd;
 		this->nickname = Client_.nickname;
+		this->username = Client_.username;
+		this->hostname = Client_.hostname;
+		this->r_name = Client_.r_name;
 	}
 	return *this;
 }
@@ -71,6 +49,7 @@ void Client::setFd(int fd){
 void Client::setInChannel(string &str){
 	inChannel.push_back(str);
 }
+
 void Client::setNickName(string nick){
 	this->nickname = nick;
 }

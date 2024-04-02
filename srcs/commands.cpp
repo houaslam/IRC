@@ -115,7 +115,6 @@ void    pass(Server& server, string line , int fd){
 	vector<string> res = split(line, " ");
 	if (res.size() == 1 && !res[0].compare(server.get_password())){
 		server.getCLients()[fd].pass = true;
-		sendMsg(server.getCLients()[fd], "UR PASSWORD IS CORRECT");
 	}
 	else{
 		if (server.getCLients()[fd].pass == false)
@@ -129,24 +128,28 @@ void nick(Server& server, string line, int fd){
 		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "")[NOT_REGISTRED]);
 		return ;
 	}
+
 	line = line.substr(4);
 	line = strtrim(line);
+
 	if (line.empty()){
 		if (!server.getCLients()[fd].getNickName().empty())
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"", "")[NICK_NOT_GIVEN]);
+
 		else
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"", "")[NICK_NOT_GIVEN]);
-			// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd].getNickName() + getMsg(NICK_NOT_GIVEN));
 	}
-	else
-	{
+	else{
 		vector<string> res = split(line, " ");
 		if (check_users(server, res[0], fd))
-				sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NICK_IN_USE]);
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NICK_IN_USE]);
+
 		else{
+			if (server.getCLients()[fd].getNickName() != ""){
+				server.getCLients()[fd].setNickName(res[0]);
+				sendMsg(server.getCLients()[fd], " NICK :" + res[0]);
+			}
 			server.getCLients()[fd].setNickName(res[0]);
-			string send = "ur nickname was set to " + server.getCLients()[fd].getNickName();
-			sendMsg(server.getCLients()[fd], send + "");
 		}
 	}
 }
@@ -154,19 +157,21 @@ void nick(Server& server, string line, int fd){
 // USER <username> <hostname> <servername> <realname>
 void user(Server& server, string line, int fd){
 	if (server.getCLients()[fd].getNickName().empty()){
-		sendMsg(server.getCLients()[fd], "PROVID A NICKNAME FIRST");
+		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_REGISTRED]);
 		return ;
 	}
 	line = line.substr(4);
 	line = strtrim(line);
 	if (line.empty()){
-		sendMsg(server.getCLients()[fd], "not enough arguments");
+		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_ENOUGH_PARA]);
+
 		return ;
 	}
 	else{
 		vector<string> res = split(line, " ");
 		if (res.size() != 4){
-			sendMsg(server.getCLients()[fd], "not enough arguments");
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_ENOUGH_PARA]);
+
 			return ;
 		}
 		server.getCLients()[fd].setUser(res[0]);

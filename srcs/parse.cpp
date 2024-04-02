@@ -30,7 +30,6 @@ bool parse(class Server &server,int fd, string reqs){
     else
         while (n < 9 && commands[n].compare(line[0]))
             n++;
-
     switch (n)
     {
         case 0:

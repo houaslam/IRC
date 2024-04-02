@@ -63,46 +63,45 @@ using namespace std;
 
 class Server{
 	private:
-		time_t start;
+	// SERVER INFO
 		int port;
 		int _socket;
 		string serverName;
-		// string topic;
 		const char* password;
 		struct sockaddr_in s_addr;
+	// SERVER COMPONENTS
+		map<int, string> msg;
 		map<int , class Client>  clients;
 		map<string, class channel>  channels;
-		map<int, string> msg;
 
 	public:
 	// CANONICAL FORM
-		Server(int port, const char* password);
-		Server(const Server& src);
-		Server& operator=(const Server& server);
 		~Server();
+		Server(const Server& src);
+		Server(int port, const char* password);
+		Server& operator=(const Server& server);
 
 	// GETERS
-	string getServerName() const;
-	int get_port() const;
-	int get_socket() const;
-	string  get_password() const;
-	map<int, string> get_msg() const;
-	struct sockaddr_in&  get_addr();
-	socklen_t  get_addr_len() const;
-	map<int, Client> &getCLients();
-	map<string, class channel> &getChannels();
-	time_t& getTime(void) const;
+		int get_port() const;
+		int get_socket() const;
+		string get_password() const;
+		string getServerName() const;
+
+		map<int, Client> &getCLients();
+		map<int, string> get_msg() const;
+		map<string, class channel> &getChannels();
+
+		struct sockaddr_in&  get_addr();
+		socklen_t  get_addr_len() const;
 
 
-	// SETERS
-	void setTime(time_t time);
-	void setUser(Client &obj);
-	channel &setChannel(channel channel, string &name, Client &client);
-	void setServerName(string name);
+		// SETERS
+		void setUser(Client &obj);
+		void setServerName(string name);
+		channel &setChannel(channel channel, string &name, Client &client);
 
-	// REGULAR FUNCTION
-	void aff_allusers();
-	// channel &createChannel();
+		// REGULAR FUNCTION
+		void aff_allusers();
 
 };
 
@@ -111,20 +110,18 @@ bool parse(class Server &server,int i, string line);
 void ft_error(string prob);
 std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);
-void add_fd(struct pollfd fds[], int* fd_count, int fd);
-void del_fd(struct pollfd fds[], int* fd_count, int p);
+
+// EXTERNAL FUNCTION
 void sendMsg(Client& client, string str);
 void ft_unknownCmd(Client &client, int fd, string &line);
-void justJoined(Client &client, channel &channel, int fd, string &line);
 string getMsg(int msgNumber);
-// map<int, string> msgs();
 string getLocalhost(Client &client);
 string nbtoString(int nb);
 map<int, string> msgs(Client& client, string channel, string cmd);
-void	mode(Server &server, string line, int fd);
 void clearScreen(int fd);
+string getTime(void);
 
-        /*BOOL*/
+// BOOL
 bool isConnected(Server& server, int fd);
 bool isChannelExist(map<string, channel> &channels,string &line);
 bool isInChannel(class Client &client, string &name);

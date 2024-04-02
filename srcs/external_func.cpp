@@ -79,3 +79,11 @@ string nbtoString(int nb){
     std::string str = ss.str();
     return str;
 }
+
+string  getTime(void){
+    time_t start = time(NULL);
+	struct tm *time = localtime(&start);
+	string res;
+	res +=  "[" + nbtoString(time->tm_hour) +  ':'+  nbtoString(time->tm_min) +  ']' + " ";
+	return res;
+}

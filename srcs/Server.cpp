@@ -103,11 +103,3 @@ map<int, string> Server::get_msg() const{
 	return this->msg;
 }
 
-time_t&  Server::getTime(void) const{
-	return this->time;
-}
-
-
-void  Server::setTime(time_t time){
-	this->time = time;
-}

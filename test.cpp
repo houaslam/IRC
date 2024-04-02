@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <cstring>
 #include <algorithm>
+
+using namespace std;
 
 int main() {
     std::vector<int> vec;
@@ -30,3 +33,5 @@ int main() {
 
     return 0;
 }
+
+
