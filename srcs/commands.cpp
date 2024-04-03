@@ -239,8 +239,8 @@ void	mode(Server &server, string line, int fd){
 	
 }
 
-// <target>{,<target>} <text to be sent>
-// void	privmsg()
+<target>{,<target>} <text to be sent>
+void	privmsg()
 
 // string getMsg(int msgNumber, Server& server, string channel, int fd){
 // 	return(   msgs()[msgNumber]);
