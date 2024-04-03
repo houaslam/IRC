@@ -52,6 +52,7 @@
 #define ERR_CHANOPRIVSNEEDED	482  // :You're not channel operator
 #define ERR_USERONCHANNEL		443  // :is already on channel
 #define ERR_NOSUCHNICK			401  // :No such nick/channel
+#define ERR_NORECIPIENT			411  //  "<client> :No recipient given (<command>)"
 
   
 // NICK 

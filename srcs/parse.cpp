@@ -23,12 +23,13 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR"};
-    int n = 0;
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG"};
+    size_t n = 0;
+    size_t size =  sizeof(commands) / sizeof(string);
     if (line.empty())
-        n = 11;
+        n = size;
     else
-        while (n < 11 && commands[n].compare(line[0]))
+        while (n < size && commands[n].compare(line[0]))
             n++;
     switch (n)
     {
@@ -58,8 +59,10 @@ bool parse(class Server &server,int fd, string reqs){
         case 9:
             // bot(server, reqs, fd);
             break;
+        case 10:
+            privmsg(server, reqs, fd);
+            break;
         default:{
-            string str = "";
             sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);
             break;
         }

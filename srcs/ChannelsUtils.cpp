@@ -12,10 +12,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		if (arg.empty())
 			return sendMsg(client, "not enough arguments");
 		if (flag == '+' && isInChannelString(arg, channel))
-		{
-			cout << "client is in channel " << channel.getChannelName() << endl;
 			channel.setChannelAdmin(arg);
-		}
 		else
 			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
 				if (arg == channel.getChannelAdmins()[i])
