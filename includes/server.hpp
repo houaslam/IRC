@@ -64,7 +64,7 @@
 // GENERAL
 #define NOT_REGISTRED		    451  // :You have not registered
 #define UNKNOW_CMD			    421  // :Unknown command
-#define ERR_NEEDMOREPARAMS		    461  // :Not enough parameters
+#define ERR_NEEDMOREPARAMS		461  // :Not enough parameters
 #define ALREADY_REGISTERED	    462  // :You may not register
 
 
@@ -127,7 +127,7 @@ void justJoined(Client &client, channel &channel, string &line);
 string getMsg(int msgNumber);
 string getLocalhost(Client &client);
 string nbtoString(int nb);
-map<int, string> msgs(Client& client, string channel, string cmd);
+map<int, string> msgs(Client& client,string nickname, string channel, string cmd);
 void clearScreen(int fd);
 string getTime(void);
 void del_fd(struct pollfd fds[], int* fd_count, int p);

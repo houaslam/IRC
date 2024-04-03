@@ -28,9 +28,11 @@ bool check_users(Server& server,string line , int ref){
 }
 
 bool isChannelExist(map<string, channel> &channels,string &line){
-	if (channels.find(line) == channels.end())
-		return false;
-	return true;
+	for(map<string, channel>::iterator it = channels.begin(); it != channels.end(); it++){
+		if (line == it->second.getChannelName())
+			return true;
+	}
+	return false;
 }
 
 bool isConnected(Server& server, int fd){
@@ -41,9 +43,9 @@ bool isConnected(Server& server, int fd){
 	return true;
 }
 
-bool isInChannel(Client &client, string &name){
+bool isInChannel(Client &client, string &channel){
 
-	vector<string>::iterator it = find(client.getInChannel().begin(), client.getInChannel().end(), name);
+	vector<string>::iterator it = find(client.getInChannel().begin(), client.getInChannel().end(), channel);
 	
 	if (it == client.getInChannel().end())
 		return false;

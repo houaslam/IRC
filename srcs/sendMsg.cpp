@@ -1,6 +1,6 @@
 #include "../includes/server.hpp"
 
-map<int, string> msgs(Client& client, string channel, string cmd){
+map<int, string> msgs(Client& client,string nickname,string channel, string cmd){
 	map<int, string> msg;
 	// CHANNEL
 	msg[IN_CHANNEL] = nbtoString(IN_CHANNEL) + " " + channel + " :You have joined too many channels";
@@ -12,7 +12,7 @@ map<int, string> msgs(Client& client, string channel, string cmd){
 	msg[RPL_NOTOPIC] = nbtoString(RPL_NOTOPIC) + " " + channel + " :No topic is set";
 	// msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + channel + " TOPIC///";
 	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
-	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + channel + " :is already on channel";
+	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + nickname + "" + channel + " :is already on channel";
 	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + client.getNickName() + " " + channel;
 	msg[ERR_NOSUCHNICK] = nbtoString(ERR_NOSUCHNICK) + " " + channel + " :No such nick/channel";
 
@@ -47,7 +47,7 @@ void ft_unknownCmd(Client &client, string &line){
 
 
     // string msg = getMsg(UNKNOW_CMD);
-    string msg = msgs(client, "", line)[UNKNOW_CMD];
+    string msg = msgs(client, "", "", line)[UNKNOW_CMD];
     string localhost = getLocalhost(client);
     sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg);
 
@@ -59,7 +59,7 @@ void justJoined(Client &client, channel &channel, string &line){
     string localhost = getLocalhost(client);
 
     if (channel.getChannelTopic().empty())
-        msg = msgs(client, channel.getChannelName(), line)[RPL_NOTOPIC];
+        msg = msgs(client, "",channel.getChannelName(), line)[RPL_NOTOPIC];
     else
         msg = channel.getChannelTopic(); //! 332
 

@@ -56,10 +56,11 @@ bool parse(class Server &server,int fd, string reqs){
             invite(server, reqs, fd);
             break;
         case 9:
-            bot(server, reqs, fd);
+            // bot(server, reqs, fd);
             break;
         default:{
-            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", reqs)[UNKNOW_CMD]);
+            string str = "";
+            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);
             break;
         }
     }

@@ -45,37 +45,37 @@ void    pass(Server& server, string line , int fd){
 	}
 	else{
 		if (server.getCLients()[fd].pass == false)
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "")[INCORRECT_PWD]);
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[INCORRECT_PWD]);
 	}
 }
 
-void bot(Server& server, string line, int fd){
-	// 	if (server.getCLients()[fd].getNickName().empty()){
-	// 	sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_REGISTRED]);
-	// 	return ;
-	// }
-	line = line.substr(3);
-	line = strtrim(line);
-	if (line.empty()){
-		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_ENOUGH_PARA]);
-		return ;
-	}
-	else{
-		vector<string> res = split(line, " ");
-		if (res.size() != 4){
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_ENOUGH_PARA]);
-			return ;
-		}
-		send(fd, "WELCOME TO PIXER SERVER BOT\n", 29, 0);
-	 // MAKE THE FORMULA USING THE PARAMETERS PROVIDED 
+// void bot(Server& server, string line, int fd){
+// 	// 	if (server.getCLients()[fd].getNickName().empty()){
+// 	// 	sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NOT_REGISTRED]);
+// 	// 	return ;
+// 	// }
+// 	line = line.substr(3);
+// 	line = strtrim(line);
+// 	if (line.empty()){
+// 		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NOT_ENOUGH_PARA]);
+// 		return ;
+// 	}
+// 	else{
+// 		vector<string> res = split(line, " ");
+// 		if (res.size() != 4){
+// 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NOT_ENOUGH_PARA]);
+// 			return ;
+// 		}
+// 		send(fd, "WELCOME TO PIXER SERVER BOT\n", 29, 0);
+// 	 // MAKE THE FORMULA USING THE PARAMETERS PROVIDED 
 	 
-	}
-}
+// 	}
+// }
 
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
 	if (server.getCLients()[fd].pass == false){
-		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "")[NOT_REGISTRED]);
+		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[NOT_REGISTRED]);
 		return ;
 	}
 
@@ -84,15 +84,15 @@ void nick(Server& server, string line, int fd){
 
 	if (line.empty()){
 		if (!server.getCLients()[fd].getNickName().empty())
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"", "")[NICK_NOT_GIVEN]);
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "","", "")[NICK_NOT_GIVEN]);
 
 		else
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"", "")[NICK_NOT_GIVEN]);
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "","", "")[NICK_NOT_GIVEN]);
 	}
 	else{
 		vector<string> res = split(line, " ");
 		if (check_users(server, res[0], fd))
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NICK_IN_USE]);
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NICK_IN_USE]);
 
 		else{
 			if (server.getCLients()[fd].getNickName() != ""){
@@ -107,20 +107,20 @@ void nick(Server& server, string line, int fd){
 // USER <username> <hostname> <servername> <realname>
 void user(Server& server, string line, int fd){
 	if (server.getCLients()[fd].getNickName().empty()){
-		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_REGISTRED]);
+		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NOT_REGISTRED]);
 		return ;
 	}
 	line = line.substr(4);
 	line = strtrim(line);
 	if (line.empty()){
-		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[ERR_NEEDMOREPARAMS]);
+		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[ERR_NEEDMOREPARAMS]);//V
 
 		return ;
 	}
 	else{
 		vector<string> res = split(line, " ");
 		if (res.size() != 4){
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[ERR_NEEDMOREPARAMS]);
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[ERR_NEEDMOREPARAMS]);//V
 
 			return ;
 		}
@@ -146,7 +146,7 @@ void join(Server& server, string line, int fd){
     line = strtrim(line);
 
     if (line.empty())
-		return sendMsg(client, msgs(client, "", "JOIN")[ERR_NEEDMOREPARAMS]);
+		return sendMsg(client, msgs(client, "", "", "JOIN")[ERR_NEEDMOREPARAMS]);//V
     vector<string> spl = split(line, " ");
 	if (spl.size() == 1)
 		spl.push_back("");
@@ -155,6 +155,8 @@ void join(Server& server, string line, int fd){
 
 		client.setInChannel(spl[0]);
 		channel.setChannelUser(client); ///add invited to users as well
+		cout << "NEW CHANNEL" << endl;
+		cout << channel.getChannelUsers().size() << endl; 
 		channel.setChannelAdmin(client.getNickName());
 		server.setChannel(channel, spl[0], client);
 		justJoined(client, channel, spl[0]); //!
@@ -163,15 +165,12 @@ void join(Server& server, string line, int fd){
 		channel &channel = server.getChannels()[spl[0]];
 		if (isInChannel(client, spl[0])) ///LATER
 			return ;
-		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['l'].c_str()))
-			return sendMsg(client, msgs(client, "JOIN", "")[ERR_CHANNELISFULL]);
+		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() > (size_t)atoi(channel.getChannelModes()['l'].c_str()))
+			return sendMsg(client, msgs(client, "", "JOIN", "")[ERR_CHANNELISFULL]);
 		if (!channel.getChannelModes()['k'].empty() && channel.getChannelModes()['k'] != "-k" && spl[1] != channel.getChannelModes()['k'])
-		{
-			cout << "keey\n";
-			return sendMsg(client, msgs(client, "JOIN", "")[ERR_BADCHANNELKEY]);
-		}
-		if (!isAdmin(client.getNickName(), channel) && !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i")
-			return sendMsg(client, msgs(client, "JOIN", "")[MODE_PLUS_I]);
+			return sendMsg(client, msgs(client, "", "JOIN", "")[ERR_BADCHANNELKEY]);
+		if (/*!isAdmin(client.getNickName(), channel) &&*/ !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i")
+			return sendMsg(client, msgs(client, "", "JOIN", "")[MODE_PLUS_I]);
 		client.setInChannel(spl[0]);
 		channel.setChannelUser(client);
 		justJoined(client, channel, spl[0]); //!
@@ -186,25 +185,26 @@ void invite(Server& server, string line, int fd){
     line = strtrim(line);
 
     if (line.empty() || split(line, " ").size() < 2)
-		return sendMsg(client, msgs(client, "", "INVITE")[ERR_NEEDMOREPARAMS]);
+		return sendMsg(client, msgs(client, "", "", "INVITE")[ERR_NEEDMOREPARAMS]);//V
 	
 	vector<string> spl = split(line, " ");
 
-	channel &channel = server.getChannels()[spl[0]]; 
-    if (!isChannelExist(server.getChannels(), spl[0]))
-		return sendMsg(client, msgs(client, "", "INVITE")[ERR_NOSUCHCHANNEL]);
-	if (!isInChannel(server.getCLients()[fd], spl[0]))
-		return sendMsg(client, msgs(client, "", "INVITE")[ERR_NOTONCHANNEL]);
+	string &invited = spl[0];
+    if (!isChannelExist(server.getChannels(), spl[1]))
+		return sendMsg(client, msgs(client, "", spl[1], "INVITE")[ERR_NOSUCHCHANNEL]);//V
+	
+	channel &channel = server.getChannels()[spl[1]];
+	if (!isInChannel(client, channel.getChannelName()))
+		return sendMsg(client, msgs(client, "", channel.getChannelName(), "INVITE")[ERR_NOTONCHANNEL]);//V
 	if (!isAdmin(client.getNickName(), channel))
-		return sendMsg(client, msgs(client, "", "INVITE")[ERR_CHANOPRIVSNEEDED]);
-	if (isInChannel(client, spl[0])) ///LATER
-		return sendMsg(client, msgs(client, "", "INVITE")[ERR_USERONCHANNEL]);
-	if (check_users(server, spl[1], fd) == true)
-		return sendMsg(client, msgs(client, "", "INVITE")[ERR_NOSUCHNICK]);
+		return sendMsg(client, msgs(client, "", channel.getChannelName(), "INVITE")[ERR_CHANOPRIVSNEEDED]);//V
+	if (isInChannelString(invited, channel))
+		return sendMsg(client, msgs(client, invited, channel.getChannelName(), "INVITE")[ERR_USERONCHANNEL]);//v
+	if (!check_users(server, invited, fd))
+		return sendMsg(client, msgs(client, "", "", "INVITE")[ERR_NOSUCHNICK]);
 
-	channel.setChannelInvited(client.getNickName());
-	// channel.setChannelUser(client);
-	sendMsg(client, msgs(client, "", "INVITE")[RPL_INVITING]);
+	channel.setChannelInvited(invited);
+	sendMsg(client, msgs(client, "", "", "INVITE")[RPL_INVITING]);
 }
 
 // TOPIC 
@@ -214,28 +214,28 @@ void	topic(Server &server, string line, int fd){// [X]
     line = strtrim(line);
 
     if (strtrim(line).empty())
-		return sendMsg(client, msgs(client, "", "TOPIC")[ERR_NEEDMOREPARAMS]);
+		return sendMsg(client, msgs(client, "","", "TOPIC")[ERR_NEEDMOREPARAMS]);//V
 	
 	vector<string> spl = split(line, " ");
 
-	channel &channel = server.getChannels()[spl[0]]; 
     if (!isChannelExist(server.getChannels(), spl[0]))
-		return sendMsg(client, msgs(client, "", "TOPIC")[ERR_NOSUCHCHANNEL]);
-	else if (!isInChannel(server.getCLients()[fd], spl[0]))
-		return sendMsg(client, msgs(client, "", "TOPIC")[ERR_NOTONCHANNEL]);
+		return sendMsg(client, msgs(client,"", spl[0], "TOPIC")[ERR_NOSUCHCHANNEL]);//V
+	channel &channel = server.getChannels()[spl[0]]; 
+	if (!isInChannel(server.getCLients()[fd], spl[0]))
+		return sendMsg(client, msgs(client,"", channel.getChannelName(), "TOPIC")[ERR_NOTONCHANNEL]);//V
 
 	string topic = line.substr(spl[0].size());
 
 	if (topic.empty())
 	{
 		if (channel.getChannelTopic().empty())
-			return sendMsg(client, msgs(client, "", "TOPIC")[RPL_NOTOPIC]);
+			return sendMsg(client, msgs(client,"", channel.getChannelName(), "TOPIC")[RPL_NOTOPIC]);//V
 		send(fd," :show old topic\n", 18, 0);
 	}
 	else{
 		if (channel.getChannelModes()['t'] == "+t" &&
 			!isAdmin(client.getNickName(), channel))
-				return sendMsg(client, msgs(client, "", "TOPIC")[ERR_CHANOPRIVSNEEDED]);
+				return sendMsg(client, msgs(client,"", channel.getChannelName(), "TOPIC")[ERR_CHANOPRIVSNEEDED]);//V
 		else
 			channel.setChannelTopic(topic);
 	}
@@ -304,30 +304,30 @@ void	mode(Server &server, string line, int fd){
     line = strtrim(line);
 	Client &client = server.getCLients()[fd];
     if (line.empty() || split(line, " ").size() < 2){
-		sendMsg(client, msgs(client, "", "MODE")[ERR_NEEDMOREPARAMS]);
+		sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]);//V
         return ;
     }
 	vector<string> spl = split(line, " ");
 	if (!isChannelExist(server.getChannels(), spl[0]))
-		return sendMsg(client, msgs(client, "", "MODE")[ERR_NOSUCHCHANNEL]);
+		return sendMsg(client, msgs(client,"" , spl[0], "MODE")[ERR_NOSUCHCHANNEL]);//V
 	channel &channel = server.getChannels()[spl[0]];
 	
 	if (!isInChannel(client, spl[0]))
-		return sendMsg(client, msgs(client, "", "MODE")[ERR_NOTONCHANNEL]);
+		return sendMsg(client, msgs(client, "",channel.getChannelName(), "MODE")[ERR_NOTONCHANNEL]);//V
 	else if (!isAdmin(client.getNickName(), channel))
-		return sendMsg(client, msgs(client, "", "MODE")[ERR_CHANOPRIVSNEEDED]);
+		return sendMsg(client, msgs(client, "",channel.getChannelName(), "MODE")[ERR_CHANOPRIVSNEEDED]);//V
 	else if (spl[1][0] == '+' || spl[1][0] == '-')
 	{
 		if (spl.size() < 3)
 			spl.push_back("");
 		if ((spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos) && spl[2].empty())
-			return sendMsg(client, msgs(client, "", "MODE")[ERR_NEEDMOREPARAMS]);
+			return sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]);//V
 		else
 			fillMode(spl[1], spl[2], channel, server, client);
-				// sendMsg(client, msgs(client, "", "MODE")[ERR_NEEDMOREPARAMS]);
+				// sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]);//V
 	}
 	else
-		sendMsg(client, msgs(client, "", "MODE")[ERR_NEEDMOREPARAMS]);
+		sendMsg(client, msgs(client ,"" , "", "MODE")[ERR_NEEDMOREPARAMS]);//V
 	
 }
 
