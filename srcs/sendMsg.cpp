@@ -3,18 +3,18 @@
 map<int, string> msgs(Client& client,string nickname,string channel, string cmd){
 	map<int, string> msg;
 	// CHANNEL
-	msg[IN_CHANNEL] = nbtoString(IN_CHANNEL) + " " + channel + " :You have joined too many channels";
+	msg[ERR_TOOMANYCHANNELS] = nbtoString(ERR_TOOMANYCHANNELS) + " " + channel + " :You have joined too many channels";
 	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
 	msg[ERR_NOSUCHCHANNEL] = nbtoString(ERR_NOSUCHCHANNEL) + " " + channel + " :No such channel";
-	msg[MODE_PLUS_I] = nbtoString(MODE_PLUS_I) + " " + channel + " :Cannot join channel (+i)";
+	msg[ERR_INVITEONLYCHAN] = nbtoString(ERR_INVITEONLYCHAN) + " " + channel + " :Cannot join channel (+i)";
 	msg[ERR_CHANNELISFULL] = nbtoString(ERR_CHANNELISFULL) + " " + channel + " :Cannot join channel (+l)";
 	msg[ERR_BADCHANNELKEY] = nbtoString(ERR_BADCHANNELKEY) + " " + channel + " :Cannot join channel (+k)";
 	msg[RPL_NOTOPIC] = nbtoString(RPL_NOTOPIC) + " " + channel + " :No topic is set";
-	// msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + channel + " TOPIC///";
+	msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + channel + ""+ nickname;
 	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
 	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + nickname + "" + channel + " :is already on channel";
-	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + client.getNickName() + " " + channel;
-	msg[ERR_NOSUCHNICK] = nbtoString(ERR_NOSUCHNICK) + " " + channel + " :No such nick/channel";
+	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + nickname + " " + channel;
+	msg[ERR_NOSUCHNICK] = nbtoString(ERR_NOSUCHNICK) + " " + nickname + " :No such nick/channel";
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
@@ -59,9 +59,9 @@ void justJoined(Client &client, channel &channel, string &line){
     string localhost = getLocalhost(client);
 
     if (channel.getChannelTopic().empty())
-        msg = msgs(client, "",channel.getChannelName(), line)[RPL_NOTOPIC];
+        msg = msgs(client, "", channel.getChannelName(), "")[RPL_NOTOPIC];
     else
-        msg = channel.getChannelTopic(); //! 332
+        msg = msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]; //! 332
 
     sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg); ////later
     sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
