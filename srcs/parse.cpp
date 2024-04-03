@@ -57,7 +57,7 @@ bool parse(class Server &server,int fd, string reqs){
             invite(server, reqs, fd);
             break;
         case 9:
-            // bot(server, reqs, fd);
+            bot(server, reqs, fd);
             break;
         case 10:
             privmsg(server, reqs, fd);
