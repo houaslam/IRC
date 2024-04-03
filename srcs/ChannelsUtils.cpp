@@ -1,5 +1,63 @@
 #include "../includes/server.hpp"
 
+void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
+	server.getCLients();
+	if (mode.size() > 2) ///recheck later
+	{
+		send(client.get_fd(), "ERROR\n", 5, 0);	
+		return; 
+	}
+	char flag = mode[0];
+	if (mode[1] == 'o'){
+		if (arg.empty())
+			return sendMsg(client, "not enough arguments");
+		if (flag == '+' && isInChannelString(arg, channel))
+		{
+			cout << "client is in channel " << channel.getChannelName() << endl;
+			channel.setChannelAdmin(arg);
+		}
+		else
+			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
+				if (arg == channel.getChannelAdmins()[i])
+					channel.getChannelAdmins()[i] = ""; ////later
+					// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+	}
+	if (mode[1] == 'k'){
+		if (flag == '-')
+			channel.getChannelModes()['k'] = "";
+		else{
+			if (arg.empty())
+				return sendMsg(client, "not enough arguments");
+			channel.getChannelModes()['k'] = arg;
+		}
+	}
+	if (mode[1] == 'l'){
+		if (flag == '-')
+			channel.getChannelModes()['l'] = "";
+		else
+		{
+			if (arg.empty())
+				return sendMsg(client, "not enough arguments");
+			for (size_t i = 0; i < arg.size(); i++)
+				if (!isdigit(arg[i]))
+					return;
+			channel.getChannelModes()['l'] = arg;
+		}
+	}
+	if (mode[1] == 't'){
+		if (flag == '-')
+			channel.getChannelModes()['t'] = "-t";
+		else
+			channel.getChannelModes()['t'] = "+t";
+	}
+	if (mode[1] == 'i'){
+		if (flag == '-')
+			channel.getChannelModes()['i'] = "-i";
+		else
+			channel.getChannelModes()['i'] = "+i";
+	}
+}
+
 bool isAdmin(string admin, channel &channel){
 	
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){

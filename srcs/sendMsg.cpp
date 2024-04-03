@@ -43,16 +43,6 @@ string getLocalhost(Client &client){
     return ":" + client.getNickName() + "!" + client.getUser() +"@localhost ";
 }
 
-void ft_unknownCmd(Client &client, string &line){
-
-
-    // string msg = getMsg(UNKNOW_CMD);
-    string msg = msgs(client, "", "", line)[UNKNOW_CMD];
-    string localhost = getLocalhost(client);
-    sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg);
-
-}
-
 void justJoined(Client &client, channel &channel, string &line){
 
     string msg;

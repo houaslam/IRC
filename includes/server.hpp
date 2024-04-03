@@ -122,7 +122,6 @@ string strtrim(const string& str);
 
 // EXTERNAL FUNCTION
 void sendMsg(Client& client, string str);
-void ft_unknownCmd(Client &client, int fd, string &line);
 void justJoined(Client &client, channel &channel, string &line);
 string getMsg(int msgNumber);
 string getLocalhost(Client &client);
@@ -132,6 +131,7 @@ void clearScreen(int fd);
 string getTime(void);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
+void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client);
 
 // BOOL
 bool isAdmin(string admin, channel &channel);

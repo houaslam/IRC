@@ -1,39 +1,6 @@
 #include "../includes/client.hpp"
 #include "../includes/server.hpp"
 
-void getMode(string mode, string str, channel &channel, Server &server){
-	return;
-	str = "";
-	if (mode.size() < 2)
-		return;
-	string flag; //itkol
-	if (mode[0] == '-')
-		flag  = "-";
-	else
-		flag = "+";
-	if (mode.find("i"))
-		cout <<"" << endl;
-			// channel.getChannelModes()['i'] = flag + "i";
-	else if(mode.find("t"))
-			channel.getChannelModes()['t'] = flag + "t";
-		else if (mode.find("o"))
-		{
-			//del or add
-			// map<int , class Client> save = server.getCLients();
-			for(map<int, class Client>::iterator it = server.getCLients().begin(); it != server.getCLients().end(); it++){
-				// if (str.compare(it->second.getNickName()))
-					// if (flag == "+")
-					// 	channel.setChannelAdmin(it->first);
-					// else
-
-			}
-		}
-		// else if (mode[i] == 'l')
-		// 	channel.getChannelModes()[i] = flag + "l";
-}
-				/*bool*/
-
-
 // PASS <password>
 void    pass(Server& server, string line , int fd){
 	line = line.substr(4);
@@ -154,8 +121,7 @@ void join(Server& server, string line, int fd){
         channel channel(spl[0]);
 
 		client.setInChannel(spl[0]);
-		channel.setChannelUser(client); ///add invited to users as well
-		cout << "NEW CHANNEL" << endl;
+		channel.setChannelUser(client);
 		cout << channel.getChannelUsers().size() << endl; 
 		channel.setChannelAdmin(client.getNickName());
 		server.setChannel(channel, spl[0], client);
@@ -241,64 +207,6 @@ void	topic(Server &server, string line, int fd){// [X]
 	}
 }
 
-void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
-	server.getCLients(); //// WHAT IF WE GAVE A +O OR WHATEVER TO SOMEONE NOT IN THE CHANNEL
-	if (mode.size() > 2) ///recheck later
-	{
-		send(client.get_fd(), "ERROR\n", 5, 0);	
-		return; 
-	}
-	char flag = mode[0];
-	if (mode[1] == 'o'){
-		if (arg.empty())
-			return sendMsg(client, "not enough arguments");
-		if (flag == '+' && isInChannelString(arg, channel))
-		{
-			cout << "client is in channel " << channel.getChannelName() << endl;
-			channel.setChannelAdmin(arg);
-		}
-		else
-			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
-				if (arg == channel.getChannelAdmins()[i])
-					channel.getChannelAdmins()[i] = ""; ////later
-					// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
-	}
-	if (mode[1] == 'k'){
-		if (flag == '-')
-			channel.getChannelModes()['k'] = "";
-		else{
-			if (arg.empty())
-				return sendMsg(client, "not enough arguments");
-			channel.getChannelModes()['k'] = arg;
-		}
-	}
-	if (mode[1] == 'l'){
-		if (flag == '-')
-			channel.getChannelModes()['l'] = "";
-		else
-		{
-			if (arg.empty())
-				return sendMsg(client, "not enough arguments");
-			for (size_t i = 0; i < arg.size(); i++)
-				if (!isdigit(arg[i]))
-					return;
-			channel.getChannelModes()['l'] = arg;
-		}
-	}
-	if (mode[1] == 't'){
-		if (flag == '-')
-			channel.getChannelModes()['t'] = "-t";
-		else
-			channel.getChannelModes()['t'] = "+t";
-	}
-	if (mode[1] == 'i'){
-		if (flag == '-')
-			channel.getChannelModes()['i'] = "-i";
-		else
-			channel.getChannelModes()['i'] = "+i";
-	}
-}
-
 void	mode(Server &server, string line, int fd){
     line = line.substr(4);
     line = strtrim(line);
@@ -330,6 +238,9 @@ void	mode(Server &server, string line, int fd){
 		sendMsg(client, msgs(client ,"" , "", "MODE")[ERR_NEEDMOREPARAMS]); 
 	
 }
+
+// <target>{,<target>} <text to be sent>
+// void	privmsg()
 
 // string getMsg(int msgNumber, Server& server, string channel, int fd){
 // 	return(   msgs()[msgNumber]);
