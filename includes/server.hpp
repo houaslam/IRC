@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <ctime>
 #include <algorithm>
+#include <fcntl.h> 
 
        /* COLORS */
 #define RESET   "\033[0m"

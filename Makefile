@@ -9,6 +9,7 @@ SRC = srcs/main.cpp \
 	  srcs/sendMsg.cpp \
 	  srcs/channel.cpp \
 	  srcs/commands.cpp \
+	  srcs/bonus.cpp \
 
 CXX		= c++
 
@@ -23,8 +24,6 @@ $(NAME): $(OBJS)
 
 %.o : %.cpp %.hpp
 	c++ ${CXXFLAGS}  -c $< -o $@
-	
-
 
 clean:
 	rm -rf $(OBJS)

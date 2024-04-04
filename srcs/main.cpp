@@ -22,12 +22,12 @@ int main(int ac , char ** av){
 				for (int i = 0; i < nb_fds; i++){
 
 					if (fds[i].revents == POLLIN){
-                        
+                    
 						if (fds[i].fd == server.get_socket()){
     						int fd = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
 							if (fd <= 0)
 								ft_error("CLIENT : ");
-
+							// fcntl(fd, F_SETFL, O_NONBLOCK);
                             Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
