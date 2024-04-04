@@ -18,7 +18,9 @@
         "__hash_table": "cpp",
         "__tree": "cpp",
         "bitset": "cpp",
-        "initializer_list": "cpp"
+        "initializer_list": "cpp",
+        "*.tcc": "cpp",
+        "exception": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -62,3 +62,4 @@ void	topic(Server &server, string line, int fd);
 void	invite(Server &server, string line, int fd);
 void	mode(Server &server, string line, int fd);
 void	bot(Server& server,  int fd);
+void	privmsg(Server &server, string line, int fd);

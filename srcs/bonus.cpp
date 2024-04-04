@@ -42,7 +42,7 @@ void bot(Server& server, int fd){
 	double bmr;
 		
     if (server.getCLients()[fd].getNickName().empty()){
-		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","")[NOT_REGISTRED]);
+		// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","", )[NOT_REGISTRED]);
 	// 	return ;
 	}
 	FILE* file = fdopen(fd, "r");

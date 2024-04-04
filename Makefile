@@ -10,6 +10,7 @@ SRC = srcs/main.cpp \
 	  srcs/channel.cpp \
 	  srcs/commands.cpp \
 	  srcs/bonus.cpp \
+	  srcs/ChannelsUtils.cpp
 
 CXX		= c++
 

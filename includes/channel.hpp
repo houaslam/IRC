@@ -36,6 +36,3 @@ class channel{
 		map<char, string> &getChannelModes();
 
 };
-
-bool isInvited(string invited, channel &channel);
-bool isAdmin(string admin, channel &channel);

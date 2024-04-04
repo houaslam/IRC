@@ -40,11 +40,11 @@
        /* ERRORS */
 
 // CHANNEL
-#define IN_CHANNEL			    405  // :You have joined too many channels
+#define ERR_TOOMANYCHANNELS		405  // :You have joined too many channels
 #define ERR_NOTONCHANNEL		442	 // :You're not on that channel
 #define ERR_NOSUCHCHANNEL 		403  // :No such channel
-#define MODE_PLUS_I 			437  // <client> <channel> :Cannot join channel (+i)"
-#define ERR_CHANNELMODEINVALID	473  // :Invalid channel mode
+#define ERR_INVITEONLYCHAN 		473  // <client> <channel> :Cannot join channel (+i)"
+// #define ERR_CHANNELMODEINVALID	473  // :Invalid channel mode
 #define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
 #define ERR_BADCHANNELKEY		475  // :Cannot join channel (+k)
 #define RPL_INVITING			341  // :<nick> <channel>
@@ -52,6 +52,8 @@
 #define RPL_NOTOPIC				331  // :No topic is set"
 #define ERR_CHANOPRIVSNEEDED	482  // :You're not channel operator
 #define ERR_USERONCHANNEL		443  // :is already on channel
+#define ERR_NOSUCHNICK			401  // :No such nick/channel
+#define ERR_NORECIPIENT			411  //  "<client> :No recipient given (<command>)"
 
   
 // NICK 
@@ -64,7 +66,7 @@
 // GENERAL
 #define NOT_REGISTRED		    451  // :You have not registered
 #define UNKNOW_CMD			    421  // :Unknown command
-#define NOT_ENOUGH_PARA		    461  // :Not enough parameters
+#define ERR_NEEDMOREPARAMS		461  // :Not enough parameters
 #define ALREADY_REGISTERED	    462  // :You may not register
 
 
@@ -122,22 +124,25 @@ string strtrim(const string& str);
 
 // EXTERNAL FUNCTION
 void sendMsg(Client& client, string str);
-void ft_unknownCmd(Client &client, int fd, string &line);
 void justJoined(Client &client, channel &channel, string &line);
 string getMsg(int msgNumber);
 string getLocalhost(Client &client);
 string nbtoString(int nb);
-map<int, string> msgs(Client& client, string channel, string cmd);
+map<int, string> msgs(Client& client,string nickname, string channel, string cmd);
 void clearScreen(int fd);
 string getTime(void);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
+void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client);
 
 // BOOL
+bool isAdmin(string admin, channel &channel);
+bool isInvited(string invited, channel &channel);
 bool isConnected(Server& server, int fd);
 bool isChannelExist(map<string, channel> &channels,string &line);
 bool isInChannel(class Client &client, string &name);
-bool isAdmin(int admin, channel channel);
+bool isInChannelString(string &client, channel &channel);
+bool check_users(Server& server,string line , int ref);
 
 // if (hajar == zwina)
 // 	return taha + hajar = love;
