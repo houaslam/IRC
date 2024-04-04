@@ -1,5 +1,33 @@
 #include "../includes/server.hpp"
 
+
+Client getClientString(map<int, Client> clients, string &name)
+{
+	map<int, Client>::iterator it = clients.begin();
+	Client ret = it->second;
+
+    for (; it != clients.end(); it++) {
+        if (it->second.getNickName() == name) {
+            ret = it->second;
+        }
+    }
+
+	return ret;
+}
+
+string getPRVMsg(string &line){
+
+	size_t colone = line.find(':');
+	string msg = "";
+
+    if (colone != string::npos)
+	{
+    	msg = line.substr(colone+ 1);
+	}
+
+	return msg;
+}
+
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
 	server.getCLients();
 	if (mode.size() > 2) ///recheck later
@@ -73,7 +101,7 @@ bool isInvited(string invited, channel &channel){
 	return false;
 }
 
-bool check_users(Server& server,string line , int ref){
+bool check_users(Server& server, string line, int ref){
 	map<int , class Client> save = server.getCLients();
 	for(map<int, class Client>::iterator it = save.begin(); it != save.end(); it++){
 		if (!line.compare(it->second.getNickName()) && it->second.get_fd() != ref)

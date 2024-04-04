@@ -53,6 +53,10 @@
 #define ERR_USERONCHANNEL		443  // :is already on channel
 #define ERR_NOSUCHNICK			401  // :No such nick/channel
 #define ERR_NORECIPIENT			411  //  "<client> :No recipient given (<command>)"
+#define ERR_CANNOTSENDTOCHAN	404  //  ":Cannot send to channel"
+#define ERR_NOTEXTTOSEND		412  //  ":No text to send"
+#define RPL_AWAY				301  //   yournick recipient_nickname :Your message has been delivered
+ 
 
   
 // NICK 
@@ -133,6 +137,8 @@ string getTime(void);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client);
+string getPRVMsg(string &line);
+Client getClientString(map<int, Client> clients, string &name);
 
 // BOOL
 bool isAdmin(string admin, channel &channel);
