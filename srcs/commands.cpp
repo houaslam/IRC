@@ -90,7 +90,7 @@ void join(Server& server, string line, int fd){
     line = strtrim(line);
 
     if (line.empty())
-		return sendMsg(client, msgs(client, "", "", "")[ERR_NEEDMOREPARAMS]); 
+		return sendMsg(client, msgs(client, "", "", "JOIN")[ERR_NEEDMOREPARAMS]); 
     vector<string> spl = split(line, " ");
 	if (spl.size() == 1)
 		spl.push_back("");
@@ -127,7 +127,7 @@ void invite(Server& server, string line, int fd){
     line = strtrim(line);
 
     if (line.empty() || split(line, " ").size() < 2)
-		return sendMsg(client, msgs(client, "", "", "")[ERR_NEEDMOREPARAMS]); 
+		return sendMsg(client, msgs(client, "", "", "INVITE")[ERR_NEEDMOREPARAMS]); 
 	
 	vector<string> spl = split(line, " ");
 
@@ -156,7 +156,7 @@ void	topic(Server &server, string line, int fd){// [X]
     line = strtrim(line);
 
     if (strtrim(line).empty())
-		return sendMsg(client, msgs(client, "","", "")[ERR_NEEDMOREPARAMS]); 
+		return sendMsg(client, msgs(client, "","", "TOPIC")[ERR_NEEDMOREPARAMS]); 
 	
 	vector<string> spl = split(line, " ");
 
@@ -188,7 +188,7 @@ void	mode(Server &server, string line, int fd){
     line = strtrim(line);
 	Client &client = server.getCLients()[fd];
     if (line.empty() || split(line, " ").size() < 2){
-		sendMsg(client, msgs(client, "","", "")[ERR_NEEDMOREPARAMS]); 
+		sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
         return ;
     }
 	vector<string> spl = split(line, " ");
@@ -205,37 +205,62 @@ void	mode(Server &server, string line, int fd){
 		if (spl.size() < 3)
 			spl.push_back("");
 		if ((spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos) && spl[2].empty())
-			return sendMsg(client, msgs(client, "","", "")[ERR_NEEDMOREPARAMS]); 
+			return sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 		else
 			fillMode(spl[1], spl[2], channel, server, client);
-				// sendMsg(client, msgs(client, "","", "")[ERR_NEEDMOREPARAMS]); 
+				// sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 	}
 	else
-		sendMsg(client, msgs(client ,"" , "", "")[ERR_NEEDMOREPARAMS]); 
+		sendMsg(client, msgs(client ,"" , "", "MODE")[ERR_NEEDMOREPARAMS]); 
 	
 }
 
 // <target>{,<target>} <text to be sent>
 void	privmsg(Server &server, string line, int fd){
-	line = line.substr(4);
+	line = line.substr(7);
     line = strtrim(line);
 	Client &client = server.getCLients()[fd];
-    if (line.empty() || split(line, " ").size() < 2){
-		sendMsg(client, msgs(client, "","", "PRIVMSG")[ERR_NORECIPIENT]); 
-        return ;
-    }
-}
+    if (line.empty())
+		return sendMsg(client, msgs(client, "","", "PRIVMSG")[ERR_NORECIPIENT]);
+	vector<string> spl = split(line, " ");
+	if (!isChannelExist(server.getChannels(), spl[0]) && !check_users(server, spl[0], fd))
+		return sendMsg(client, msgs(client,"" , spl[0], "")[ERR_NOSUCHNICK]);
+	if (spl.size() == 1)
+		spl.push_back("");
+	if(spl[1][0] != ':')
+		return (sendMsg(client, msgs(client ,"" , "", "PRIVMSG")[ERR_NEEDMOREPARAMS])); 
+	string msg = getPRVMsg(line);
+	if (msg.empty())
+		return (sendMsg(client, msgs(client ,"" , "", "")[ERR_NOTEXTTOSEND]));
+	if (check_users(server, spl[0], fd))
+	{
+		sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
+		Client target = getClientString(server.getCLients(), spl[0]);
+		msg = "[" + client.getNickName() + "] " + msg + "\r\n";
+		send(target.get_fd(), msg.c_str(), msg.size(), 0);
+		return;
+	}
+	if (isChannelExist())
+	// channel &channel = server.getChannels(spl[0]);
+	// if (channel.getChannelModes()['i'] == "+i" && isInvited(client.getNickName(), channel))
+	// 	return sendMsg(client, msgs(client,"" , spl[0], "")[ERR_CANNOTSENDTOCHAN]);
 
+}
+///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
+///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD
+///ADD PART
 /*
-ERR_NOSUCHNICK (401)
-ERR_NOSUCHSERVER (402)
-ERR_CANNOTSENDTOCHAN (404)
+ERR_NOSUCHNICK (401) //
+ERR_NOSUCHSERVER (402) //!X
+ERR_NOSUCHCHANNEL 403 ->doesn't exist //
+ERR_CANNOTSENDTOCHAN (404) -> when it's +i //
 ERR_TOOMANYTARGETS (407)
 ERR_NORECIPIENT (411) //
-ERR_NOTEXTTOSEND (412)
+ERR_NOTEXTTOSEND (412) //
 ERR_NOTOPLEVEL (413)
 ERR_WILDTOPLEVEL (414)
-RPL_AWAY (301)
+RPL_AWAY (301) //
+475 +L
 */
 // string getMsg(int msgNumber, Server& server, string channel, int fd){
 // 	return(   msgs()[msgNumber]);

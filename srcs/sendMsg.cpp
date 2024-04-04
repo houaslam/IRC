@@ -16,6 +16,9 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + nickname + " " + channel;
 	msg[ERR_NOSUCHNICK] = nbtoString(ERR_NOSUCHNICK) + " " + nickname + " :No such nick/channel";
 	msg[ERR_NORECIPIENT] = nbtoString(ERR_NORECIPIENT) + " " + nickname + " :No recipient given (" + cmd + ")";
+	msg[ERR_CANNOTSENDTOCHAN] = nbtoString(ERR_CANNOTSENDTOCHAN) + " " + nickname + " " + channel + " :Cannot send to channel";
+	msg[ERR_NOTEXTTOSEND] = nbtoString(ERR_NOTEXTTOSEND) + " :No text to send";
+	msg[RPL_AWAY] = nbtoString(RPL_AWAY) + " " + client.getNickName() + " " + nickname + " :Your message has been delivered";
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
