@@ -3,7 +3,6 @@
 
 
 int main(int ac , char ** av){
-
 	if (ac == 3){
 
 		Server server(atoi(av[1]), av[2]);
@@ -16,6 +15,7 @@ int main(int ac , char ** av){
 		int nb_fds = 1;
 
 		while(true){
+
 
 			if (poll(fds, nb_fds, 0) > 0){
 
@@ -37,6 +37,7 @@ int main(int ac , char ** av){
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							if (k > 0){
 								reqs[k] = '\0';
+
 							    if (parse(server, fds[i].fd, reqs) == false)
 									cout << "exit\n";
 							}

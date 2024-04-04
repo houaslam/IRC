@@ -240,7 +240,7 @@ void	privmsg(Server &server, string line, int fd){
 		send(target.get_fd(), msg.c_str(), msg.size(), 0);
 		return;
 	}
-	if (isChannelExist())
+	// if (isChannelExist())
 	// channel &channel = server.getChannels(spl[0]);
 	// if (channel.getChannelModes()['i'] == "+i" && isInvited(client.getNickName(), channel))
 	// 	return sendMsg(client, msgs(client,"" , spl[0], "")[ERR_CANNOTSENDTOCHAN]);

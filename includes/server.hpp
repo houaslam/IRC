@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <netinet/in.h>
+#include <pthread.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <iostream>
@@ -15,6 +16,7 @@
 #include <vector>
 #include <vector>
 #include <sys/socket.h>  
+#include <thread>
 #include <string>
 #include <cctype>
 #include <poll.h>
@@ -90,6 +92,7 @@ class Server{
 		map<string, class channel>  channels;
 
 	public:
+		int curr_fd;
 	// CANONICAL FORM
 		~Server();
 		Server(const Server& src);

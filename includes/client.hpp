@@ -26,6 +26,7 @@ class Client{
 		// JOIN
 		vector<string> inChannel;
 	public:
+		pthread_t thread;
 		bool isConnected;
 		bool pass;
 
@@ -61,5 +62,5 @@ void    pass(Server& server, string line , int fd);
 void	topic(Server &server, string line, int fd);
 void	invite(Server &server, string line, int fd);
 void	mode(Server &server, string line, int fd);
-void	bot(Server& server,  int fd);
+void*	bot(void *arg);
 void	privmsg(Server &server, string line, int fd);
