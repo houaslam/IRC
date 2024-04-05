@@ -57,7 +57,9 @@ bool parse(class Server &server,int fd, string reqs){
             invite(server, reqs, fd);
             break;
         case 9:
-            bot(server, reqs, fd);
+            server.curr_fd = fd;
+            pthread_create(&server.getCLients()[fd].thread, NULL, bot, static_cast<void *>(&server));
+            pthread_join(server.getCLients()[fd].thread, NULL);
             break;
         case 10:
             privmsg(server, reqs, fd);
