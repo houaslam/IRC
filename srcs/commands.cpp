@@ -16,29 +16,6 @@ void    pass(Server& server, string line , int fd){
 	}
 }
 
-void bot(Server& server, string line, int fd){
-	// 	if (server.getCLients()[fd].getNickName().empty()){
-	// 	sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NOT_REGISTRED]); 
-	// 	return ;
-	// }
-	line = line.substr(3);
-	line = strtrim(line);
-	if (line.empty()){
-		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[ERR_NEEDMOREPARAMS]); 
-		return ;
-	}
-	else{
-		vector<string> res = split(line, " ");
-		if (res.size() != 4){
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[ERR_NEEDMOREPARAMS]); 
-			return ;
-		}
-		send(fd, "WELCOME TO PIXER SERVER BOT\n", 29, 0);
-	 // MAKE THE FORMULA USING THE PARAMETERS PROVIDED 
-	 
-	}
-}
-
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
 	if (server.getCLients()[fd].pass == false){

@@ -62,5 +62,5 @@ void    pass(Server& server, string line , int fd);
 void	topic(Server &server, string line, int fd);
 void	invite(Server &server, string line, int fd);
 void	mode(Server &server, string line, int fd);
-void*	bot(void *arg);
+void	bot(int fd, string cmd, Server& sever);
 void	privmsg(Server &server, string line, int fd);
