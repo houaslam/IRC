@@ -44,13 +44,13 @@ void bot(int fd, string line,  Server& server){
 	bmr *= 10000;
 
 	if (bmr > 35)
-		send(fd, "You are extremly obese\n", 24, 0);
+		send(fd, "\033[31mYou are extremly obese\n\033[0m", 33, 0);
 	else if (bmr < 34.9 && bmr > 30)
-		send(fd, "You are obese\n", 15, 0);
+		send(fd, "\033[33mYou are obese\n\033[0m", 25, 0);
 	else if (bmr < 29.9 && bmr > 25)
-		send(fd, "You are overweight\n", 20, 0);
+		send(fd, "\033[35mYou are overweight\n\033[0m", 29, 0);
 	else if (bmr > 18.5 && bmr < 24.9)
-		send(fd, "You are extremly normal\n", 24, 0);
+		send(fd, "\033[32mYou are normal\n\033[0m", 25, 0);
 	else if ( bmr < 18.5)
-		send(fd, "You are underweight\n", 21, 0);
+		send(fd, "\033[31mYou are underweight\n\033[0m", 30, 0);
 }
