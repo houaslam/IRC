@@ -20,7 +20,8 @@
         "bitset": "cpp",
         "initializer_list": "cpp",
         "*.tcc": "cpp",
-        "exception": "cpp"
+        "exception": "cpp",
+        "complex": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

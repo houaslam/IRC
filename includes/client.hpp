@@ -64,3 +64,4 @@ void	invite(Server &server, string line, int fd);
 void	mode(Server &server, string line, int fd);
 void	bot(int fd, string cmd, Server& sever);
 void	privmsg(Server &server, string line, int fd);
+void	part(Server &server, string line, int fd);

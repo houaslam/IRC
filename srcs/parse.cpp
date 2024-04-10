@@ -23,7 +23,7 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG"};
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PART"};
     size_t n = 0;
     size_t size =  sizeof(commands) / sizeof(string);
     if (line.empty())
@@ -64,6 +64,9 @@ bool parse(class Server &server,int fd, string reqs){
             break;
         case 10:
             privmsg(server, reqs, fd);
+            break;
+        case 11:
+            part(server, reqs, fd);
             break;
         default:{
             sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);

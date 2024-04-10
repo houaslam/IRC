@@ -112,9 +112,12 @@ void join(Server& server, string line, int fd){
 			return sendMsg(client, msgs(client, "", "", "")[ERR_BADCHANNELKEY]); 
 		if (/*!isAdmin(client.getNickName(), channel) &&*/ !isInvited(client.getNickName(), channel) && channel.getChannelModes()['i'] == "+i")
 			return sendMsg(client, msgs(client, "", "", "")[ERR_INVITEONLYCHAN]); 
+		for (size_t i = 0; i < channel.getChannelInvited().size(); i++)
+			if (client.getNickName() == channel.getChannelInvited()[i])
+				channel.getChannelInvited().erase(channel.getChannelInvited().begin() + i);
 		client.setInChannel(spl[0]);
 		channel.setChannelUser(client);
-		justJoined(client, channel, spl[0]); //!
+		justJoined(client, channel, spl[0]); //! ///
 	}
 }
 
@@ -149,7 +152,7 @@ void invite(Server& server, string line, int fd){
 }
 
 // TOPIC 
-void	topic(Server &server, string line, int fd){// [X]
+void	topic(Server &server, string line, int fd){
 	Client &client = server.getCLients()[fd];
     line = line.substr(5);
     line = strtrim(line);
@@ -253,11 +256,37 @@ void	privmsg(Server &server, string line, int fd){
 		
 	}
 }
+
+void	part(Server &server, string line, int fd){
+	Client &client = server.getCLients()[fd];
+    line = line.substr(4);
+    line = strtrim(line);
+
+    if (strtrim(line).empty())
+		return sendMsg(client, msgs(client, "","", "PART")[ERR_NEEDMOREPARAMS]); 
+	
+	vector<string> spl = split(line, " ");
+
+    if (!isChannelExist(server.getChannels(), spl[0]))
+		return sendMsg(client, msgs(client,"", spl[0], "")[ERR_NOSUCHCHANNEL]); 
+	channel &channel = server.getChannels()[spl[0]]; 
+	if (!isInChannel(server.getCLients()[fd], spl[0]))
+		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
+//!	  :dan-!d@localhost PART #test    ; dan- is leaving the channel #test
+	unsetUser(channel, client);
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+	{
+		string msg = "PART " + channel.getChannelName() + "\t; " + client.getNickName() + " leaving the channel " + channel.getChannelName(); // maybe hashtag
+		sendMsg(channel.getChannelUsers()[i], msg);
+	}
+	
+}
 ///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
 ///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD
-///ADD PART
+// IF NO USER LEFT WE DELETE THE CHANNEL
+// ADD HASHTAGS
 
-/*
+/* INVITE
 ERR_NOSUCHNICK (401) //
 ERR_NOSUCHSERVER (402) //!X
 ERR_NOSUCHCHANNEL 403 ->doesn't exist //

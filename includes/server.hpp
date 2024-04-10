@@ -142,6 +142,7 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client);
 string getPRVMsg(string &line);
 Client getClientString(map<int, Client> clients, string &name);
+void unsetUser(channel &channel, Client &exUser);
 
 // BOOL
 bool isAdmin(string admin, channel &channel);
