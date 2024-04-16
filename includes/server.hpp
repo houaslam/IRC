@@ -151,9 +151,4 @@ bool isChannelExist(map<string, channel> &channels,string &line);
 bool isInChannel(class Client &client, string &name);
 bool isInChannelString(string &client, channel &channel);
 bool check_users(Server& server,string line , int ref);
-
-// if (hajar == zwina)
-// 	return taha + hajar = love;
-// if (hajar == khyba)
-// 	return (taha + hajar = love);
-// 	bghit ngheyerha
+void sendMsgg(Client& client, string str);

@@ -3,6 +3,8 @@
 Server::Server(int port, const char* password) : port(port), serverName("Pixserv"), password(password){
 	struct in_addr *addr = NULL;
 	struct hostent* test = NULL;
+	if (port <= 0 || !strcmp(password , ""))
+		ft_error("Invalid parameter: format : ./ircserv [port] [pass]");
 	test = gethostbyname("localhost");
 	int reuse = 1;
 

@@ -42,6 +42,7 @@ void bot(int fd, string line,  Server& server){
 	// send(fd, ".\n", 3, 0);
 	bmr /=  h * h;
 	bmr *= 10000;
+	cout << "BMR = " << bmr << endl;
 
 	if (bmr > 35)
 		send(fd, "\033[31mYou are extremly obese\n\033[0m", 33, 0);

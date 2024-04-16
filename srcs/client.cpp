@@ -44,27 +44,17 @@ int Client::get_fd(){
 	return this->fd;
 }
 
-void Client::setFd(int fd){
+void	Client::setFd(int fd){
 	this->fd = fd;
-}
-
-void Client::setInChannel(string &str){
+}void	Client::setInChannel(string &str){
 	inChannel.push_back(str);
-}
-
-void Client::setNickName(string nick){
+}void	Client::setNickName(string nick){
 	this->nickname = nick;
-}
-
-void Client::setUser(string nick){
+}void	Client::setUser(string nick){
 	this->username = nick;
-}
-
-void Client::setHost(string nick){
+}void	Client::setHost(string nick){
 	this->hostname = nick;
-}
-
-void Client::setRName(string nick){
+}void	Client::setRName(string nick){
 	this->r_name = nick;
 }
 
