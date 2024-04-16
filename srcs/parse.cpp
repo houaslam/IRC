@@ -23,7 +23,7 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING"};
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART"};
     size_t n = 0;
     size_t size =  sizeof(commands) / sizeof(string);
     if (line.empty())
@@ -65,6 +65,9 @@ bool parse(class Server &server,int fd, string reqs){
             break;
         case 11:
             cout << "-----------PING---------------->" << reqs << endl;
+            break;
+        case 12:
+            part(server, reqs, fd);
             break;
         default:{
             sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);

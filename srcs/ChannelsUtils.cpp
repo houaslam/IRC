@@ -1,5 +1,18 @@
 #include "../includes/server.hpp"
 
+void unsetUser(channel &channel, Client &exUser){
+	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++) //if they were admin
+		if (exUser.getNickName() == channel.getChannelAdmins()[i])
+			channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
+			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
+
+	vector<string>::iterator it = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
+	
+	exUser.getInChannel().erase(it);
+}
+
 
 Client getClientString(map<int, Client> clients, string &name)
 {
@@ -22,7 +35,7 @@ string getPRVMsg(string &line){
 
     if (colone != string::npos)
 	{
-    	msg = line.substr(colone+ 1);
+    	msg = line.substr(colone + 1);
 	}
 
 	return msg;
@@ -44,8 +57,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		else
 			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
 				if (arg == channel.getChannelAdmins()[i])
-					channel.getChannelAdmins()[i] = ""; ////later
-					// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+					channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
 	}
 	if (mode[1] == 'k'){
 		if (flag == '-')

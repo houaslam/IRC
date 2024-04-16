@@ -21,7 +21,11 @@
         "initializer_list": "cpp",
         "*.tcc": "cpp",
         "exception": "cpp",
+<<<<<<< HEAD
         "algorithm": "cpp"
+=======
+        "complex": "cpp"
+>>>>>>> refs/remotes/origin/main
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
