@@ -21,7 +21,11 @@
         "initializer_list": "cpp",
         "*.tcc": "cpp",
         "exception": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "__availability": "cpp",
+        "__locale": "cpp",
+        "algorithm": "cpp",
+        "locale": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

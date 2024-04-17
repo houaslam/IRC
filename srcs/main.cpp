@@ -31,20 +31,25 @@ int main(int ac , char ** av){
                             Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
+							// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],))//  "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]"
+
+							sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Internet Relay Network");
+    						sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName() + " ");
+    						sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 003 " + server.getCLients()[fd].getNickName() + " :This server was created 0 ");
+    						sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 004 " + server.getCLients()[fd].getNickName() + " :" + server.getServerName() + " 1.1 More info");
 						}
 
 						else {
 							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							if (k > 0){
 								reqs[k] = '\0';
-
 							    if (parse(server, fds[i].fd, reqs) == false)
 									cout << "exit\n";
 							}
 
 							else{
 								if (k == 0){
-									cout << "a user is disconnected\n";
+									// cout << "a user is disconnected\n";
 									server.getCLients().erase(fds[i].fd);
 								}
 								else

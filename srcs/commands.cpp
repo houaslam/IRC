@@ -253,7 +253,6 @@ void	privmsg(Server &server, string line, int fd){
 			if (fd != channel.getChannelUsers()[i].get_fd())
 				send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 		}
-		
 	}
 }
 
@@ -279,12 +278,46 @@ void	part(Server &server, string line, int fd){
 		string msg = "PART " + channel.getChannelName() + "\t; " + client.getNickName() + " leaving the channel " + channel.getChannelName(); // maybe hashtag
 		sendMsg(channel.getChannelUsers()[i], msg);
 	}
-	
 }
+
+//kick <channel> <user> <reason>
+void	kick(Server &server, string line, int fd){ 
+	Client &client = server.getCLients()[fd];
+    line = line.substr(4);
+    line = strtrim(line);
+
+    if (strtrim(line).empty() || split(line, " ").size() < 2)
+		return sendMsg(client, msgs(client, "","", "KICK")[ERR_NEEDMOREPARAMS]); 
+	
+	vector<string> spl = split(line, " ");
+
+    if (!isChannelExist(server.getChannels(), spl[0]))
+		return sendMsg(client, msgs(client,"", spl[0], "")[ERR_NOSUCHCHANNEL]); 
+	channel &channel = server.getChannels()[spl[0]]; 
+	if (!isInChannel(server.getCLients()[fd], spl[0]))
+		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
+	if (!isAdmin(client.getNickName(), channel))
+		return sendMsg(client, msgs(client, "", channel.getChannelName(), "")[ERR_CHANOPRIVSNEEDED]);
+	string &user = spl[1];
+	if (isAdmin(user, channel) || !isInChannelString(user, channel))
+		return ; //!441 ///AND CHECK IF I DIDN'T ADD "441" TO ANOTHER ONE BEFORE
+	if (spl.size() > 2){ ///SEMD THE REASON
+		string msg = line;
+    	size_t pos = line.find(channel.getChannelName()[0]);
+    	if (pos != string::npos)
+			msg = line.substr(pos + channel.getChannelName().size());
+    	pos = msg.find(user[0]);
+    	if (pos != string::npos)
+			msg = msg.substr(pos + user.size());
+	}
+	// Client &cUser = getClientString(server.getCLients(), user.);
+	// unsetUser(channel, cUser);
+}
+
 ///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
 ///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD
-// IF NO USER LEFT WE DELETE THE CHANNEL
-// ADD HASHTAGS
+/// IF NO USER LEFT WE DELETE THE CHANNEL
+/// ADD HASHTAGS
 
 /* INVITE
 ERR_NOSUCHNICK (401) //
