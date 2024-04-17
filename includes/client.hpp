@@ -56,7 +56,6 @@ class Client{
 
 void    user(Server& server, string line, int fd);
 void    nick(Server& server ,string line, int fd);
-string  &withoutNewLine(string &line);
 void    join(Server& server, string line, int fd);
 void    pass(Server& server, string line , int fd);
 void	topic(Server &server, string line, int fd);
@@ -65,3 +64,5 @@ void	mode(Server &server, string line, int fd);
 void	bot(int fd, string cmd, Server& sever);
 void	privmsg(Server &server, string line, int fd);
 void	part(Server &server, string line, int fd);
+void	kick(Server &server, string line, int fd);
+string  withoutNewLine(string &line);

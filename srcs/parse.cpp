@@ -2,8 +2,25 @@
 #include "../includes/server.hpp"
 #include "../includes/client.hpp"
 
-string &withoutNewLine(string &line){
-
+string withoutNewLine(string &line){
+    // string ret ;
+    
+    // int j = 0;
+    // int i = 0;
+    // while (line[i])
+    // {
+    //     if (line[i] != '\n' && line[i] != '\r'){
+    //         ret[j] = line[i];
+    //         j++;
+    //     }
+    //     i++;
+    // }
+    
+    // // for (size_t i = 0; i < line.size(); i++)
+    // // {
+    // // }
+    // // return "";
+    // ret[j++] = '\0';
     size_t pos = line.find('\r');
 
     if (pos != string::npos)
@@ -16,10 +33,10 @@ string &withoutNewLine(string &line){
     
     return line;
 }
-
 bool parse(class Server &server,int fd, string reqs){
+    cout << endl<< "with newline 2-> " << "[" << reqs << "]"<< endl;
     reqs = withoutNewLine(reqs);
-    server.get_addr();
+    cout << endl<< "without newline -> " << "[" << reqs << "]"<< endl;
 
     vector<string> line;
     line = split(reqs, " ");
@@ -27,7 +44,7 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART"};
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART", "KICK"};
     size_t n = 0;
     size_t size =  sizeof(commands) / sizeof(string);
     if (line.empty())
@@ -72,8 +89,11 @@ bool parse(class Server &server,int fd, string reqs){
         case 12:
             part(server, reqs, fd);
             break;
+        case 13:
+            kick(server, reqs, fd);
+            break;
         default:{
-            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs+" ")[UNKNOW_CMD]);
+            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);
             break;
         }
     }

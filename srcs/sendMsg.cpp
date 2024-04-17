@@ -31,14 +31,14 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
 
 	// GENERAL
-	msg[UNKNOW_CMD] = nbtoString(UNKNOW_CMD) + " " + cmd +  " :Unknown command";
+	msg[UNKNOW_CMD] = nbtoString(UNKNOW_CMD) + "\t" + cmd +  " :Unknown command";
 
 	return msg;
 }
 
 void sendMsg(Client& client, string str){
     str = str + "\r\n";
-    send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
+    // send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
     send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
     send(client.get_fd(), str.c_str(), str.length() , 0);
 }
@@ -61,3 +61,8 @@ void justJoined(Client &client, channel &channel, string &line){
     sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
     sendMsg(client, localhost + "366" + " " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
 }
+///:<client> JOIN <channel>
+///:<server> 332 <client> <channel> :<topic>
+/// :<server> 333 <client> <channel> <topic_setter> <timestamp>
+/// :<server> 353 <client> = <channel> :<user_list>
+/// :<server> 366 <client> <channel> :End of /NAMES list.

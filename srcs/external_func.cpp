@@ -80,10 +80,3 @@ string nbtoString(int nb){
     return str;
 }
 
-string  getTime(void){
-    time_t start = time(NULL);
-	struct tm *time = localtime(&start);
-	string res;
-	res +=  "[" + nbtoString(time->tm_hour) +  ':'+  nbtoString(time->tm_min) +  ']' + " ";
-	return res;
-}

@@ -22,9 +22,17 @@
         "*.tcc": "cpp",
         "exception": "cpp",
 <<<<<<< HEAD
+        "complex": "cpp",
+        "__availability": "cpp",
+        "__locale": "cpp",
+        "algorithm": "cpp",
+        "locale": "cpp"
+=======
+<<<<<<< HEAD
         "algorithm": "cpp"
 =======
         "complex": "cpp"
+>>>>>>> refs/remotes/origin/main
 >>>>>>> refs/remotes/origin/main
     },
     "C_Cpp.errorSquiggles": "disabled"

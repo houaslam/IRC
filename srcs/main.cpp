@@ -1,12 +1,12 @@
 #include "../includes/server.hpp"
 #include "../includes/client.hpp"
 
-void sendMsgg(Client& client, string str){
-    str = str + "\r\n";
-    send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
-    send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
-    send(client.get_fd(), str.c_str(), str.length() , 0);
-}
+// void sendMsgg(Client& client, string str){
+//     str = str + "\r\n";
+//     send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
+//     send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
+//     send(client.get_fd(), str.c_str(), str.length() , 0);
+// }
 
 int main(int ac , char ** av){
 	if (ac == 3){
@@ -36,21 +36,25 @@ int main(int ac , char ** av){
 							Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
+							// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],))//  "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]"
+
 						}
 
 						else {
-							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
+							int k = read(fds[i].fd, reqs, sizeof(reqs));
+							// int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							// int k = read(fds[i].fd, reqs, sizeof(reqs));
 							if (k > 0){
 								reqs[k] = '\0';
-
+								
+								cout << "with newline -> " << "[" << reqs << "]"<< endl;
 							    if (parse(server, fds[i].fd, reqs) == false)
 									cout << "exit\n";
 							}
 
 							else{
 								if (k == 0){
-									cout << "a user is disconnected\n";
+									// cout << "a user is disconnected\n";
 									server.getCLients().erase(fds[i].fd);
 								}
 								else
@@ -64,3 +68,4 @@ int main(int ac , char ** av){
 		}
 	}
 }
+// /connect localhost 8500

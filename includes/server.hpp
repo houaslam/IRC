@@ -83,6 +83,7 @@ class Server{
 		int port;
 		int _socket;
 		string serverName;
+		unsigned long start;
 		const char* password;
 		struct sockaddr_in s_addr;
 	// SERVER COMPONENTS
@@ -103,6 +104,7 @@ class Server{
 		int get_socket() const;
 		string get_password() const;
 		string getServerName() const;
+		unsigned long  getTime(void);
 
 		map<int, Client> &getCLients();
 		map<int, string> get_msg() const;
@@ -136,7 +138,7 @@ string getLocalhost(Client &client);
 string nbtoString(int nb);
 map<int, string> msgs(Client& client,string nickname, string channel, string cmd);
 void clearScreen(int fd);
-string getTime(void);
+// string getTime(void);
 void del_fd(struct pollfd fds[], int* fd_count, int p);
 void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client);
@@ -153,3 +155,4 @@ bool isInChannel(class Client &client, string &name);
 bool isInChannelString(string &client, channel &channel);
 bool check_users(Server& server,string line , int ref);
 void sendMsgg(Client& client, string str);
+unsigned long	get_time(void);
