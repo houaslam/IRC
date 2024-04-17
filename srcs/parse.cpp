@@ -23,7 +23,11 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
+<<<<<<< HEAD
     string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PART", "KICK"};
+=======
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART"};
+>>>>>>> refs/remotes/origin/main
     size_t n = 0;
     size_t size =  sizeof(commands) / sizeof(string);
     if (line.empty())
@@ -31,6 +35,7 @@ bool parse(class Server &server,int fd, string reqs){
     else
         while (n < size && commands[n].compare(line[0]))
             n++;
+    cerr << "-----------COMMAND---------------->" << reqs  << "|\n";
     switch (n)
     {
         case 0:
@@ -58,14 +63,14 @@ bool parse(class Server &server,int fd, string reqs){
             break;
         case 9:
             bot(fd, reqs, server);
-            // server.curr_fd = fd;
-            // pthread_create(&server.getCLients()[fd].thread, NULL, bot, static_cast<void *>(&server));
-            // pthread_join(server.getCLients()[fd].thread, NULL);
             break;
         case 10:
             privmsg(server, reqs, fd);
             break;
         case 11:
+            cout << "-----------PING---------------->" << reqs << endl;
+            break;
+        case 12:
             part(server, reqs, fd);
             break;
         case 12:
