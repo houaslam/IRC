@@ -3,7 +3,7 @@
 Server::Server(int port, const char* password) : port(port), serverName("Pixserv"), password(password){
 	struct in_addr *addr = NULL;
 	struct hostent* test = NULL;
-	this->start = get_time();
+	start = clock();
 	if (port <= 0 || !strcmp(password , ""))
 		ft_error("Invalid parameter: format : ./ircserv [port] [pass]");
 	test = gethostbyname("localhost");
@@ -32,11 +32,6 @@ Server::Server(int port, const char* password) : port(port), serverName("Pixserv
 		ft_error("LISTEN : !");
 
 	cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
-}
-
-unsigned long  Server::getTime(void){
-	return get_time() - this->start;
-
 }
 
 Server::~Server(){

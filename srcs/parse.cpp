@@ -33,10 +33,9 @@ string withoutNewLine(string &line){
     
     return line;
 }
+
 bool parse(class Server &server,int fd, string reqs){
-    cout << endl<< "with newline 2-> " << "[" << reqs << "]"<< endl;
     reqs = withoutNewLine(reqs);
-    cout << endl<< "without newline -> " << "[" << reqs << "]"<< endl;
 
     vector<string> line;
     line = split(reqs, " ");
