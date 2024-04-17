@@ -38,7 +38,7 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 
 void sendMsg(Client& client, string str){
     str = str + "\r\n";
-    send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
+    // send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
     send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
     send(client.get_fd(), str.c_str(), str.length() , 0);
 }

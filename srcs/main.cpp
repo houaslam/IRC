@@ -1,12 +1,12 @@
 #include "../includes/server.hpp"
 #include "../includes/client.hpp"
 
-void sendMsgg(Client& client, string str){
-    str = str + "\r\n";
-    send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
-    send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
-    send(client.get_fd(), str.c_str(), str.length() , 0);
-}
+// void sendMsgg(Client& client, string str){
+//     str = str + "\r\n";
+//     send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
+//     send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
+//     send(client.get_fd(), str.c_str(), str.length() , 0);
+// }
 
 int main(int ac , char ** av){
 	if (ac == 3){
@@ -38,17 +38,16 @@ int main(int ac , char ** av){
 							add_fd(fds, &nb_fds, user_.get_fd());
 							// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],))//  "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]"
 
-							sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Internet Relay Network");
-    						sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName() + " ");
-    						sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 003 " + server.getCLients()[fd].getNickName() + " :This server was created 0 ");
-    						sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 004 " + server.getCLients()[fd].getNickName() + " :" + server.getServerName() + " 1.1 More info");
 						}
 
 						else {
-							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
+							int k = read(fds[i].fd, reqs, sizeof(reqs));
+							// int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							// int k = read(fds[i].fd, reqs, sizeof(reqs));
 							if (k > 0){
 								reqs[k] = '\0';
+								
+								cout << "with newline -> " << "[" << reqs << "]"<< endl;
 							    if (parse(server, fds[i].fd, reqs) == false)
 									cout << "exit\n";
 							}
@@ -69,3 +68,4 @@ int main(int ac , char ** av){
 		}
 	}
 }
+// /connect localhost 8500

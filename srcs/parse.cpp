@@ -2,20 +2,24 @@
 #include "../includes/server.hpp"
 #include "../includes/client.hpp"
 
-string &withoutNewLine(string &line){
+string& withoutNewLine(string &line){
 
-    size_t newLine = line.find('\n');
+    size_t pos = line.find('\r');
 
-    if (newLine != string::npos)
-    {
-        line.erase(newLine, 1);
-    }
+    if (pos != string::npos)
+        line.erase(pos, 1);
+
+    pos = line.find('\n');
+    
+    if (pos != string::npos)
+        line.erase(pos, 1);
+    
     return line;
 }
-
 bool parse(class Server &server,int fd, string reqs){
+    cout << endl<< "with newline 2-> " << "[" << reqs << "]"<< endl;
     reqs = withoutNewLine(reqs);
-    server.get_addr();
+    cout << endl<< "without newline -> " << "[" << reqs << "]"<< endl;
 
     vector<string> line;
     line = split(reqs, " ");
@@ -23,7 +27,6 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    // string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PART", };
     string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART", "KICK"};
     size_t n = 0;
     size_t size =  sizeof(commands) / sizeof(string);
@@ -32,7 +35,7 @@ bool parse(class Server &server,int fd, string reqs){
     else
         while (n < size && commands[n].compare(line[0]))
             n++;
-    cerr << "-----------COMMAND---------------->" << reqs  << "|\n";
+    cerr << "-----------COMMAND---------------->" << reqs  << "|" << endl;
     switch (n)
     {
         case 0:
