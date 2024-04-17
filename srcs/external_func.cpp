@@ -65,14 +65,13 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd){
 	(*fd_count)++;
 }
 
-unsigned long	get_time(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+string  getTime(void){
+    time_t start = time(NULL);
+    struct tm *time = localtime(&start);
+    string res;
+    res +=  "[" + nbtoString(time->tm_hour) +  ':'+  nbtoString(time->tm_min) +  ']' + " ";
+    return res;
 }
-
 string nbtoString(int nb){
     std::stringstream ss;
     ss << nb;

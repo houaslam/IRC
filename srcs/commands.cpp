@@ -77,7 +77,7 @@ void user(Server& server, string line, int fd){
 	// if (server.getCLients()[fd].isConnected){
 		sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Internet Relay Network");
     	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName() + " ");
-    	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 003 " + server.getCLients()[fd].getNickName() + " :This server was created " + nbtoString(server.getTime()));
+    	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 003 " + server.getCLients()[fd].getNickName() + " :This server was created " + getTime());
     	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 004 " + server.getCLients()[fd].getNickName() + " :" + server.getServerName() + " 1.1 More info");
 
 	// }
@@ -318,21 +318,3 @@ void	kick(Server &server, string line, int fd){
 ///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD
 /// IF NO USER LEFT WE DELETE THE CHANNEL
 /// ADD HASHTAGS
-
-/* INVITE
-ERR_NOSUCHNICK (401) //
-ERR_NOSUCHSERVER (402) //!X
-ERR_NOSUCHCHANNEL 403 ->doesn't exist //
-ERR_CANNOTSENDTOCHAN (404) -> when it's +i //
-ERR_NORECIPIENT (411) //
-ERR_NOTEXTTOSEND (412) //
-ERR_TOOMANYTARGETS (407)
-ERR_NOTOPLEVEL (413)
-ERR_WILDTOPLEVEL (414)
-RPL_AWAY (301) //
-475 +L
-*/
-// string getMsg(int msgNumber, Server& server, string channel, int fd){
-// 	return(   msgs()[msgNumber]);
-// }
-
