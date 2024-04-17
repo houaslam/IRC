@@ -23,11 +23,8 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-<<<<<<< HEAD
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PART", "KICK"};
-=======
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART"};
->>>>>>> refs/remotes/origin/main
+    // string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PART", };
+    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART", "KICK"};
     size_t n = 0;
     size_t size =  sizeof(commands) / sizeof(string);
     if (line.empty())
@@ -73,7 +70,7 @@ bool parse(class Server &server,int fd, string reqs){
         case 12:
             part(server, reqs, fd);
             break;
-        case 12:
+        case 13:
             kick(server, reqs, fd);
             break;
         default:{

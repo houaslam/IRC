@@ -152,7 +152,4 @@ bool isChannelExist(map<string, channel> &channels,string &line);
 bool isInChannel(class Client &client, string &name);
 bool isInChannelString(string &client, channel &channel);
 bool check_users(Server& server,string line , int ref);
-<<<<<<< HEAD
-=======
 void sendMsgg(Client& client, string str);
->>>>>>> refs/remotes/origin/main
