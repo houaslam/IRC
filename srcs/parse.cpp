@@ -4,12 +4,16 @@
 
 string &withoutNewLine(string &line){
 
-    size_t newLine = line.find('\n');
+    size_t pos = line.find('\r');
 
-    if (newLine != string::npos)
-    {
-        line.erase(newLine, 1);
-    }
+    if (pos != string::npos)
+        line.erase(pos, 1);
+
+    pos = line.find('\n');
+    
+    if (pos != string::npos)
+        line.erase(pos, 1);
+    
     return line;
 }
 
@@ -31,7 +35,6 @@ bool parse(class Server &server,int fd, string reqs){
     else
         while (n < size && commands[n].compare(line[0]))
             n++;
-    cerr << "-----------COMMAND---------------->" << reqs  << "|\n";
     switch (n)
     {
         case 0:
@@ -70,7 +73,7 @@ bool parse(class Server &server,int fd, string reqs){
             part(server, reqs, fd);
             break;
         default:{
-            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);
+            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs+" ")[UNKNOW_CMD]);
             break;
         }
     }
