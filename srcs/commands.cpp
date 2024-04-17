@@ -310,8 +310,8 @@ void	kick(Server &server, string line, int fd){
     	if (pos != string::npos)
 			msg = msg.substr(pos + user.size());
 	}
-	// Client &cUser = getClientString(server.getCLients(), user.);
-	// unsetUser(channel, cUser);
+	Client cUser = getClientString(server.getCLients(), user);
+	unsetUser(channel, cUser);
 }
 
 ///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
