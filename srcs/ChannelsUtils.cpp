@@ -8,9 +8,10 @@ void unsetUser(channel &channel, Client &exUser){
 		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
 
+	// return;
 	vector<string>::iterator it = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
 	
-	exUser.getInChannel().erase(it);
+	exUser.getInChannel().erase(exUser.getInChannel().begin(), it);
 }
 
 

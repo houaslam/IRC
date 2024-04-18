@@ -298,18 +298,21 @@ void	kick(Server &server, string line, int fd){
 		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
 	if (!isAdmin(client.getNickName(), channel))
 		return sendMsg(client, msgs(client, "", channel.getChannelName(), "")[ERR_CHANOPRIVSNEEDED]);
-	string &user = spl[1];
+	string user = spl[1];
 	if (isAdmin(user, channel) || !isInChannelString(user, channel))
-		return ; //!441 ///AND CHECK IF I DIDN'T ADD "441" TO ANOTHER ONE BEFORE
-	if (spl.size() > 2){ ///SEMD THE REASON
-		string msg = line;
-    	size_t pos = line.find(channel.getChannelName()[0]);
-    	if (pos != string::npos)
-			msg = line.substr(pos + channel.getChannelName().size());
-    	pos = msg.find(user[0]);
-    	if (pos != string::npos)
-			msg = msg.substr(pos + user.size());
-	}
+		return sendMsg(client, msgs(client, user, channel.getChannelName(), "")[ERR_USERNOTINCHANNEL]);
+	// if (spl.size() > 2){ ///SEMD THE REASON
+	// 	string msg = line;
+    // 	size_t pos = line.find(channel.getChannelName()[0]);
+    // 	if (pos != string::npos)
+	// 		msg = line.substr(pos + channel.getChannelName().size());
+    // 	pos = msg.find(user[0]);
+    // 	if (pos != string::npos)
+	// 		msg = msg.substr(pos + user.size());
+	// 	cout << "SENDING REASON";
+
+	// }
+	// return;
 	Client cUser = getClientString(server.getCLients(), user);
 	unsetUser(channel, cUser);
 }

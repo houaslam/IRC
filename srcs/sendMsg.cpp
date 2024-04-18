@@ -2,6 +2,7 @@
 
 map<int, string> msgs(Client& client,string nickname,string channel, string cmd){
 	map<int, string> msg;
+	channel = "#" + channel;
 	// CHANNEL
 	msg[ERR_TOOMANYCHANNELS] = nbtoString(ERR_TOOMANYCHANNELS) + " " + channel + " :You have joined too many channels";
 	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + ":You're not on that channel";
@@ -19,6 +20,7 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[ERR_CANNOTSENDTOCHAN] = nbtoString(ERR_CANNOTSENDTOCHAN) + " " + nickname + " " + channel + " :Cannot send to channel";
 	msg[ERR_NOTEXTTOSEND] = nbtoString(ERR_NOTEXTTOSEND) + " :No text to send";
 	msg[RPL_AWAY] = nbtoString(RPL_AWAY) + " " + client.getNickName() + " " + nickname + " :Your message has been delivered";
+	msg[ERR_USERNOTINCHANNEL] = nbtoString(ERR_USERNOTINCHANNEL) + " " + nickname + " " + channel + " :They aren't on that channel";
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
@@ -57,9 +59,9 @@ void justJoined(Client &client, channel &channel, string &line){
     else
         msg = msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]; //! 332
 
-    sendMsg(client, localhost  + " " + client.getNickName() + " " + line + msg); ////later
-    sendMsg(client, localhost + "353" + " " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
-    sendMsg(client, localhost + "366" + " " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
+    sendMsg(client , " " + client.getNickName() + " " + line + msg); ////later
+    sendMsg(client , "353 " + client.getNickName() + " = "+ line + " :@" + client.getNickName()); //!353
+    sendMsg(client , "366 " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
 }
 ///:<client> JOIN <channel>
 ///:<server> 332 <client> <channel> :<topic>
