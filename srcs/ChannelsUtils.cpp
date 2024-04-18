@@ -2,16 +2,18 @@
 
 void unsetUser(channel &channel, Client &exUser){
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++) //if they were admin
-		if (exUser.getNickName() == channel.getChannelAdmins()[i])
 			channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
 
-	// return;
-	vector<string>::iterator it = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
-	
-	exUser.getInChannel().erase(exUser.getInChannel().begin(), it);
+	// vector<string>::iterator it = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
+	for (size_t i = 0; i < exUser.getInChannel().size(); i++) //if they were admin
+		if (channel.getChannelName() == exUser.getInChannel()[i])
+			exUser.getInChannel().erase(exUser.getInChannel().begin() + i); ////// test 
+
+	// if (it != exUser.getInChannel().end())	
+
 }
 
 
@@ -54,7 +56,10 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		if (arg.empty())
 			return sendMsg(client, "not enough arguments");
 		if (flag == '+' && isInChannelString(arg, channel))
+		{
+			sendMsg(client, client.getNickName() + "MODE #" +channel.getChannelName() + " +o " + arg) /// test this
 			channel.setChannelAdmin(arg);
+		}
 		else
 			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
 				if (arg == channel.getChannelAdmins()[i])

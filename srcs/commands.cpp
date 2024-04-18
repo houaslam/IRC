@@ -105,7 +105,7 @@ void join(Server& server, string line, int fd){
 	else{
 		channel &channel = server.getChannels()[spl[0]];
 		if (isInChannel(client, spl[0])) ///LATER
-			return ;
+			return justJoined(client, channel, spl[0]);
 		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() > (size_t)atoi(channel.getChannelModes()['l'].c_str()))
 			return sendMsg(client, msgs(client, "", "", "")[ERR_CHANNELISFULL]); 
 		if (!channel.getChannelModes()['k'].empty() && channel.getChannelModes()['k'] != "-k" && spl[1] != channel.getChannelModes()['k'])
