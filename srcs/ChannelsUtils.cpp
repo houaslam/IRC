@@ -92,7 +92,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		else
 			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
 				if (arg == channel.getChannelAdmins()[i])
-				{	sendMsg(client,  " MODE #" + channel.getChannelName() + " -o " + arg); /// test this
+				{	sendMsg(client,  " MODE #" + channel.getChannelName() + " -o " + arg); 
 					channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
 				}
 	}
@@ -101,21 +101,21 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		{
 			channel.getChannelModes()['k'] = "";
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -k"); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -k"); 
 		}
 		else{
 			if (arg.empty())
 				return;
 			channel.getChannelModes()['k'] = arg;
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +k " + arg); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +k " + arg); 
 		}
 	}
 	if (mode[1] == 'l'){
 		if (flag == '-')
 		{
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -l"); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -l"); 
 			channel.getChannelModes()['l'] = "";
 		}
 		else
@@ -126,7 +126,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 				if (!isdigit(arg[i]))
 					return;
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +l " + arg); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +l " + arg); 
 			channel.getChannelModes()['l'] = arg;
 		}
 	}
@@ -135,27 +135,27 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		{
 			channel.getChannelModes()['t'] = "-t";
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -t"); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -t"); 
 		}
 		else
 		{
 			cout << "HERE\n";
 			channel.getChannelModes()['t'] = "+t";
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +t"); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +t"); 
 		}
 	}
 	if (mode[1] == 'i'){
 		if (flag == '-')
 		{
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -i"); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -i"); 
 			channel.getChannelModes()['i'] = "-i";
 		}
 		else
 		{
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +i"); /// test this
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +i"); 
 			channel.getChannelModes()['i'] = "+i";
 		}
 	}

@@ -151,7 +151,6 @@ void invite(Server& server, string line, int fd){
 	sendMsg(client, msgs(client, invited, channel.getChannelName(), "")[RPL_INVITING]);
 	Client reciever = getClientString(server.getCLients(), invited);
 	sendMsg(reciever, "INVITE " + invited + " :#" + channel.getChannelName());
-	//:nick INVITE user :#channel
 
 }
 
@@ -238,12 +237,11 @@ void	privmsg(Server &server, string line, int fd){
 	string msg = getPRVMsg(line);
 	if (msg.empty())
 		return (sendMsg(client, msgs(client ,"" , "", "")[ERR_NOTEXTTOSEND]));
-	msg = "[" + client.getNickName() + "] " + msg + "\r\n";
 	if (check_users(server, spl[0], fd))
 	{
 		sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
 		Client target = getClientString(server.getCLients(), spl[0]);
-		send(target.get_fd(), msg.c_str(), msg.size(), 0);
+		sendMsg(target, client.getNickName()+ " PRIVMSG " + target.getNickName() + " :" + msg);
 	}
 	else if(isChannelExist(server.getChannels(), spl[0]))
 	{
@@ -303,20 +301,22 @@ void	kick(Server &server, string line, int fd){
 	string user = spl[1];
 	if (isAdmin(user, channel) || !isInChannelString(user, channel))
 		return sendMsg(client, msgs(client, user, channel.getChannelName(), "")[ERR_USERNOTINCHANNEL]);
-	// if (spl.size() > 2){ ///SEMD THE REASON
-	// 	string msg = line;
-    // 	size_t pos = line.find(channel.getChannelName()[0]);
-    // 	if (pos != string::npos)
-	// 		msg = line.substr(pos + channel.getChannelName().size());
-    // 	pos = msg.find(user[0]);
-    // 	if (pos != string::npos)
-	// 		msg = msg.substr(pos + user.size());
-	// 	cout << "SENDING REASON";
+	if (spl.size() > 2){ ///SEMD THE REASON
+		string msg = line;
+    	size_t pos = line.find(channel.getChannelName()[0]);
+    	if (pos != string::npos)
+			msg = line.substr(pos + channel.getChannelName().size());
+    	pos = msg.find(user[0]);
+    	if (pos != string::npos)
+			msg = msg.substr(pos + user.size());
+		cout << "SENDING REASON";
 
-	// }
-	// return;
+	}
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+		sendMsg(channel.getChannelUsers()[i],  " KICK #" + channel.getChannelName() + " " + user);
 	Client cUser = getClientString(server.getCLients(), user);
 	unsetChannelUser(channel, cUser);
+
 }
 
 ///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
