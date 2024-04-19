@@ -201,6 +201,7 @@ bool isConnected(Server& server, int fd){
 		return false;
 	if (server.getCLients()[fd].getNickName().empty())
 		return false;
+	cout << "already connected\n";
 	return true;
 }
 

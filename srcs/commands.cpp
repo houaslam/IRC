@@ -13,8 +13,11 @@ void    pass(Server& server, string line , int fd){
 	else{
 		if (res.size() == 0)
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ERR_NEEDMOREPARAMS]);
-		else if (isConnected(server, fd))
+		if (isConnected(server, fd))
+		{
+			cout << "CHECKED"
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ALREADY_REGISTERED]); 
+		}
 		else if (res[0].compare(server.get_password()))
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[INCORRECT_PWD]); 
 	}
