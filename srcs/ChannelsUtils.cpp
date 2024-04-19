@@ -1,19 +1,53 @@
 #include "../includes/server.hpp"
 
-void unsetUser(channel &channel, Client &exUser){
+// void unsetUser(Server &server, int fd){
+// 	vector<string>::iterator findIt;
+// 	Client &client = server.getCLients()[fd];
+// 	for (map<string, channel>::iterator it = server.getChannels().begin();it != server.getChannels().end(); it++)
+// 	{
+// 		//USERS
+// 		for (vector<Client>::iterator i = 0; i < it->second.getChannelUsers().size(); i++)
+// 		{
+// 			findIt = find(it->second.getChannelUsers()[i].begin(), it->second.getChannelUsers()[i].end(), client.getNickName());
+// 			// if ( != it->second.getChannelUsers().end())
+// 			// if (it->second.getChannelUsers()[i])
+// 		}
+		
+// 	// 	vector<Client>::iterator findIt = find(it->second.getChannelUsers().begin(), it->second.getChannelUsers().end(), client);
+// 		// 	it->second.getChannelUsers().erase(findIt);
+// 		// //ADMINS
+// 		// vector<string>::iterator findIt = find(it->second.getChannelAdmins().begin(), it->second.getChannelAdmins().end(), client.getNickName());
+// 		// if (findIt != it->second.getChannelAdmins().begin())
+// 		// 	it->second.getChannelAdmins().erase(findIt);
+// 	}
+// 			// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+// // 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++) // in users
+// // 		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
+// // 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
+
+// // 	for (size_t i = 0; i < exUser.getInChannel().size(); i++) //in channels
+// // 		if (channel.getChannelName() == exUser.getInChannel()[i])
+// // 			exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
+
+// }
+
+void unsetChannelUser(channel &channel, Client &exUser){
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++) //if they were admin
-		if (exUser.getNickName() == channel.getChannelAdmins()[i])
+		if (channel.getChannelAdmins()[i] == exUser.getNickName())
 			channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
-	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++) // in users
 		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
 
-	// return;
-	vector<string>::iterator it = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
-	
-	exUser.getInChannel().erase(exUser.getInChannel().begin(), it);
+	// for (size_t i = 0; i < exUser.getInChannel().size(); i++) //in channels
+	// 	if (channel.getChannelName() == exUser.getInChannel()[i])
+	// 		exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
+	vector<string>::iterator findIt = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
+    
+    if (findIt != exUser.getInChannel().end()) {
+        exUser.getInChannel().erase(findIt);
+    }
 }
-
 
 Client getClientString(map<int, Client> clients, string &name)
 {
@@ -44,55 +78,86 @@ string getPRVMsg(string &line){
 
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
 	server.getCLients();
-	if (mode.size() > 2) ///recheck later
-	{
-		send(client.get_fd(), "ERROR\n", 5, 0);	
+	if (mode.size() > 2) //////recheck later
 		return; 
-	}
 	char flag = mode[0];
 	if (mode[1] == 'o'){
 		if (arg.empty())
-			return sendMsg(client, "not enough arguments");
+			return ;
 		if (flag == '+' && isInChannelString(arg, channel))
+		{
+			sendMsg(client,  " MODE #" + channel.getChannelName() + " +o " + arg);
 			channel.setChannelAdmin(arg);
+		}
 		else
 			for (size_t i = 0; i < channel.getChannelAdmins().size(); i++)
 				if (arg == channel.getChannelAdmins()[i])
+				{	sendMsg(client,  " MODE #" + channel.getChannelName() + " -o " + arg); 
 					channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+				}
 	}
 	if (mode[1] == 'k'){
 		if (flag == '-')
+		{
 			channel.getChannelModes()['k'] = "";
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -k"); 
+		}
 		else{
 			if (arg.empty())
-				return sendMsg(client, "not enough arguments");
+				return;
 			channel.getChannelModes()['k'] = arg;
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +k " + arg); 
 		}
 	}
 	if (mode[1] == 'l'){
 		if (flag == '-')
+		{
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -l"); 
 			channel.getChannelModes()['l'] = "";
+		}
 		else
 		{
 			if (arg.empty())
-				return sendMsg(client, "not enough arguments");
+				return ;
 			for (size_t i = 0; i < arg.size(); i++)
 				if (!isdigit(arg[i]))
 					return;
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +l " + arg); 
 			channel.getChannelModes()['l'] = arg;
 		}
 	}
 	if (mode[1] == 't'){
 		if (flag == '-')
+		{
 			channel.getChannelModes()['t'] = "-t";
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -t"); 
+		}
 		else
+		{
+			cout << "HERE\n";
 			channel.getChannelModes()['t'] = "+t";
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +t"); 
+		}
 	}
 	if (mode[1] == 'i'){
 		if (flag == '-')
+		{
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " -i"); 
 			channel.getChannelModes()['i'] = "-i";
+		}
 		else
+		{
+			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +i"); 
 			channel.getChannelModes()['i'] = "+i";
+		}
 	}
 }
 
