@@ -106,7 +106,7 @@ void join(Server& server, string line, int fd){
 		channel &channel = server.getChannels()[spl[0]];
 		if (isInChannel(client, spl[0])) ///LATER
 			return justJoined(client, channel, spl[0]);
-		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() > (size_t)atoi(channel.getChannelModes()['l'].c_str()))
+		if (!channel.getChannelModes()['l'].empty() && channel.getChannelModes()['l'] != "-l" && channel.getChannelUsers().size() >= (size_t)atoi(channel.getChannelModes()['l'].c_str()))
 			return sendMsg(client, msgs(client, "", "", "")[ERR_CHANNELISFULL]); 
 		if (!channel.getChannelModes()['k'].empty() && channel.getChannelModes()['k'] != "-k" && spl[1] != channel.getChannelModes()['k'])
 			return sendMsg(client, msgs(client, "", "", "")[ERR_BADCHANNELKEY]); 
@@ -118,6 +118,7 @@ void join(Server& server, string line, int fd){
 		client.setInChannel(spl[0]);
 		channel.setChannelUser(client);
 		justJoined(client, channel, spl[0]); //! ///
+
 	}
 }
 
@@ -209,7 +210,7 @@ void	mode(Server &server, string line, int fd){
 	{
 		if (spl.size() < 3)
 			spl.push_back("");
-		if ((spl[1].find("o") != string::npos || spl[1].find("k") != string::npos || spl[1].find("l") != string::npos) && spl[2].empty())
+		if ((spl[1].find("o") != string::npos) && spl[2].empty())
 			return sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 		else
 			fillMode(spl[1], spl[2], channel, server, client);
@@ -241,19 +242,22 @@ void	privmsg(Server &server, string line, int fd){
 	{
 		sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
 		Client target = getClientString(server.getCLients(), spl[0]);
-		sendMsg(target, client.getNickName()+ " PRIVMSG " + target.getNickName() + " :" + msg);
-	}
+		sendMsg(target,  ":" + client.getNickName() + " PRIVMSG " + target.getNickName() + " :" + msg);
+	}//:user1!user@host PRIVMSG #channel :Hello, everyone!
+
+
 	else if(isChannelExist(server.getChannels(), spl[0]))
 	{
 		channel &channel = server.getChannels()[spl[0]];
+		if (!isInChannel(server.getCLients()[fd], spl[0]))
+			return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
 		if ((channel.getChannelModes()['i'] == "+i" && (!isInvited(client.getNickName(), channel) && !isInChannel(client, spl[0]))) || \
 			(!channel.getChannelModes()['k'].empty() && channel.getChannelModes()['k']  != "-k" && !isInChannel(client, spl[0])))
 				return sendMsg(client, msgs(client,"" , spl[0], "")[ERR_CANNOTSENDTOCHAN]);
 		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		{
-			cout << channel.getChannelUsers()[i].getNickName() << endl;
 			if (fd != channel.getChannelUsers()[i].get_fd())
-				send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
+				sendMsg(channel.getChannelUsers()[i], ":" + client.getNickName() + " PRIVMSG #" + channel.getChannelName() + " :" + msg);
 		}
 	}
 }
@@ -273,11 +277,9 @@ void	part(Server &server, string line, int fd){
 	channel &channel = server.getChannels()[spl[0]]; 
 	if (!isInChannel(server.getCLients()[fd], spl[0]))
 		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
-//!	  :dan-!d@localhost PART #test    ; dan- is leaving the channel #test
 	unsetChannelUser(channel, client);
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		sendMsg(channel.getChannelUsers()[i], "PART #" + channel.getChannelName());
-
 }
 
 //kick <channel> <user> <reason>
@@ -302,21 +304,22 @@ void	kick(Server &server, string line, int fd){
 	if (isAdmin(user, channel) || !isInChannelString(user, channel))
 		return sendMsg(client, msgs(client, user, channel.getChannelName(), "")[ERR_USERNOTINCHANNEL]);
 	if (spl.size() > 2){ ///SEMD THE REASON
-		string msg = line;
+		string reason = line;
     	size_t pos = line.find(channel.getChannelName()[0]);
     	if (pos != string::npos)
-			msg = line.substr(pos + channel.getChannelName().size());
-    	pos = msg.find(user[0]);
+			reason = line.substr(pos + channel.getChannelName().size());
+    	pos = reason.find(user[0]);
     	if (pos != string::npos)
-			msg = msg.substr(pos + user.size());
-		cout << "SENDING REASON";
+			reason = reason.substr(pos + user.size());
+		// for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+			/////finish
+//KICK <channel> <user> :<reason>
 
 	}
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		sendMsg(channel.getChannelUsers()[i],  " KICK #" + channel.getChannelName() + " " + user);
-	Client cUser = getClientString(server.getCLients(), user);
+	Client &cUser = getClientStringRef(server.getCLients(), user);
 	unsetChannelUser(channel, cUser);
-
 }
 
 ///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 

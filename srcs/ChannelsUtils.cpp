@@ -35,18 +35,24 @@ void unsetChannelUser(channel &channel, Client &exUser){
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++) //if they were admin
 		if (channel.getChannelAdmins()[i] == exUser.getNickName())
 			channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
+	
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++) // in users
 		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
 
-	// for (size_t i = 0; i < exUser.getInChannel().size(); i++) //in channels
-	// 	if (channel.getChannelName() == exUser.getInChannel()[i])
-	// 		exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
-	vector<string>::iterator findIt = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
+	for (size_t i = 0; i < exUser.getInChannel().size(); i++) //in channels
+	{
+
+		if (channel.getChannelName() == exUser.getInChannel()[i])
+			exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
+	}
+
+	// vector<string>::iterator findIt = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
     
-    if (findIt != exUser.getInChannel().end()) {
-        exUser.getInChannel().erase(findIt);
-    }
+    // if (findIt != exUser.getInChannel().end()) {
+    //     exUser.getInChannel().erase(findIt);
+    // }
+
 }
 
 Client getClientString(map<int, Client> clients, string &name)
@@ -61,6 +67,19 @@ Client getClientString(map<int, Client> clients, string &name)
     }
 
 	return ret;
+}
+
+Client &getClientStringRef(map<int, Client> &clients, string &name)
+{
+	map<int, Client>::iterator it = clients.begin();
+
+    for (; it != clients.end(); it++) {
+        if (it->second.getNickName() == name) {
+            return it->second;
+        }
+    }
+
+	return it->second;
 }
 
 string getPRVMsg(string &line){
@@ -105,7 +124,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		}
 		else{
 			if (arg.empty())
-				return;
+				return sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 			channel.getChannelModes()['k'] = arg;
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +k " + arg); 
@@ -121,7 +140,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		else
 		{
 			if (arg.empty())
-				return ;
+				return sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 			for (size_t i = 0; i < arg.size(); i++)
 				if (!isdigit(arg[i]))
 					return;
@@ -139,7 +158,6 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 		}
 		else
 		{
-			cout << "HERE\n";
 			channel.getChannelModes()['t'] = "+t";
 			for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 				sendMsg(channel.getChannelUsers()[i],  " MODE #" + channel.getChannelName() + " +t"); 
@@ -213,6 +231,7 @@ bool isInChannel(Client &client, string &channel){
 
 	return true;
 }
+
 bool isInChannelString(string &client, channel &channel){
 
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
