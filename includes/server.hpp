@@ -25,6 +25,7 @@
 #include <sys/time.h>
 #include <ctime>
 #include <algorithm>
+#include <csignal>
 #include <fcntl.h> 
 
        /* COLORS */

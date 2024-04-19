@@ -32,14 +32,14 @@ void bot(int fd, string line,  Server& server){
 		return;
 	int h = get_info(fd, res[1], 100,  210);
 
-	// sleep(1);
-	// send(fd, ".", 2, 0);
-	// sleep(1);
-	// send(fd, ".", 2, 0);
-	// sleep(1);
-	// send(fd, ".", 2, 0);
-	// sleep(1);
-	// send(fd, ".\n", 3, 0);
+	sleep(1);
+	send(fd, ".", 2, 0);
+	sleep(1);
+	send(fd, ".", 2, 0);
+	sleep(1);
+	send(fd, ".", 2, 0);
+	sleep(1);
+	send(fd, ".\n", 3, 0);
 	bmr /=  h * h;
 	bmr *= 10000;
 	cout << "BMR = " << bmr << endl;

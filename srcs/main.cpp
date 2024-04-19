@@ -32,7 +32,6 @@ int main(int ac , char ** av){
 							int fd = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
 							if (fd <= 0)
 								ft_error("CLIENT : ");
-							fcntl(fd, F_SETFL, O_NONBLOCK);
 							Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
@@ -41,20 +40,20 @@ int main(int ac , char ** av){
 						}
 
 						else {
-							int k = read(fds[i].fd, reqs, sizeof(reqs));
-							// int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
+							// int k = read(fds[i].fd, reqs, sizeof(reqs));
+							int k = recv(fds[i].fd, reqs, sizeof(reqs), 0);
 							// int k = read(fds[i].fd, reqs, sizeof(reqs));
 							if (k > 0){
 								reqs[k] = '\0';
-								
-								cout << "with newline -> " << "[" << reqs << "]"<< endl;
-							    if (parse(server, fds[i].fd, reqs) == false)
-									cout << "exit\n";
+							    if (parse(server, fds[i].fd, reqs) == false){
+									cerr << "exit\n";
+									close(fds[i].fd);
+								}
 							}
 
 							else{
 								if (k == 0){
-									// cout << "a user is disconnected\n";
+									cout << "a user is disconnected\n";
 									server.getCLients().erase(fds[i].fd);
 								}
 								else

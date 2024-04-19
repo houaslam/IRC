@@ -30,7 +30,7 @@ Server::Server(int port, const char* password) : port(port), serverName("Pixserv
 
 	if (listen(_socket, 5) < 0)
 		ft_error("LISTEN : !");
-
+	fcntl(this->_socket, F_SETFL, O_NONBLOCK);
 	cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
 }
 
