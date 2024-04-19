@@ -2,15 +2,15 @@
 
 Server::Server(int port, const char* password) : port(port), serverName("Pixserv"), password(password){
 	struct in_addr *addr = NULL;
-	struct hostent* test = NULL;
+	struct hostent* host = NULL;
 	start = clock();
-	if (port <= 0 || !strcmp(password , ""))
+	if (port <= 0 || port > 65536 || !strcmp(password , ""))
 		ft_error("Invalid parameter: format : ./ircserv [port] [pass]");
-	test = gethostbyname("localhost");
+	host = gethostbyname("localhost");
 	int reuse = 1;
 
-	if (test != NULL)
-		addr = (struct in_addr *)test->h_addr;
+	if (host != NULL)
+		addr = (struct in_addr *)host->h_addr;
 	else
 		ft_error("INVALID ADD ");
 

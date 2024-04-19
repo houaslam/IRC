@@ -18,6 +18,8 @@ void    pass(Server& server, string line , int fd){
 
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
+	cout << "YES\n";
+	cout << "line = " << line << endl;
 	if (server.getCLients()[fd].pass == false){
 		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[NOT_REGISTRED]);
 		return ;
