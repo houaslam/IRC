@@ -3,24 +3,6 @@
 #include "../includes/client.hpp"
 
 string withoutNewLine(string &line){
-    // string ret ;
-    
-    // int j = 0;
-    // int i = 0;
-    // while (line[i])
-    // {
-    //     if (line[i] != '\n' && line[i] != '\r'){
-    //         ret[j] = line[i];
-    //         j++;
-    //     }
-    //     i++;
-    // }
-    
-    // // for (size_t i = 0; i < line.size(); i++)
-    // // {
-    // // }
-    // // return "";
-    // ret[j++] = '\0';
     size_t pos = line.find('\r');
 
     if (pos != string::npos)
@@ -83,7 +65,6 @@ bool parse(class Server &server,int fd, string reqs){
             privmsg(server, reqs, fd);
             break;
         case 11:
-            // cout << "-----------PING---------------->" << reqs << endl;
             sendMsg(server.getCLients()[fd], "PONG");
             break;
         case 12:
