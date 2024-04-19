@@ -56,6 +56,7 @@ int main(int ac , char ** av){
 								if (k == 0){
 									// cout << "a user is disconnected\n";
 									server.getCLients().erase(fds[i].fd);
+									// unsetChannelUser
 								}
 								else
 									ft_error("DONE : ");

@@ -148,7 +148,11 @@ void invite(Server& server, string line, int fd){
 		return sendMsg(client, msgs(client, invited, "", "")[ERR_NOSUCHNICK]); 
 
 	channel.setChannelInvited(invited);
-	sendMsg(client, msgs(client, invited, channel.getChannelName(), "")[RPL_INVITING]); 
+	sendMsg(client, msgs(client, invited, channel.getChannelName(), "")[RPL_INVITING]);
+	Client reciever = getClientString(server.getCLients(), invited);
+	sendMsg(reciever, "INVITE " + invited + " :#" + channel.getChannelName());
+	//:nick INVITE user :#channel
+
 }
 
 // TOPIC 
@@ -272,12 +276,10 @@ void	part(Server &server, string line, int fd){
 	if (!isInChannel(server.getCLients()[fd], spl[0]))
 		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
 //!	  :dan-!d@localhost PART #test    ; dan- is leaving the channel #test
-	unsetUser(channel, client);
+	unsetChannelUser(channel, client);
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-	{
-		string msg = "PART " + channel.getChannelName() + "\t; " + client.getNickName() + " leaving the channel " + channel.getChannelName(); // maybe hashtag
-		sendMsg(channel.getChannelUsers()[i], msg);
-	}
+		sendMsg(channel.getChannelUsers()[i], "PART #" + channel.getChannelName());
+
 }
 
 //kick <channel> <user> <reason>
@@ -314,7 +316,7 @@ void	kick(Server &server, string line, int fd){
 	// }
 	// return;
 	Client cUser = getClientString(server.getCLients(), user);
-	unsetUser(channel, cUser);
+	unsetChannelUser(channel, cUser);
 }
 
 ///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
