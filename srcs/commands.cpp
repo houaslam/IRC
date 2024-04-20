@@ -5,17 +5,14 @@
 void    pass(Server& server, string line , int fd){
 	line = line.substr(4);
 	line = strtrim(line);
-	if (server.getCLients()[fd].pass == true)
-		cout << "PASS ALREADY PROVIDED\n";
 	vector<string> res = split(line, " ");
-	if (res.size() == 1 && !res[0].compare(server.get_password())){
+	if (res.size() == 1 && !res[0].compare(server.get_password()) && server.getCLients()[fd].pass != true)
 		server.getCLients()[fd].pass = true;
-	}
 	else{
-		if (res.size() == 0)
-			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ERR_NEEDMOREPARAMS]);
 		if (server.getCLients()[fd].pass == true)
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ALREADY_REGISTERED]); 
+		if (res.size() == 0)
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ERR_NEEDMOREPARAMS]);
 		else if (res[0].compare(server.get_password()))
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[INCORRECT_PWD]); 
 	}
@@ -23,7 +20,6 @@ void    pass(Server& server, string line , int fd){
 
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
-	cout << "YES\n";
 	cout << "line = " << line << endl;
 	if (server.getCLients()[fd].pass == false){
 		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[NOT_REGISTRED]);
@@ -42,16 +38,18 @@ void nick(Server& server, string line, int fd){
 	}
 	else{
 		vector<string> res = split(line, " ");
-		if (check_users(server, res[0], fd))
+		if(res[0][0] == '$' || res[0][0] == ':')
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[ERR_ERRONEUSNICKNAME]);
+		else if (line.find_first_of(" ,.*?!@") != std::string::npos)
+			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[ERR_ERRONEUSNICKNAME]);
+		else if (check_users(server, res[0], fd))
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],"","","")[NICK_IN_USE]);
-
-		else{
-			if (server.getCLients()[fd].getNickName() != ""){
+		else if (server.getCLients()[fd].getNickName() != ""){
 				server.getCLients()[fd].setNickName(res[0]);
-				sendMsg(server.getCLients()[fd], " NICK :" + res[0]);
+				sendMsg(server.getCLients()[fd], " NICK :" + res[0]); // THIS MSG DOESN T SHOW UP
 			}
+		else
 			server.getCLients()[fd].setNickName(res[0]);
-		}
 	}
 }
 

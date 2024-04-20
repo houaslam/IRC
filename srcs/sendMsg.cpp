@@ -25,11 +25,12 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
 	msg[NICK_IN_USE] =   " : Nickname is already in use";
+	msg[ERR_ERRONEUSNICKNAME] =  " :Erroneus nickname";
 
 	// PASS
 	msg[NOT_REGISTRED] = nbtoString(NOT_REGISTRED) +  " :You have not registered";
 	msg[ERR_NEEDMOREPARAMS] =  nbtoString(ERR_NEEDMOREPARAMS) + " " + cmd + " :Not enough parameters";
-	msg[ALREADY_REGISTERED] = nbtoString(ALREADY_REGISTERED) +  " :You may not reregister";
+	msg[ALREADY_REGISTERED] = " : You may not reregister";
 	msg[INCORRECT_PWD] =  " : Password is incorrect";
 	// msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
 

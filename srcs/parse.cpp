@@ -65,6 +65,7 @@ bool parse(class Server &server,int fd, string reqs){
             privmsg(server, reqs, fd);
             break;
         case 11:
+            cout << "PING WAS SENT\n";
             sendMsg(server.getCLients()[fd], "PONG");
             break;
         case 12:

@@ -59,12 +59,13 @@
 #define ERR_CANNOTSENDTOCHAN	404  //  ":Cannot send to channel"
 #define ERR_NOTEXTTOSEND		412  //  ":No text to send"
 #define RPL_AWAY				301  //   yournick recipient_nickname :Your message has been delivered
-#define ERR_USERNOTINCHANNEL	441	 // <nick> <channel> :They aren't on that channel"
+#define ERR_USERNOTINCHANNEL	441	 //  :They aren't on that channel"
 
   
 // NICK 
 #define NICK_NOT_GIVEN		    431  // :Nickname not given"
 #define NICK_IN_USE			    433  // :Nickname is already in use"
+#define ERR_ERRONEUSNICKNAME	432 //  ":Erroneus nickname"
 
 // PASS
 #define INCORRECT_PWD		    464  // :Password is incorrect
