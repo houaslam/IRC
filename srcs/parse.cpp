@@ -17,6 +17,7 @@ string withoutNewLine(string &line){
 }
 
 bool parse(class Server &server,int fd, string reqs){
+    // channelCheck(server);
     reqs = withoutNewLine(reqs);
 
     vector<string> line;

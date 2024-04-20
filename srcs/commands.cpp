@@ -248,7 +248,10 @@ void	privmsg(Server &server, string line, int fd){
 	{
 		sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
 		Client target = getClientString(server.getCLients(), spl[0]);
-		sendMsg(target,  ":" + client.getNickName() + " PRIVMSG " + target.getNickName() + " :" + msg);
+		// sendMsg(target,  ":" + client.getNickName() + " PRIVMSG " + target.getNickName() + " :" + msg);
+
+			string prvmsg = getLocalhost(client) + "PRIVMSG " + target.getNickName() + " :" + msg +"\r\n";
+			send(target.get_fd(), prvmsg.c_str(), prvmsg.size(), 0);
 	}//:user1!user@host PRIVMSG #channel :Hello, everyone!
 
 
@@ -262,8 +265,12 @@ void	privmsg(Server &server, string line, int fd){
 				return sendMsg(client, msgs(client,"" , spl[0], "")[ERR_CANNOTSENDTOCHAN]);
 		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		{
+			sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
 			if (fd != channel.getChannelUsers()[i].get_fd())
-				sendMsg(channel.getChannelUsers()[i], ":" + client.getNickName() + " PRIVMSG #" + channel.getChannelName() + " :" + msg);
+			{
+			string prvmsg = getLocalhost(client) + "PRIVMSG #" + channel.getChannelName() + " :" + msg +"\r\n";
+			send(channel.getChannelUsers()[i].get_fd(), prvmsg.c_str(), prvmsg.size(), 0);
+		}
 		}
 	}
 }
@@ -283,9 +290,11 @@ void	part(Server &server, string line, int fd){
 	channel &channel = server.getChannels()[spl[0]]; 
 	if (!isInChannel(server.getCLients()[fd], spl[0]))
 		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]); 
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
+			string msg = getLocalhost(client) + "PART #" + channel.getChannelName() + "\r\n";
+			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
+		}
 	unsetChannelUser(channel, client);
-	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-		sendMsg(channel.getChannelUsers()[i], "PART #" + channel.getChannelName());
 }
 
 //kick <channel> <user> <reason>
@@ -309,21 +318,27 @@ void	kick(Server &server, string line, int fd){
 	string user = spl[1];
 	if (isAdmin(user, channel) || !isInChannelString(user, channel))
 		return sendMsg(client, msgs(client, user, channel.getChannelName(), "")[ERR_USERNOTINCHANNEL]);
+	string reason = "";
 	if (spl.size() > 2){ ///SEMD THE REASON
 		string reason = line;
-    	size_t pos = line.find(channel.getChannelName()[0]);
+		size_t pos = line.find(channel.getChannelName()[0]);
     	if (pos != string::npos)
 			reason = line.substr(pos + channel.getChannelName().size());
     	pos = reason.find(user[0]);
     	if (pos != string::npos)
 			reason = reason.substr(pos + user.size());
-		// for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-			/////finish
-//KICK <channel> <user> :<reason>
-
+		for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
+			string msg = getLocalhost(client) + "KICK #" + channel.getChannelName() + " " + user + " :" +reason +  "\r\n";
+			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
+		}
 	}
-	for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
-		sendMsg(channel.getChannelUsers()[i],  " KICK #" + channel.getChannelName() + " " + user);
+	else
+		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
+		{
+			string msg = getLocalhost(client) + "KICK #" + channel.getChannelName() + " " + user + " :" + "\r\n";
+			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
+		}
+
 	Client &cUser = getClientStringRef(server.getCLients(), user);
 	unsetChannelUser(channel, cUser);
 }

@@ -146,6 +146,7 @@ string getPRVMsg(string &line);
 Client getClientString(map<int, Client> clients, string &name);
 Client &getClientStringRef(map<int, Client> &clients, string &name);
 void unsetChannelUser(channel &channel, Client &exUser);
+void channelCheck(Server &server);
 
 // BOOL
 bool isAdmin(string admin, channel &channel);

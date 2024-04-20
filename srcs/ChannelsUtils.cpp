@@ -1,5 +1,16 @@
 #include "../includes/server.hpp"
 
+// void channelCheck(Server &server){
+//				channel.getChannelInvited().erase(channel.getChannelInvited().begin() + i);
+
+	// for (size_t i = 0; i < server.getChannels().size(); i++)
+	// {
+	// 	if (server.getChannels()[i].getChannelUsers().empty())
+	// 		server.getChannels().erase(server.getChannels().begin()); ///test
+	// }
+	
+// }
+
 // void unsetUser(Server &server, int fd){
 // 	vector<string>::iterator findIt;
 // 	Client &client = server.getCLients()[fd];

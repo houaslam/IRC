@@ -77,6 +77,7 @@ void justJoined(Client &client, channel &channel, string &line){
 				nicknames += " ";
 		}
 	}
+
     sendMsg(client , "353 " + client.getNickName() + " = #"+ line + " :" + nicknames); //!353
 	sendMsg(client , "366 " + client.getNickName() + " #" + line + " :End of /NAMES list."); //! 366
 	//  "<client> <channel> :End of /NAMES list"
