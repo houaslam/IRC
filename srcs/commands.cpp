@@ -5,7 +5,8 @@
 void    pass(Server& server, string line , int fd){
 	line = line.substr(4);
 	line = strtrim(line);
-
+	if (server.getCLients()[fd].pass == true)
+		cout << "PASS ALREADY PROVIDED\n";
 	vector<string> res = split(line, " ");
 	if (res.size() == 1 && !res[0].compare(server.get_password())){
 		server.getCLients()[fd].pass = true;
@@ -13,11 +14,8 @@ void    pass(Server& server, string line , int fd){
 	else{
 		if (res.size() == 0)
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ERR_NEEDMOREPARAMS]);
-		if (isConnected(server, fd))
-		{
-			cout << "CHECKED"
+		if (server.getCLients()[fd].pass == true)
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[ALREADY_REGISTERED]); 
-		}
 		else if (res[0].compare(server.get_password()))
 			sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[INCORRECT_PWD]); 
 	}
@@ -82,14 +80,10 @@ void user(Server& server, string line, int fd){
 		server.setServerName(res[2]);
 		server.getCLients()[fd].setRName(res[3]);
 	}
-	// server.getCLients()[fd].isConnected = isConnected(server, fd);
-	// if (server.getCLients()[fd].isConnected){
 		sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Internet Relay Network");
     	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName() + " ");
     	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 003 " + server.getCLients()[fd].getNickName() + " :This server was created " + getTime());
     	sendMsg(server.getCLients()[fd],":" + server.getServerName() + " 004 " + server.getCLients()[fd].getNickName() + " :" + server.getServerName() + " 1.1 More info");
-
-	// }
 }
 
 // JOIN <channels>
