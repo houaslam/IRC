@@ -23,7 +23,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(NAME)
 
-%.o : %.cpp %.hpp
+%.o : %.cpp
 	c++ ${CXXFLAGS}  -c $< -o $@
 
 clean:
