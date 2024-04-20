@@ -39,7 +39,7 @@ class Client{
 		//SETTERS
 		void setId(int id);
 		void setFd(int fd);
-		void setNickName(string nick);
+		void setNickName(string &nick);
 		void setUser(string nick);
 		void setHost(string nick);
 		void setRName(string nick);

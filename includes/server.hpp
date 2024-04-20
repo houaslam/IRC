@@ -159,3 +159,4 @@ bool isInChannelString(string &client, channel &channel);
 bool check_users(Server& server,string line , int ref);
 void sendMsgg(Client& client, string str);
 string	getTime(void);
+string	getTiming(void);

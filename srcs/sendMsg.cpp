@@ -41,8 +41,6 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 
 void sendMsg(Client& client, string str){
     str = getLocalhost(client) + str + "\r\n";
-    // send(client.get_fd(), getTime().c_str(), getTime().length(), 0);
-    // send(client.get_fd(), getLocalhost(client).c_str(), getLocalhost(client).length(), 0);
 	cout << "msg sent = " << str << endl;
     send(client.get_fd(), str.c_str(), str.length() , 0);
 }
@@ -53,7 +51,6 @@ string getLocalhost(Client &client){
 
 void justJoined(Client &client, channel &channel, string &line){
 	sendMsg(client, "JOIN " + channel.getChannelName());
-	// return; /// to test if the problem is this later
     if ((!channel.getChannelTopic().empty()))
 		sendMsg(client, msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]); //! 332
 	
@@ -63,7 +60,6 @@ void justJoined(Client &client, channel &channel, string &line){
 	for (size_t i = 0; i < channel.getChannelAdmins().size() ; i++)
 	{
 		nicknames += "@" + channel.getChannelAdmins()[i];
-		// if (i + 1 <= i < channel.getChannelAdmins().size())
 			nicknames += " ";
 	}
 
@@ -73,14 +69,12 @@ void justJoined(Client &client, channel &channel, string &line){
 		if (it == channel.getChannelAdmins().end())
 		{
 			nicknames += channel.getChannelUsers()[i].getNickName();
-			// if (i + 1 <= i < channel.getChannelAdmins().size())
 				nicknames += " ";
 		}
 	}
-
+	cout << GREEN << nicknames << RESET << endl;
     sendMsg(client , "353 " + client.getNickName() + " = "+ line + " :" + nicknames); //!353
 	cout << nicknames << endl;
 	sendMsg(client , "366 " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
-	//  "<client> <channel> :End of /NAMES list"
 
 }

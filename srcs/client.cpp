@@ -51,7 +51,7 @@ void	Client::setFd(int fd){
 	this->fd = fd;
 }void	Client::setInChannel(string &str){
 	inChannel.push_back(str);
-}void	Client::setNickName(string nick){
+}void	Client::setNickName(string &nick){
 	this->nickname = nick;
 }void	Client::setUser(string nick){
 	this->username = nick;

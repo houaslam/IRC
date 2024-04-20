@@ -41,9 +41,9 @@ void    channel::setChannelUser(Client &client_){
     users.push_back(client_);
 }void   channel::setChannelTopic(string &topic){
 	this->topic = topic;
-}void   channel::setChannelAdmin(string admin){
+}void   channel::setChannelAdmin(string &admin){
 	this->admins.push_back(admin);
-}void   channel::setChannelInvited(string invited){
+}void   channel::setChannelInvited(string &invited){
 	this->invited.push_back(invited);
 }
 

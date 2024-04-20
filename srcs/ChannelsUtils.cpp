@@ -43,12 +43,30 @@
 // }
 
 void unsetChannelUser(channel &channel, Client &exUser){
+
+
+	cout << GREEN ;
+	cout << "STAART _________ START" << endl;
+	cout << "ADMINS _________ " << endl;
+	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
+		cout << channel.getChannelAdmins()[i] << endl;
+	}
+	cout << "USERS _________ " << endl;
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
+		cout << channel.getChannelUsers()[i].getNickName() << endl;
+	}
+	for (size_t i = 0; i < exUser.getInChannel().size(); i++){
+		cout << exUser.getInChannel()[i] << endl;
+	}
+	cout << "EEND _________ EEND" << endl;
+	cout << RESET ;
+	/////test why it doesn't get delete
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++) //if they were admin
 		if (channel.getChannelAdmins()[i] == exUser.getNickName())
 			channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
 	
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++) // in users
-		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
+		if (exUser.get_fd() == channel.getChannelUsers()[i].get_fd())
 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
 
 	for (size_t i = 0; i < exUser.getInChannel().size(); i++) //in channels
@@ -58,6 +76,23 @@ void unsetChannelUser(channel &channel, Client &exUser){
 			exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
 	}
 
+	//______________________________________________________________________
+
+	cout << RED ;
+	cout << "STAART _________ START" << endl;
+	cout << "ADMINS _________ " << endl;
+	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
+		cout << channel.getChannelAdmins()[i] << endl;
+	}
+	cout << "USERS _________ " << endl;
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
+		cout << channel.getChannelUsers()[i].getNickName() << endl;
+	}
+	for (size_t i = 0; i < exUser.getInChannel().size(); i++){
+		cout << exUser.getInChannel()[i] << endl;
+	}
+	cout << "EEND _________ EEND" << endl;
+	cout << RED ;
 	// vector<string>::iterator findIt = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
     
     // if (findIt != exUser.getInChannel().end()) {

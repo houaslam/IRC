@@ -78,14 +78,17 @@ void user(Server& server, string line, int fd){
 		server.setServerName(res[2]);
 		server.getCLients()[fd].setRName(res[3]);
 	}
+
+
+
 		string msg1 = ":" + server.getServerName()+" 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Relay Network, " + getLocalhost(server.getCLients()[fd]) + "\r\n"; 
-		string msg2 = ":" + server.getServerName()+" 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName()+", running version ft_irc\r\n"; 
-		string msg3 = ":" + server.getServerName()+" 003 " + server.getCLients()[fd].getNickName() + " :This server was created Mon Jan 1 00:00:00 2024\r\n"; 
+		string msg2 = ":" + server.getServerName()+" 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName()+", running version ft_irc\r\n";
+		string msg3 = ":" + server.getServerName()+" 003 " + server.getCLients()[fd].getNickName() + " :This server was created " + getTiming() +"\r\n"; 
 		string msg4 = ":" + server.getServerName()+" 004 " + server.getCLients()[fd].getNickName() + " " + server.getServerName()+" ft_irc More info\r\n"; 
 		send(fd, msg1.c_str(), msg1.size(), 0);
 		send(fd, msg2.c_str(), msg2.size(), 0);
 		send(fd, msg3.c_str(), msg3.size(), 0);
-		send(fd, msg3.c_str(), msg4.size(), 0);
+		send(fd, msg4.c_str(), msg4.size(), 0);
 		server.getCLients()[fd].isConnected = true;
 }
 
@@ -182,18 +185,17 @@ void	topic(Server &server, string line, int fd){
 	string topic = line.substr(spl[0].size());
 
 	if (topic.empty())
-	{
 		if (channel.getChannelTopic().empty())
 			return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[RPL_NOTOPIC]); 
-		send(fd," :show old topic\n", 18, 0);
+	if (channel.getChannelModes()['t'] == "+t" &&
+		!isAdmin(client.getNickName(), channel))
+			return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_CHANOPRIVSNEEDED]); 
+	channel.setChannelTopic(topic);
+	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
+		string msg = ":" + getLocalhost(client) + " TOPIC " + channel.getChannelName() + " " + topic + "\r\n";
+		send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 	}
-	else{
-		if (channel.getChannelModes()['t'] == "+t" &&
-			!isAdmin(client.getNickName(), channel))
-				return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_CHANOPRIVSNEEDED]); 
-		else
-			channel.setChannelTopic(topic);
-	}
+	
 }
 
 void	mode(Server &server, string line, int fd){
@@ -296,9 +298,7 @@ void	part(Server &server, string line, int fd){
 	if (!isInChannel(server.getCLients()[fd], spl[0]))
 		return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_NOTONCHANNEL]);
 	string reason = "";
-		cout << RED << "AFTER HERE WERE'S GONNA BE THE REASON " << RESET << endl;
 	if (spl.size() >= 2){
-		cout << "HERE WERE'S GONNA BE THE REASON " << endl;
 		 reason = line;
 		size_t pos = line.find(channel.getChannelName()[0]);
     	if (pos != string::npos)
@@ -341,27 +341,24 @@ void	kick(Server &server, string line, int fd){
     	pos = reason.find(user[0]);
     	if (pos != string::npos)
 			reason = reason.substr(pos + user.size());
-		for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
-			string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " :" +reason +  "\r\n";
-			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
-		}
+		// for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
+		// 	string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " :" +reason +  "\r\n";
+		// 	send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
+		// }
 	}
-	else
-	{
+	// else
+	// {
 
 		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		{
 			string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " :" + "\r\n";
 			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 		}
-	}
+	// }
 
 	Client &cUser = getClientStringRef(server.getCLients(), user);
 	unsetChannelUser(channel, cUser);
 }
 
-///CHECK BEFORE EVERY COMMAND IF ITS THE SAME USER 
 ///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD
 /// IF NO USER LEFT WE DELETE THE CHANNEL
-/// ADD HASHTAGS
-///WHAT ABOUT ALREADY JOINED
