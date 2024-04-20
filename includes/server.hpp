@@ -65,6 +65,7 @@
 // NICK 
 #define NICK_NOT_GIVEN		    431  // :Nickname not given"
 #define NICK_IN_USE			    433  // :Nickname is already in use"
+#define ERR_ERRONEUSNICKNAME	433  // :Erroneus nickname"
 
 // PASS
 #define INCORRECT_PWD		    464  // :Password is incorrect

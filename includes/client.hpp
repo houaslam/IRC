@@ -19,13 +19,13 @@ class Client{
 		string r_name;
 
 		// CONNECTION
-
 		//CLIENT HIMSELF 
 		int fd;
 
 		// JOIN
 		vector<string> inChannel;
 	public:
+		int lineMode;
 		pthread_t thread;
 		bool isConnected;
 		bool pass;

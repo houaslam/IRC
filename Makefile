@@ -14,7 +14,7 @@ SRC = srcs/main.cpp \
 
 CXX		= c++
 
-CXXFLAGS	= -std=c++98 -Wall -Wextra -Werror 
+CXXFLAGS	= -std=c++98 -fsanitize=address -Wall -Wextra -Werror 
 
 OBJS 	= $(SRC:.cpp=.o)
 
@@ -23,7 +23,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(NAME)
 
-%.o : %.cpp %.hpp
+%.o : %.cpp
 	c++ ${CXXFLAGS}  -c $< -o $@
 
 clean:

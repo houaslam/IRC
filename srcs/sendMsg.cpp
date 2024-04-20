@@ -2,7 +2,6 @@
 
 map<int, string> msgs(Client& client,string nickname,string channel, string cmd){
 	map<int, string> msg;
-	channel = "#" + channel;
 	// CHANNEL
 	msg[ERR_TOOMANYCHANNELS] = nbtoString(ERR_TOOMANYCHANNELS) + " " + channel + " :You have joined too many channels";
 	msg[ERR_NOTONCHANNEL] = nbtoString(ERR_NOTONCHANNEL) + " " + channel + " :You're not on that channel";
@@ -24,14 +23,15 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 
 	// NICK
 	msg[NICK_NOT_GIVEN] = nbtoString(NICK_NOT_GIVEN) + " :Nickname not given";
-	msg[NICK_IN_USE] =  nbtoString(NICK_IN_USE) + " " + client.getNickName() + " :Nickname is already in use";
+	msg[NICK_IN_USE] =   " : Nickname is already in use";
+	msg[ERR_ERRONEUSNICKNAME] =  " :Erroneus nickname";
 
 	// PASS
 	msg[NOT_REGISTRED] = nbtoString(NOT_REGISTRED) +  " :You have not registered";
 	msg[ERR_NEEDMOREPARAMS] =  nbtoString(ERR_NEEDMOREPARAMS) + " " + cmd + " :Not enough parameters";
-	msg[ALREADY_REGISTERED] = nbtoString(ALREADY_REGISTERED) +  " :You may not reregister";
-	msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password incorrect";
-	//:Password incorrect"
+	msg[ALREADY_REGISTERED] = " : You may not reregister";
+	msg[INCORRECT_PWD] =  " : Password is incorrect";
+	// msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
 
 	// GENERAL
 	msg[UNKNOW_CMD] = nbtoString(UNKNOW_CMD) + " " + cmd +  " :Unknown command";
@@ -52,8 +52,8 @@ string getLocalhost(Client &client){
 }
 
 void justJoined(Client &client, channel &channel, string &line){
-
-	sendMsg(client, " JOIN #" + channel.getChannelName());
+	sendMsg(client, "JOIN " + channel.getChannelName());
+	// return; /// to test if the problem is this later
     if ((!channel.getChannelTopic().empty()))
 		sendMsg(client, msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]); //! 332
 	
@@ -63,7 +63,7 @@ void justJoined(Client &client, channel &channel, string &line){
 	for (size_t i = 0; i < channel.getChannelAdmins().size() ; i++)
 	{
 		nicknames += "@" + channel.getChannelAdmins()[i];
-		if (i + 1 < i < channel.getChannelAdmins().size())
+		// if (i + 1 <= i < channel.getChannelAdmins().size())
 			nicknames += " ";
 	}
 
@@ -73,21 +73,14 @@ void justJoined(Client &client, channel &channel, string &line){
 		if (it == channel.getChannelAdmins().end())
 		{
 			nicknames += channel.getChannelUsers()[i].getNickName();
-			if (i + 1 < i < channel.getChannelAdmins().size())
+			// if (i + 1 <= i < channel.getChannelAdmins().size())
 				nicknames += " ";
 		}
 	}
 
-    sendMsg(client , "353 " + client.getNickName() + " = #"+ line + " :" + nicknames); //!353
-	sendMsg(client , "366 " + client.getNickName() + " #" + line + " :End of /NAMES list."); //! 366
+    sendMsg(client , "353 " + client.getNickName() + " = "+ line + " :" + nicknames); //!353
+	cout << nicknames << endl;
+	sendMsg(client , "366 " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
 	//  "<client> <channel> :End of /NAMES list"
 
 }
-///:<client> JOIN <channel>
-///:<server> 332 <client> <channel> :<topic>
-/// :<server> 333 <client> <channel> <topic_setter> <timestamp>
-/// :<server> 353 <client> = <channel> :<user_list>
-/// :<server> 366 <client> <channel> :End of /NAMES list.
-
-
-///CHECK WHEN WE PART A CHANNEL WHAT HAPPENS
