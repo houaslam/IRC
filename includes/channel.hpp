@@ -22,10 +22,10 @@ class channel{
 		~channel();
 
 		// REGULAR FUNCTIONS
-		void    setChannelUser(class Client &client_);
+		void setChannelUser(class Client &client_);
 		void setChannelTopic(string &topic);
-		void setChannelAdmin(string admin);
-		void setChannelInvited(string admin);
+		void setChannelAdmin(string &admin);
+		void setChannelInvited(string &admin);
 
 		// GETERS
 		string &getChannelName();
@@ -34,5 +34,8 @@ class channel{
 		vector<string> &getChannelInvited();
 		vector<Client> &getChannelUsers();
 		map<char, string> &getChannelModes();
+
+		string TopicSetter;
+		string TopicTime;
 
 };

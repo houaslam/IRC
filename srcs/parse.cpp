@@ -17,7 +17,10 @@ string withoutNewLine(string &line){
 }
 
 bool parse(class Server &server,int fd, string reqs){
+    channelCheck(server);
+    cout << BLUE << "->" << reqs << RESET;
     reqs = withoutNewLine(reqs);
+
 
     vector<string> line;
     line = split(reqs, " ");
@@ -25,16 +28,20 @@ bool parse(class Server &server,int fd, string reqs){
     if (line.empty())
         return true;
 
-    string commands[] = {"USER", "NICK", "JOIN", "SEND", "EXIT", "PASS", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "PING", "PART", "KICK"};
+    string commands[] = {"USER", "NICK", "PASS", "EXIT", "JOIN", "TOPIC", "MODE", "INVITE", "BMR", "PRIVMSG", "KICK", "PART", "PING", "WHOIS", "CAP"};
     size_t n = 0;
+
     size_t size =  sizeof(commands) / sizeof(string);
-    if (line.empty())
-        n = size;
-    else
-        while (n < size && commands[n].compare(line[0]))
+    while (n < size && commands[n].compare(line[0]))
             n++;
+    if (n == 13 || n == 14)
+        return true;
     switch (n)
     {
+        if (server.getCLients()[fd].isConnected == false && (n >= 4 && n <= 11)){
+		    sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[NOT_REGISTRED]);
+            break;
+        }
         case 0:
             user(server, reqs, fd);
            break;
@@ -42,40 +49,45 @@ bool parse(class Server &server,int fd, string reqs){
             nick(server, reqs, fd);
             break;
         case 2:
-            join(server, reqs, fd);
-            break;
-        case 4:
-            return false;
-        case 5:
             pass(server, reqs, fd);
             break;
-        case 6:
+        case 3:
+            return false;
+        case 4:
+            join(server, reqs, fd);
+            break;
+        case 5:
             topic(server, reqs, fd);
             break;
-        case 7:
+        case 6:
             mode(server, reqs, fd);
             break;
-        case 8:
+        case 7:
             invite(server, reqs, fd);
             break;
-        case 9:
+        case 8:
             bot(fd, reqs, server);
             break;
-        case 10:
+        case 9:
             privmsg(server, reqs, fd);
             break;
-        case 11:
-            cout << "PING WAS SENT\n";
-            sendMsg(server.getCLients()[fd], "PONG");
-            break;
-        case 12:
-            part(server, reqs, fd);
-            break;
-        case 13:
+        case 10:
             kick(server, reqs, fd);
             break;
+        case 11:
+            part(server, reqs, fd);
+            break;
+        case 12:
+        {
+            cout << "PING WAS RECIEVED\n";
+            string pong = "PONG :" + reqs.substr(5) +"\r\n";
+            cout << "sending" << pong << endl;
+            send(fd, pong.c_str(), pong.size(), 0);
+            break;
+        }
         default:{
-            sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);
+            if (server.getCLients()[fd].isConnected == true)
+                sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "" ,"", reqs)[UNKNOW_CMD]);
             break;
         }
     }

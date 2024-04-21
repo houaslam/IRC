@@ -4,10 +4,12 @@
 
 
 Client::Client(): nickname("user"), username(""), fd(1), isConnected(false){
+	lineMode = 0;
 
 }
 
 Client::Client(int fd):nickname(""), username(""), fd(fd), isConnected(false){
+	lineMode = 0;
 }
 
 Client::Client(const Client& src){
@@ -21,6 +23,7 @@ Client& Client::operator=(const Client& Client_){
 		this->username = Client_.username;
 		this->hostname = Client_.hostname;
 		this->r_name = Client_.r_name;
+		this->lineMode = Client_.lineMode;
 	}
 	return *this;
 }
@@ -48,7 +51,7 @@ void	Client::setFd(int fd){
 	this->fd = fd;
 }void	Client::setInChannel(string &str){
 	inChannel.push_back(str);
-}void	Client::setNickName(string nick){
+}void	Client::setNickName(string &nick){
 	this->nickname = nick;
 }void	Client::setUser(string nick){
 	this->username = nick;

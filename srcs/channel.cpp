@@ -7,7 +7,9 @@ channel::channel():name(""), topic(""){
 	modes['t'] = "+t";
 	modes['k'] = "";
 	modes['o'] = "+o";
-	modes['l'] = ""; 
+	modes['l'] = "";
+    TopicSetter = "";
+    TopicTime = "";
 }
 
 channel::channel(string name):name(name), topic(""){
@@ -16,6 +18,8 @@ channel::channel(string name):name(name), topic(""){
 	modes['k'] = ""; //password
 	modes['o'] = "+o"; //admins kicking and banning ...
 	modes['l'] = ""; 
+    TopicSetter = "";
+    TopicTime = "";
 }
 
 channel::channel(const channel& src){
@@ -31,6 +35,8 @@ channel& channel::operator=(const channel& src){
         this->topic = src.topic;
         this->admins = src.admins;
         this->modes = src.modes;
+        this->TopicSetter = src.TopicSetter;
+        this->TopicTime = src.TopicTime;
     }
     return *this;
 }
@@ -41,9 +47,9 @@ void    channel::setChannelUser(Client &client_){
     users.push_back(client_);
 }void   channel::setChannelTopic(string &topic){
 	this->topic = topic;
-}void   channel::setChannelAdmin(string admin){
+}void   channel::setChannelAdmin(string &admin){
 	this->admins.push_back(admin);
-}void   channel::setChannelInvited(string invited){
+}void   channel::setChannelInvited(string &invited){
 	this->invited.push_back(invited);
 }
 

@@ -72,6 +72,18 @@ string  getTime(void){
     res +=  "[" + nbtoString(time->tm_hour) +  ':'+  nbtoString(time->tm_min) +  ']' + " ";
     return res;
 }
+string getTiming(void){
+    time_t currentTime = time(NULL);
+
+    const int bufferSize = 80;
+    char buffer[bufferSize];
+
+    strftime(buffer, bufferSize, "%a %b %d %H:%M:%S %Y", gmtime(&currentTime));
+
+    // return string(buffer);
+    return buffer;
+}
+
 string nbtoString(int nb){
     std::stringstream ss;
     ss << nb;

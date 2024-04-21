@@ -50,7 +50,8 @@
 #define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
 #define ERR_BADCHANNELKEY		475  // :Cannot join channel (+k)
 #define RPL_INVITING			341  // :<nick> <channel>
-#define RPL_TOPIC	    		332  // :Channel Topic
+#define RPL_TOPIC	    		332  // yournick #examplechannel setbyuser time
+#define RPL_TOPICWHOTIME	    333  // :Channel Topic 
 #define RPL_NOTOPIC				331  // :No topic is set"
 #define ERR_CHANOPRIVSNEEDED	482  // :You're not channel operator
 #define ERR_USERONCHANNEL		443  // :is already on channel
@@ -59,13 +60,13 @@
 #define ERR_CANNOTSENDTOCHAN	404  //  ":Cannot send to channel"
 #define ERR_NOTEXTTOSEND		412  //  ":No text to send"
 #define RPL_AWAY				301  //   yournick recipient_nickname :Your message has been delivered
-#define ERR_USERNOTINCHANNEL	441	 //  :They aren't on that channel"
+#define ERR_USERNOTINCHANNEL	441	 // <nick> <channel> :They aren't on that channel"
 
   
 // NICK 
 #define NICK_NOT_GIVEN		    431  // :Nickname not given"
 #define NICK_IN_USE			    433  // :Nickname is already in use"
-#define ERR_ERRONEUSNICKNAME	432 //  ":Erroneus nickname"
+#define ERR_ERRONEUSNICKNAME	433  // :Erroneus nickname"
 
 // PASS
 #define INCORRECT_PWD		    464  // :Password is incorrect
@@ -145,7 +146,9 @@ void add_fd(struct pollfd fds[], int* fd_count, int fd);
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client);
 string getPRVMsg(string &line);
 Client getClientString(map<int, Client> clients, string &name);
-void unsetChannelUser(channel &channel, Client &exUser);
+Client &getClientStringRef(map<int, Client> &clients, string &name);
+void unsetChannelUser(channel &channel, Client &exUser, Server &server);
+void channelCheck(Server &server);
 
 // BOOL
 bool isAdmin(string admin, channel &channel);
@@ -157,3 +160,4 @@ bool isInChannelString(string &client, channel &channel);
 bool check_users(Server& server,string line , int ref);
 void sendMsgg(Client& client, string str);
 string	getTime(void);
+string	getTiming(void);

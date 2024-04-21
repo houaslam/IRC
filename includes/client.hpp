@@ -19,13 +19,13 @@ class Client{
 		string r_name;
 
 		// CONNECTION
-
 		//CLIENT HIMSELF 
 		int fd;
 
 		// JOIN
 		vector<string> inChannel;
 	public:
+		int lineMode;
 		pthread_t thread;
 		bool isConnected;
 		bool pass;
@@ -39,7 +39,7 @@ class Client{
 		//SETTERS
 		void setId(int id);
 		void setFd(int fd);
-		void setNickName(string nick);
+		void setNickName(string &nick);
 		void setUser(string nick);
 		void setHost(string nick);
 		void setRName(string nick);
