@@ -206,7 +206,6 @@ void	mode(Server &server, string line, int fd){
 	cout << client.lineMode  << endl;
 	if (client.lineMode == 1)
 		return;
-	cout <<"HERERERE\n";
     if (line.empty() || split(line, " ").size() < 2){
 		sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
         return ;
@@ -308,7 +307,7 @@ void	part(Server &server, string line, int fd){
 			string msg = getLocalhost(client) + "PART " + channel.getChannelName() + reason + "\r\n";
 			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 		}
-	unsetChannelUser(channel, client);
+	unsetChannelUser(channel, client, server);
 }
 
 //kick <channel> <user> <reason>
@@ -357,7 +356,7 @@ void	kick(Server &server, string line, int fd){
 	// }
 
 	Client &cUser = getClientStringRef(server.getCLients(), user);
-	unsetChannelUser(channel, cUser);
+	unsetChannelUser(channel, cUser, server);
 }
 
 ///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD

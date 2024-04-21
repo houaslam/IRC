@@ -1,15 +1,21 @@
 #include "../includes/server.hpp"
 
-// void channelCheck(Server &server){
-//				channel.getChannelInvited().erase(channel.getChannelInvited().begin() + i);
+void channelCheck(Server &server){
+				// channel.getChannelInvited().erase(channel.getChannelInvited().begin() + i);
 
 	// for (size_t i = 0; i < server.getChannels().size(); i++)
 	// {
-	// 	if (server.getChannels()[i].getChannelUsers().empty())
+		// if (server.getChannels()[i].getChannelUsers().size().empty())
 	// 		server.getChannels().erase(server.getChannels().begin()); ///test
 	// }
+	for (map<string, channel>::iterator it = server.getChannels().begin(); it != server.getChannels().end(); it++)
+	{
+		if (it->second.getChannelUsers().empty())
+			server.getChannels().erase(it);
+	// 	/* code */
+	}
 	
-// }
+}
 
 // void unsetUser(Server &server, int fd){
 // 	vector<string>::iterator findIt;
@@ -42,27 +48,10 @@
 
 // }
 
-void unsetChannelUser(channel &channel, Client &exUser){
+void unsetChannelUser(channel &channel, Client &exUser, Server &server){
 
-
-	cout << GREEN ;
-	cout << "STAART _________ START" << endl;
-	cout << "ADMINS _________ " << endl;
-	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
-		cout << channel.getChannelAdmins()[i] << endl;
-	}
-	cout << "USERS _________ " << endl;
-	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
-		cout << channel.getChannelUsers()[i].getNickName() << endl;
-	}
-	for (size_t i = 0; i < exUser.getInChannel().size(); i++){
-		cout << exUser.getInChannel()[i] << endl;
-	}
-	cout << "EEND _________ EEND" << endl;
-	cout << RESET ;
-	/////test why it doesn't get delete
 	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++) //if they were admin
-		if (channel.getChannelAdmins()[i] == exUser.getNickName())
+		if (getClientString(server.getCLients(), channel.getChannelAdmins()[i]).get_fd() == exUser.get_fd())
 			channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
 	
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++) // in users
@@ -75,30 +64,6 @@ void unsetChannelUser(channel &channel, Client &exUser){
 		if (channel.getChannelName() == exUser.getInChannel()[i])
 			exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
 	}
-
-	//______________________________________________________________________
-
-	cout << RED ;
-	cout << "STAART _________ START" << endl;
-	cout << "ADMINS _________ " << endl;
-	for (size_t i = 0; i < channel.getChannelAdmins().size(); i++){
-		cout << channel.getChannelAdmins()[i] << endl;
-	}
-	cout << "USERS _________ " << endl;
-	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
-		cout << channel.getChannelUsers()[i].getNickName() << endl;
-	}
-	for (size_t i = 0; i < exUser.getInChannel().size(); i++){
-		cout << exUser.getInChannel()[i] << endl;
-	}
-	cout << "EEND _________ EEND" << endl;
-	cout << RED ;
-	// vector<string>::iterator findIt = find(exUser.getInChannel().begin(), exUser.getInChannel().end(), channel.getChannelName());
-    
-    // if (findIt != exUser.getInChannel().end()) {
-    //     exUser.getInChannel().erase(findIt);
-    // }
-
 }
 
 Client getClientString(map<int, Client> clients, string &name)

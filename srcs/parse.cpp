@@ -17,7 +17,7 @@ string withoutNewLine(string &line){
 }
 
 bool parse(class Server &server,int fd, string reqs){
-    // channelCheck(server);
+    channelCheck(server);
     cout << BLUE << "->" << reqs << RESET;
     reqs = withoutNewLine(reqs);
 

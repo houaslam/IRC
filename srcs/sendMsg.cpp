@@ -74,7 +74,6 @@ void justJoined(Client &client, channel &channel, string &line){
 	}
 	cout << GREEN << nicknames << RESET << endl;
     sendMsg(client , "353 " + client.getNickName() + " = "+ line + " :" + nicknames); //!353
-	cout << nicknames << endl;
 	sendMsg(client , "366 " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
 
 }

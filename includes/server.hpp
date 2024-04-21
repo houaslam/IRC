@@ -146,7 +146,7 @@ void fillMode(string mode, string &arg, channel &channel, Server &server, Client
 string getPRVMsg(string &line);
 Client getClientString(map<int, Client> clients, string &name);
 Client &getClientStringRef(map<int, Client> &clients, string &name);
-void unsetChannelUser(channel &channel, Client &exUser);
+void unsetChannelUser(channel &channel, Client &exUser, Server &server);
 void channelCheck(Server &server);
 
 // BOOL
