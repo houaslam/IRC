@@ -11,10 +11,7 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[ERR_BADCHANNELKEY] = nbtoString(ERR_BADCHANNELKEY) + " " + channel + " :Cannot join channel (+k)";
 	msg[RPL_NOTOPIC] = nbtoString(RPL_NOTOPIC) + " " + channel + " :No topic is set";
 	msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + client.getNickName() + " " + channel + " " + nickname;
-	//:irc.example.com 332 yournick #examplechannel :Welcome to the channel!
 
-		//:irc.example.com 333 yournick #examplechannel setbyuser 1622181726
-	//
 	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
 	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + nickname + "" + channel + " :is already on channel";
 	msg[RPL_INVITING] = nbtoString(RPL_INVITING)  + " " + client.getNickName() + " " + nickname + " " + channel;
@@ -35,7 +32,6 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[ERR_NEEDMOREPARAMS] =  nbtoString(ERR_NEEDMOREPARAMS) + " " + cmd + " :Not enough parameters";
 	msg[ALREADY_REGISTERED] = " : You may not reregister";
 	msg[INCORRECT_PWD] =  " : Password is incorrect";
-	// msg[INCORRECT_PWD] = nbtoString(INCORRECT_PWD) + " :Password is incorrect";
 
 	// GENERAL
 	msg[UNKNOW_CMD] = nbtoString(UNKNOW_CMD) + " " + cmd +  " :Unknown command";
@@ -56,9 +52,7 @@ string getLocalhost(Client &client){
 void justJoined(Client &client, channel &channel, string &line){
 	sendMsg(client, "JOIN " + channel.getChannelName());
     if ((!channel.getChannelTopic().empty())){
-		sendMsg(client, msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]); //! 332
-	// msg[RPL_TOPICWHOTIME] = nbtoString(RPL_TOPICWHOTIME) + " " + client.getNickName() + " " + channel + " "+ nickname;
-		//:irc.example.com 333 yournick #examplechannel setbyuser 1622181726
+		sendMsg(client, msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]);
 		string msg = getLocalhost(client) + "333 " + client.getNickName() + " " + channel.getChannelName() + " " + channel.TopicSetter + " " + channel.TopicTime + "\r\n";
 		send(client.get_fd(), msg.c_str(), msg.size(), 0); //! 333
 	}
