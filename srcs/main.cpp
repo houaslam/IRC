@@ -35,10 +35,7 @@ int main(int ac , char ** av){
 							// int k = recv(fds[i].fd, reqs, 10000000, 0);
 							if (k > 0){
 								reqs[k] = '\0';
-							    if (parse(server, fds[i].fd, reqs) == false){
-									cerr << "exit\n";
-									close(fds[i].fd);
-								}
+							    parse(server, fds[i].fd, reqs);
 							}
 
 							else{

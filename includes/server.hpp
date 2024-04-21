@@ -127,7 +127,7 @@ class Server{
 };
 
 // OTHERS
-bool parse(class Server &server,int i, string line);
+void parse(class Server &server,int i, string line);
 void ft_error(string prob);
 std::vector<std::string> split(std::string src, std::string s);
 string strtrim(const string& str);
