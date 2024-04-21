@@ -81,6 +81,7 @@ bool parse(class Server &server,int fd, string reqs){
         {
             cout << "PING WAS RECIEVED\n";
             string pong = "PONG :" + reqs.substr(5) +"\r\n";
+            cout << "sending" << pong << endl;
             send(fd, pong.c_str(), pong.size(), 0);
             break;
         }

@@ -50,7 +50,8 @@
 #define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
 #define ERR_BADCHANNELKEY		475  // :Cannot join channel (+k)
 #define RPL_INVITING			341  // :<nick> <channel>
-#define RPL_TOPIC	    		332  // :Channel Topic
+#define RPL_TOPIC	    		332  // yournick #examplechannel setbyuser time
+#define RPL_TOPICWHOTIME	    333  // :Channel Topic 
 #define RPL_NOTOPIC				331  // :No topic is set"
 #define ERR_CHANOPRIVSNEEDED	482  // :You're not channel operator
 #define ERR_USERONCHANNEL		443  // :is already on channel

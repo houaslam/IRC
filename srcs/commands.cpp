@@ -161,7 +161,8 @@ void invite(Server& server, string line, int fd){
 	channel.setChannelInvited(invited);
 	sendMsg(client, msgs(client, invited, channel.getChannelName(), "")[RPL_INVITING]);
 	Client reciever = getClientString(server.getCLients(), invited);
-	sendMsg(reciever, "INVITE " + invited + " :" + channel.getChannelName());
+	string msg = getLocalhost(client) + " INVITE " + invited + " :" + channel.getChannelName() + "\r\n";
+	send(reciever.get_fd(), msg.c_str(), msg.size(), 0);
 
 }
 
@@ -186,16 +187,17 @@ void	topic(Server &server, string line, int fd){
 
 	if (topic.empty())
 		if (channel.getChannelTopic().empty())
-			return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[RPL_NOTOPIC]); 
+			return; 
 	if (channel.getChannelModes()['t'] == "+t" &&
 		!isAdmin(client.getNickName(), channel))
 			return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_CHANOPRIVSNEEDED]); 
 	channel.setChannelTopic(topic);
+	channel.TopicSetter = client.getNickName();
+	channel.TopicTime = getTiming();
 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
 		string msg = ":" + getLocalhost(client) + " TOPIC " + channel.getChannelName() + " " + topic + "\r\n";
 		send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 	}
-	
 }
 
 void	mode(Server &server, string line, int fd){
@@ -350,7 +352,7 @@ void	kick(Server &server, string line, int fd){
 
 		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		{
-			string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " :" + "\r\n";
+			string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " " + reason+ "\r\n";
 			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 		}
 	// }
@@ -358,6 +360,3 @@ void	kick(Server &server, string line, int fd){
 	Client &cUser = getClientStringRef(server.getCLients(), user);
 	unsetChannelUser(channel, cUser, server);
 }
-
-///RETURN FALSE WHEN REMOVING A USER SO WE WILL DELETE THEIR FD
-/// IF NO USER LEFT WE DELETE THE CHANNEL

@@ -1,52 +1,10 @@
 #include "../includes/server.hpp"
 
 void channelCheck(Server &server){
-				// channel.getChannelInvited().erase(channel.getChannelInvited().begin() + i);
-
-	// for (size_t i = 0; i < server.getChannels().size(); i++)
-	// {
-		// if (server.getChannels()[i].getChannelUsers().size().empty())
-	// 		server.getChannels().erase(server.getChannels().begin()); ///test
-	// }
 	for (map<string, channel>::iterator it = server.getChannels().begin(); it != server.getChannels().end(); it++)
-	{
 		if (it->second.getChannelUsers().empty())
 			server.getChannels().erase(it);
-	// 	/* code */
-	}
-	
 }
-
-// void unsetUser(Server &server, int fd){
-// 	vector<string>::iterator findIt;
-// 	Client &client = server.getCLients()[fd];
-// 	for (map<string, channel>::iterator it = server.getChannels().begin();it != server.getChannels().end(); it++)
-// 	{
-// 		//USERS
-// 		for (vector<Client>::iterator i = 0; i < it->second.getChannelUsers().size(); i++)
-// 		{
-// 			findIt = find(it->second.getChannelUsers()[i].begin(), it->second.getChannelUsers()[i].end(), client.getNickName());
-// 			// if ( != it->second.getChannelUsers().end())
-// 			// if (it->second.getChannelUsers()[i])
-// 		}
-		
-// 	// 	vector<Client>::iterator findIt = find(it->second.getChannelUsers().begin(), it->second.getChannelUsers().end(), client);
-// 		// 	it->second.getChannelUsers().erase(findIt);
-// 		// //ADMINS
-// 		// vector<string>::iterator findIt = find(it->second.getChannelAdmins().begin(), it->second.getChannelAdmins().end(), client.getNickName());
-// 		// if (findIt != it->second.getChannelAdmins().begin())
-// 		// 	it->second.getChannelAdmins().erase(findIt);
-// 	}
-// 			// channel.getChannelAdmins().erase(channel.getChannelAdmins().begin() + i);
-// // 	for (size_t i = 0; i < channel.getChannelUsers().size(); i++) // in users
-// // 		if (exUser.getNickName() == channel.getChannelUsers()[i].getNickName())
-// // 			channel.getChannelUsers().erase(channel.getChannelUsers().begin() + i);
-
-// // 	for (size_t i = 0; i < exUser.getInChannel().size(); i++) //in channels
-// // 		if (channel.getChannelName() == exUser.getInChannel()[i])
-// // 			exUser.getInChannel().erase(exUser.getInChannel().begin() + i);
-
-// }
 
 void unsetChannelUser(channel &channel, Client &exUser, Server &server){
 
@@ -108,8 +66,6 @@ string getPRVMsg(string &line){
 
 void fillMode(string mode, string &arg, channel &channel, Server &server, Client &client){
 	server.getCLients();
-	if (mode.size() > 2) //////recheck later
-		return; 
 	char flag = mode[0];
 	if (mode[1] == 'o'){
 		if (arg.empty())

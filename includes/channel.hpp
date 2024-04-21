@@ -35,4 +35,7 @@ class channel{
 		vector<Client> &getChannelUsers();
 		map<char, string> &getChannelModes();
 
+		string TopicSetter;
+		string TopicTime;
+
 };

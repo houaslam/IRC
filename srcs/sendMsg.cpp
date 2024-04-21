@@ -11,9 +11,11 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[ERR_BADCHANNELKEY] = nbtoString(ERR_BADCHANNELKEY) + " " + channel + " :Cannot join channel (+k)";
 	msg[RPL_NOTOPIC] = nbtoString(RPL_NOTOPIC) + " " + channel + " :No topic is set";
 	msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + channel + " "+ nickname;
+		//:irc.example.com 333 yournick #examplechannel setbyuser 1622181726
+	//
 	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
 	msg[ERR_USERONCHANNEL] = nbtoString(ERR_USERONCHANNEL) + " " + nickname + "" + channel + " :is already on channel";
-	msg[RPL_INVITING] = nbtoString(RPL_INVITING) + " " + nickname + " " + channel;
+	msg[RPL_INVITING] = nbtoString(RPL_INVITING)  + " " + client.getNickName() + " " + nickname + " " + channel;
 	msg[ERR_NOSUCHNICK] = nbtoString(ERR_NOSUCHNICK) + " " + nickname + " :No such nick/channel";
 	msg[ERR_NORECIPIENT] = nbtoString(ERR_NORECIPIENT) + " " + nickname + " :No recipient given (" + cmd + ")";
 	msg[ERR_CANNOTSENDTOCHAN] = nbtoString(ERR_CANNOTSENDTOCHAN) + " " + nickname + " " + channel + " :Cannot send to channel";
@@ -51,8 +53,13 @@ string getLocalhost(Client &client){
 
 void justJoined(Client &client, channel &channel, string &line){
 	sendMsg(client, "JOIN " + channel.getChannelName());
-    if ((!channel.getChannelTopic().empty()))
+    if ((!channel.getChannelTopic().empty())){
 		sendMsg(client, msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]); //! 332
+	// msg[RPL_TOPICWHOTIME] = nbtoString(RPL_TOPICWHOTIME) + " " + client.getNickName() + " " + channel + " "+ nickname;
+		//:irc.example.com 333 yournick #examplechannel setbyuser 1622181726
+		string msg = getLocalhost(client) + "333 " + client.getNickName() + channel.getChannelName() + " " + channel.TopicSetter + " " + channel.TopicTime + "\r\n";
+		send(client.get_fd(), msg.c_str(), msg.size(), 0); //! 333
+	}
 	
 	string nicknames;
 	vector<string>::iterator it;
@@ -72,7 +79,6 @@ void justJoined(Client &client, channel &channel, string &line){
 				nicknames += " ";
 		}
 	}
-	cout << GREEN << nicknames << RESET << endl;
     sendMsg(client , "353 " + client.getNickName() + " = "+ line + " :" + nicknames); //!353
 	sendMsg(client , "366 " + client.getNickName() + " " + line + " :End of /NAMES list."); //! 366
 
