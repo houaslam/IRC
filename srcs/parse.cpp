@@ -37,11 +37,6 @@ void parse(class Server &server,int fd, string reqs){
         return ;
     if (server.getCLients()[fd].isConnected == false && (n >= 3 && n <= 10))
 	    return sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[NOT_REGISTRED]);
-    string color = RED;
-    if (server.getCLients()[fd].isConnected == true)
-        color = GREEN;
-    cout << color << n << RESET<<endl;
-    cout << "without" << n <<endl;
     switch (n)
     {
         case 0:

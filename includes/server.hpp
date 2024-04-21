@@ -39,14 +39,12 @@
 #define WHITE   "\033[37m"   
 
 
-       /* ERRORS */
 
 // CHANNEL
 #define ERR_TOOMANYCHANNELS		405  // :You have joined too many channels
 #define ERR_NOTONCHANNEL		442	 // :You're not on that channel
 #define ERR_NOSUCHCHANNEL 		403  // :No such channel
 #define ERR_INVITEONLYCHAN 		473  // <client> <channel> :Cannot join channel (+i)"
-// #define ERR_CHANNELMODEINVALID	473  // :Invalid channel mode
 #define ERR_CHANNELISFULL		471  // :Cannot join channel (+l)
 #define ERR_BADCHANNELKEY		475  // :Cannot join channel (+k)
 #define RPL_INVITING			341  // :<nick> <channel>

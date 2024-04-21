@@ -20,7 +20,6 @@ void    pass(Server& server, string line , int fd){
 
 // NICK <nickname>
 void nick(Server& server, string line, int fd){
-	cout << "line = " << line << endl;
 	if (server.getCLients()[fd].pass == false){
 		sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd], "", "", "")[NOT_REGISTRED]);
 		return ;
@@ -78,9 +77,6 @@ void user(Server& server, string line, int fd){
 		server.setServerName(res[2]);
 		server.getCLients()[fd].setRName(res[3]);
 	}
-
-
-
 		string msg1 = ":" + server.getServerName()+" 001 " + server.getCLients()[fd].getNickName() + " :Welcome to the Relay Network, " + getLocalhost(server.getCLients()[fd]) + "\r\n"; 
 		string msg2 = ":" + server.getServerName()+" 002 " + server.getCLients()[fd].getNickName() + " :Your host is " + server.getServerName()+", running version ft_irc\r\n";
 		string msg3 = ":" + server.getServerName()+" 003 " + server.getCLients()[fd].getNickName() + " :This server was created " + getTiming() +"\r\n"; 
@@ -90,6 +86,8 @@ void user(Server& server, string line, int fd){
 		send(fd, msg3.c_str(), msg3.size(), 0);
 		send(fd, msg4.c_str(), msg4.size(), 0);
 		server.getCLients()[fd].isConnected = true;
+
+		cout << WHITE << "[Connected ✅]" << endl << RESET;
 }
 
 // JOIN <channels>
@@ -206,7 +204,6 @@ void	mode(Server &server, string line, int fd){
     line = strtrim(line);
 	Client &client = server.getCLients()[fd];
 	client.lineMode++;
-	cout << client.lineMode  << endl;
 	if (client.lineMode == 1)
 		return;
     if (line.empty() || split(line, " ").size() < 2){
@@ -230,7 +227,6 @@ void	mode(Server &server, string line, int fd){
 			return sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 		else
 			fillMode(spl[1], spl[2], channel, server, client);
-				// sendMsg(client, msgs(client, "","", "MODE")[ERR_NEEDMOREPARAMS]); 
 	}
 	else
 		sendMsg(client, msgs(client ,"" , "", "MODE")[ERR_NEEDMOREPARAMS]); 
@@ -258,11 +254,10 @@ void	privmsg(Server &server, string line, int fd){
 	{
 		sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
 		Client target = getClientString(server.getCLients(), spl[0]);
-		// sendMsg(target,  ":" + client.getNickName() + " PRIVMSG " + target.getNickName() + " :" + msg);
 
 			string prvmsg = getLocalhost(client) + "PRIVMSG " + target.getNickName() + " :" + msg +"\r\n";
 			send(target.get_fd(), prvmsg.c_str(), prvmsg.size(), 0);
-	}//:user1!user@host PRIVMSG channel :Hello, everyone!
+	}
 
 
 	else if(isChannelExist(server.getChannels(), spl[0]))
@@ -275,7 +270,6 @@ void	privmsg(Server &server, string line, int fd){
 				return sendMsg(client, msgs(client,"" , spl[0], "")[ERR_CANNOTSENDTOCHAN]);
 		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		{
-			// sendMsg(client, msgs(client , spl[0], "", "")[RPL_AWAY]);
 			if (fd != channel.getChannelUsers()[i].get_fd()){
 			string prvmsg = getLocalhost(client) + "PRIVMSG " + channel.getChannelName() + " :" + msg +"\r\n";
 			send(channel.getChannelUsers()[i].get_fd(), prvmsg.c_str(), prvmsg.size(), 0);
@@ -343,20 +337,12 @@ void	kick(Server &server, string line, int fd){
     	pos = reason.find(user[0]);
     	if (pos != string::npos)
 			reason = reason.substr(pos + user.size());
-		// for (size_t i = 0; i < channel.getChannelUsers().size(); i++){
-		// 	string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " :" +reason +  "\r\n";
-		// 	send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
-		// }
 	}
-	// else
-	// {
-
 		for (size_t i = 0; i < channel.getChannelUsers().size(); i++)
 		{
 			string msg = getLocalhost(client) + "KICK " + channel.getChannelName() + " " + user + " " + reason+ "\r\n";
 			send(channel.getChannelUsers()[i].get_fd(), msg.c_str(), msg.size(), 0);
 		}
-	// }
 
 	Client &cUser = getClientStringRef(server.getCLients(), user);
 	unsetChannelUser(channel, cUser, server);

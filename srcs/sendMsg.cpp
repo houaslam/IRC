@@ -41,7 +41,6 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 
 void sendMsg(Client& client, string str){
     str = getLocalhost(client) + str + "\r\n";
-	cout << "msg sent = " << str << endl;
     send(client.get_fd(), str.c_str(), str.length() , 0);
 }
 

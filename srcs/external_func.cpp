@@ -61,7 +61,6 @@ void del_fd(struct pollfd fds[], int* fd_count, int p){
 void add_fd(struct pollfd fds[], int* fd_count, int fd){
 	fds[(*fd_count)].fd = fd;
 	fds[(*fd_count)].events = POLLIN;
-	std::cout << BLUE << "NEW CONNECTION\n" << RESET;
 	(*fd_count)++;
 }
 

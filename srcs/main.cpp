@@ -1,17 +1,18 @@
 #include "../includes/server.hpp"
 #include "../includes/client.hpp"
+#include "limits.h"
 
 int main(int ac , char ** av){
 	if (ac == 3){
 		Server server(atoi(av[1]), av[2]);
-		char reqs[1024];
-		struct pollfd fds[1024];
+		char reqs[MAX_CANON];
+		struct pollfd fds[MAX_CANON];
 		fds[0].fd = server.get_socket();
 		fds[0].events = POLLIN;
 		socklen_t add_size = sizeof(server.get_addr_len());
 
 		int nb_fds = 1;
-
+		cout << GREEN << "[🤗 Welcome to our server]" << endl<< RESET;
 		while(true){
 
 
@@ -26,13 +27,12 @@ int main(int ac , char ** av){
 							Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
-							// sendMsg(server.getCLients()[fd], msgs(server.getCLients()[fd],))//  "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]"
-
 						}
 
 						else {
 							int k = read(fds[i].fd, reqs, sizeof(reqs));
-							// int k = recv(fds[i].fd, reqs, 10000000, 0);
+							if (k >= MAX_CANON)
+								break;
 							if (k > 0){
 								reqs[k] = '\0';
 							    parse(server, fds[i].fd, reqs);
@@ -40,10 +40,9 @@ int main(int ac , char ** av){
 
 							else{
 								if (k == 0){
-									cout << "a user is disconnected\n";
+									cout << YELLOW << "[👋 Goodbye!]" << endl << RESET;
 									server.getCLients().erase(fds[i].fd);
 									del_fd(fds, &nb_fds, i);
-									// unsetChannelUser
 								}
 								else
 									ft_error("DONE : ");
@@ -55,4 +54,5 @@ int main(int ac , char ** av){
 		}
 	}
 }
-// /connect localhost 8500
+
+

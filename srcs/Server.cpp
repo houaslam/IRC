@@ -28,10 +28,9 @@ Server::Server(int port, const char* password) : port(port), serverName("Pixserv
 	if (bind(_socket, (struct sockaddr*)&s_addr, sizeof(s_addr)) < 0)
 		ft_error("BIND : ");
 
-	if (listen(_socket, 5) < 0)
+	if (listen(_socket,  SOMAXCONN) < 0)
 		ft_error("LISTEN : !");
 	fcntl(this->_socket, F_SETFL, O_NONBLOCK);
-	cout << GREEN << "SOCKET SETUP IS DONE!\n" << RESET;
 }
 
 Server::~Server(){
