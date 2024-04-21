@@ -16,16 +16,13 @@ int main(int ac , char ** av){
 
 
 			if (poll(fds, nb_fds, -1) > 0){
-
 				for (int i = 0; i < nb_fds; i++){
-
 					if (fds[i].revents == POLLIN){
 
 						if (fds[i].fd == server.get_socket()){
 							int fd = accept(server.get_socket(), (struct sockaddr *)&server.get_addr(), &add_size);
 							if (fd <= 0)
 								ft_error("CLIENT : ");
-							fcntl(fd, F_SETFL, O_NONBLOCK);
 							Client  user_(fd);
 							server.setUser(user_);
 							add_fd(fds, &nb_fds, user_.get_fd());
@@ -34,10 +31,8 @@ int main(int ac , char ** av){
 						}
 
 						else {
-							// int k = read(fds[i].fd, reqs, sizeof(reqs));
 							int k = read(fds[i].fd, reqs, sizeof(reqs));
 							// int k = recv(fds[i].fd, reqs, 10000000, 0);
-							cout << "k == " << k << "  fd = " << fds[i].fd <<  endl;
 							if (k > 0){
 								reqs[k] = '\0';
 							    if (parse(server, fds[i].fd, reqs) == false){
@@ -50,11 +45,11 @@ int main(int ac , char ** av){
 								if (k == 0){
 									cout << "a user is disconnected\n";
 									server.getCLients().erase(fds[i].fd);
+									del_fd(fds, &nb_fds, i);
 									// unsetChannelUser
 								}
 								else
 									ft_error("DONE : ");
-								del_fd(fds, &nb_fds, i);
 							}
 						}
 					}
