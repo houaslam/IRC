@@ -98,7 +98,7 @@ void join(Server& server, string line, int fd){
     line = line.substr(4);
     line = strtrim(line);
 
-    if (line.empty() || line[0] != '#')
+    if (line.empty())
 		return sendMsg(client, msgs(client, "", "", "JOIN")[ERR_NEEDMOREPARAMS]); 
 	
     vector<string> spl = split(line, " ");
@@ -191,6 +191,7 @@ void	topic(Server &server, string line, int fd){
 	if (channel.getChannelModes()['t'] == "+t" &&
 		!isAdmin(client.getNickName(), channel))
 			return sendMsg(client, msgs(client,"", channel.getChannelName(), "")[ERR_CHANOPRIVSNEEDED]); 
+	topic = topic.substr(1);
 	channel.setChannelTopic(topic);
 	channel.TopicSetter = client.getNickName();
 	channel.TopicTime = getTiming();

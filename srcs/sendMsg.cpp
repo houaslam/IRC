@@ -10,7 +10,9 @@ map<int, string> msgs(Client& client,string nickname,string channel, string cmd)
 	msg[ERR_CHANNELISFULL] = nbtoString(ERR_CHANNELISFULL) + " " + channel + " :Cannot join channel (+l)";
 	msg[ERR_BADCHANNELKEY] = nbtoString(ERR_BADCHANNELKEY) + " " + channel + " :Cannot join channel (+k)";
 	msg[RPL_NOTOPIC] = nbtoString(RPL_NOTOPIC) + " " + channel + " :No topic is set";
-	msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + channel + " "+ nickname;
+	msg[RPL_TOPIC] = nbtoString(RPL_TOPIC) + " " + client.getNickName() + " " + channel + " " + nickname;
+	//:irc.example.com 332 yournick #examplechannel :Welcome to the channel!
+
 		//:irc.example.com 333 yournick #examplechannel setbyuser 1622181726
 	//
 	msg[ERR_CHANOPRIVSNEEDED] = nbtoString(ERR_CHANOPRIVSNEEDED) + " " + channel + " :You're not channel operator";
@@ -57,7 +59,7 @@ void justJoined(Client &client, channel &channel, string &line){
 		sendMsg(client, msgs(client, channel.getChannelTopic(), channel.getChannelName(), "")[RPL_TOPIC]); //! 332
 	// msg[RPL_TOPICWHOTIME] = nbtoString(RPL_TOPICWHOTIME) + " " + client.getNickName() + " " + channel + " "+ nickname;
 		//:irc.example.com 333 yournick #examplechannel setbyuser 1622181726
-		string msg = getLocalhost(client) + "333 " + client.getNickName() + channel.getChannelName() + " " + channel.TopicSetter + " " + channel.TopicTime + "\r\n";
+		string msg = getLocalhost(client) + "333 " + client.getNickName() + " " + channel.getChannelName() + " " + channel.TopicSetter + " " + channel.TopicTime + "\r\n";
 		send(client.get_fd(), msg.c_str(), msg.size(), 0); //! 333
 	}
 	
